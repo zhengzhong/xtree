@@ -1,0 +1,15 @@
+#
+# Created by ZHENG Zhong on 2011-02-09.
+#
+
+.hg/
+_build/
+
+~*
+*.bak
+*.ccscc
+*.ncb
+*.suo
+*.cmd
+*.py[co]
+

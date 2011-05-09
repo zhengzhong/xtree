@@ -118,6 +118,9 @@
 				RelativePath=".\test\test_child_node_list.cpp">
 			</File>
 			<File
+				RelativePath=".\test\test_child_node_list_push.cpp">
+			</File>
+			<File
 				RelativePath=".\test\test_document_select.cpp">
 			</File>
 			<File

@@ -68,18 +68,18 @@ BOOST_AUTO_TEST_CASE(test_parse_string)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_parse_not_well_formed)
+BOOST_AUTO_TEST_CASE(test_parse_bad_xml)
 {
-    std::cout << "test_parse_not_well_formed\n";
-    const char* TEST_XML = "<root><bad element/></root>";
-    try
+    std::cout << "test_parse_bad_xml\n";
+    const char* TEST_XML[] = {
+        "<root><bad element/></root>",  // invalid element tag.
+        "<root a='A1' b='B' a='A2'/>",  // attributes with the same name.
+        "<root>hello",                  // unclosed tag.
+        "<root>hello</Root>",           // unmatched begin/close tag.
+    };
+    for (int i = 0; i < sizeof(TEST_XML) / sizeof(const char*); ++i)
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
-        BOOST_ERROR("expected dom_error but got nothing when parsing non-well-formed XML");
-    }
-    catch (const xtree::dom_error&)
-    {
-        // Ignore.
+        BOOST_CHECK_THROW(xtree::parse_string(TEST_XML[i]), xtree::dom_error);
     }
 }
 

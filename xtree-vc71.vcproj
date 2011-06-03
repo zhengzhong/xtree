@@ -154,6 +154,9 @@
 				RelativePath=".\src\xtree\sax_attribute_list.cpp">
 			</File>
 			<File
+				RelativePath=".\src\xtree\sax_error_info.cpp">
+			</File>
+			<File
 				RelativePath=".\src\xtree\sax_handler.cpp">
 			</File>
 			<File
@@ -300,7 +303,19 @@
 				RelativePath=".\include\xtree\xtree.hpp">
 			</File>
 			<File
+				RelativePath=".\include\xtree\xtree_dom.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\xtree_dom_fwd.hpp">
+			</File>
+			<File
 				RelativePath=".\include\xtree\xtree_fwd.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\xtree_sax.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\xtree_sax_fwd.hpp">
 			</File>
 		</Filter>
 	</Files>

@@ -15,54 +15,71 @@ namespace xtree {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // basic_const_element_iterator
+    // basic_element_iterator
     //
 
 
-    template<class M>
-    class basic_const_element_iterator
+    template<class Element, class Mover>
+    class basic_element_iterator
     {
 
-        typedef basic_const_element_iterator<M> this_type;
+        template<class Element_, class Mover_>
+        friend class basic_element_iterator;
+
+        typedef basic_element_iterator<Element, Mover>  this_type;
 
     public:
 
-        typedef const element   value_type;
-        typedef const element&  reference;
-        typedef const element*  pointer;
+        typedef Mover     mover_type;
+
+        typedef Element   value_type;
+        typedef Element&  reference;
+        typedef Element*  pointer;
 
     public:
 
-        explicit basic_const_element_iterator(): mover_()
+        explicit basic_element_iterator(): mover_()
         {
             // Do nothing.
         }
 
-        explicit basic_const_element_iterator(basic_node_ptr<const element> parent): mover_(parent)
+        explicit basic_element_iterator(basic_node_ptr<Element> parent): mover_(parent)
         {
             // Do nothing.
         }
 
-        // Use auto-generated copy constructor.
-        // Use auto-generated copy assignment.
-        // Use auto-generated destructor.
-
-        bool operator==(const this_type& rhs) const
+        template<class Element_, class Mover_>
+        basic_element_iterator(const basic_element_iterator<Element_, Mover_>& rhs)
+        : mover_(rhs.mover_)
         {
-            return (mover_.get() == rhs.mover_.get());
+            // Do nothing.
         }
 
-        bool operator!=(const this_type& rhs) const
+        template<class Element_, class Mover_>
+        this_type& operator=(const basic_element_iterator<Element_, Mover_>& rhs)
         {
-            return (mover_.get() != rhs.mover_.get());
+            mover_ = rhs.mover_;
+            return *this;
         }
 
-        const element& operator*() const
+        template<class Element_, class Mover_>
+        bool operator==(const basic_element_iterator<Element_, Mover_>& rhs) const
+        {
+            return mover_ == rhs.mover_;
+        }
+
+        template<class Element_, class Mover_>
+        bool operator!=(const basic_element_iterator<Element_, Mover_>& rhs) const
+        {
+            return !operator==(rhs);
+        }
+
+        reference operator*() const
         {
             return (*mover_.get());
         }
 
-        const element* operator->() const
+        pointer operator->() const
         {
             return (mover_.get().operator->());
         }
@@ -95,92 +112,14 @@ namespace xtree {
             return tmp;
         }
 
-        basic_node_ptr<const element> ptr() const
+        basic_node_ptr<Element> ptr() const
         {
             return mover_.get();
         }
 
     protected:
 
-        M mover_;
-
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // basic_element_iterator
-    //
-
-
-    template<class M>
-    class basic_element_iterator: public basic_const_element_iterator<M>
-    {
-
-        typedef basic_element_iterator<M>        this_type;
-        typedef basic_const_element_iterator<M>  base_type;
-
-    public:
-
-        typedef element   value_type;
-        typedef element&  reference;
-        typedef element*  pointer;
-
-    public:
-
-        explicit basic_element_iterator()
-        {
-            // Do nothing.
-        }
-
-        explicit basic_element_iterator(basic_node_ptr<element> parent): base_type(parent)
-        {
-            // Do nothing.
-        }
-
-        // Use auto-generated copy constructor.
-        // Use auto-generated copy assignment.
-        // Use auto-generated destructor.
-
-        element& operator*() const
-        {
-            return const_cast<element&>(base_type::operator*());
-        }
-
-        element* operator->() const
-        {
-            return const_cast<element*>(base_type::operator->());
-        }
-
-        this_type& operator++()
-        {
-            mover_.increment();
-            return *this;
-        }
-
-        this_type operator++(int)
-        {
-            this_type tmp = *this;
-            mover_.increment();
-            return tmp;
-        }
-
-        this_type& operator--()
-        {
-            mover_.decrement();
-            return *this;
-        }
-
-        this_type operator--(int)
-        {
-            this_type tmp = *this;
-            mover_.decrement();
-            return tmp;
-        }
-
-        basic_node_ptr<element> ptr() const
-        {
-            return const_node_cast<element>(base_type::ptr());
-        }
+        mover_type mover_;
 
     };
 
@@ -190,8 +129,14 @@ namespace xtree {
     //
 
 
+    template<class Element>
     class subelement_mover
     {
+
+        template<class Element_>
+        friend class subelement_mover;
+
+        typedef subelement_mover<element>  this_type;
 
     public:
 
@@ -200,7 +145,7 @@ namespace xtree {
             // Do nothing.
         }
 
-        explicit subelement_mover(basic_node_ptr<const element> parent): current_()
+        explicit subelement_mover(basic_node_ptr<Element> parent): current_()
         {
             if (parent != 0)
             {
@@ -208,7 +153,32 @@ namespace xtree {
             }
         }
 
-        const basic_node_ptr<const element>& get() const
+        template<class Element_>
+        subelement_mover(const subelement_mover<Element_>& rhs): current_(rhs.current_)
+        {
+            // Do nothing.
+        }
+
+        template<class Element_>
+        this_type& operator=(const subelement_mover<Element_>& rhs)
+        {
+            current_ = rhs.current_;
+            return *this;
+        }
+
+        template<class Element_>
+        bool operator==(const subelement_mover<Element_>& rhs) const
+        {
+            return current_ == rhs.current_;
+        }
+
+        template<class Element_>
+        bool operator!=(const subelement_mover<Element_>& rhs) const
+        {
+            return !operator==(rhs);
+        }
+
+        const basic_node_ptr<Element>& get() const
         {
             return current_;
         }
@@ -231,7 +201,7 @@ namespace xtree {
                 throw bad_dom_operation("decrement() called on end position");
             }
             // Ensure the current position is not begin.
-            basic_node_ptr<const element> prev = current_->get_prev_sibling_elem();
+            basic_node_ptr<Element> prev = current_->get_prev_sibling_elem();
             if (prev == 0)
             {
                 throw bad_dom_operation("decrement() called on begin position");
@@ -241,18 +211,24 @@ namespace xtree {
 
     private:
 
-        basic_node_ptr<const element> current_;
+        basic_node_ptr<Element> current_;
 
     };
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // subelement_mover
+    // df_element_mover
     //
 
 
+    template<class Element>
     class df_element_mover
     {
+
+        template<class Element_>
+        friend class df_element_mover;
+
+        typedef df_element_mover<Element>  this_type;
 
     public:
 
@@ -261,13 +237,47 @@ namespace xtree {
             // Do nothing.
         }
 
-        explicit df_element_mover(basic_node_ptr<const element> parent)
+        explicit df_element_mover(basic_node_ptr<Element> parent)
         : parent_(parent), current_(parent)
         {
             // Do nothing.
         }
 
-        const basic_node_ptr<const element>& get() const
+        template<class Element_>
+        df_element_mover(const df_element_mover<Element_>& rhs)
+        : parent_(rhs.parent_), current_(rhs.current_)
+        {
+            // Do nothing.
+        }
+
+        template<class Element_>
+        this_type& operator=(const df_element_mover<Element_>& rhs)
+        {
+            parent_ = rhs.parent_;
+            current_ = rhs.current_;
+            return *this;
+        }
+
+        template<class Element_>
+        bool operator==(const df_element_mover<Element_>& rhs) const
+        {
+            if (current_ == 0 && rhs.current_ == 0)
+            {
+                return true;  // end iterators (current_ == 0) are considered to be equal.
+            }
+            else
+            {
+                return parent_ == rhs.parent_ && current_ == rhs.current_;
+            }
+        }
+
+        template<class Element_>
+        bool operator!=(const df_element_mover<Element_>& rhs) const
+        {
+            return !operator==(rhs);
+        }
+
+        const basic_node_ptr<Element>& get() const
         {
             return current_;
         }
@@ -280,7 +290,7 @@ namespace xtree {
                 throw bad_dom_operation("increment() called on end position");
             }
             // Try to move deeper.
-            basic_node_ptr<const element> next = current_->find_first_elem();
+            basic_node_ptr<Element> next = current_->find_first_elem();
             if (next != 0)
             {
                 current_ = next;
@@ -305,7 +315,7 @@ namespace xtree {
                 }
             }
             // Move to end.
-            current_ = basic_node_ptr<const element>();
+            current_ = basic_node_ptr<Element>();
         }
 
         void decrement()
@@ -320,10 +330,10 @@ namespace xtree {
                 throw bad_dom_operation("decrement() called on begin position");
             }
             // Try to move to last subelement of previous sibling element.
-            basic_node_ptr<const element> prev = current_->get_prev_sibling_elem();
+            basic_node_ptr<Element> prev = current_->get_prev_sibling_elem();
             if (prev != 0)
             {
-                basic_node_ptr<const element> last_elem = prev;
+                basic_node_ptr<Element> last_elem = prev;
                 while (last_elem->find_last_elem() != 0)
                 {
                     last_elem = last_elem->find_last_elem();
@@ -337,8 +347,8 @@ namespace xtree {
 
     private:
 
-        basic_node_ptr<const element> parent_;
-        basic_node_ptr<const element> current_;
+        basic_node_ptr<Element> parent_;
+        basic_node_ptr<Element> current_;
 
     };
 
@@ -348,11 +358,26 @@ namespace xtree {
     //
 
 
-    typedef basic_const_element_iterator<subelement_mover>  const_subelement_iterator;
-    typedef basic_element_iterator<subelement_mover>        subelement_iterator;
+    typedef basic_element_iterator<
+        const element,
+        subelement_mover<const element>
+    > const_subelement_iterator;
 
-    typedef basic_const_element_iterator<df_element_mover>  const_df_element_iterator;
-    typedef basic_element_iterator<df_element_mover>        df_element_iterator;
+    typedef basic_element_iterator<
+        element,
+        subelement_mover<element>
+    > subelement_iterator;
+
+
+    typedef basic_element_iterator<
+        const element,
+        df_element_mover<const element>
+    > const_df_element_iterator;
+
+    typedef basic_element_iterator<
+        element,
+        df_element_mover<element>
+    > df_element_iterator;
 
 
 } // namespace xtree

@@ -16,6 +16,7 @@
 
 #include <xtree/xtree.hpp>
 
+#include <iterator>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -33,12 +34,16 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator)
         "<item>one</item>two"
         "<item>three</item>four"
         "<item>five</item>six"
+        "<item>seven</item>eight"
+        "<item>nine</item>ten"
         "</root>"
     ;
     const std::pair<std::string, std::string> EXPECTED[] = {
         std::make_pair("one", "two"),
         std::make_pair("three", "four"),
         std::make_pair("five", "six"),
+        std::make_pair("seven", "eight"),
+        std::make_pair("nine", "ten"),
     };
     const unsigned int MAX_SIZE = sizeof(EXPECTED)
                                 / sizeof(const std::pair<std::string, std::string>);
@@ -85,6 +90,14 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator)
                 BOOST_CHECK_EQUAL(index, 0);
             }
         }
+        // Test iterator category with std::advance().
+        xtree::subelement_iterator x(root);
+        std::advance(x, 4);
+        BOOST_CHECK_EQUAL(x->content(), EXPECTED[4].first);
+        BOOST_CHECK_EQUAL(x->tail(), EXPECTED[4].second);
+        std::advance(x, -2);
+        BOOST_CHECK_EQUAL(x->content(), EXPECTED[2].first);
+        BOOST_CHECK_EQUAL(x->tail(), EXPECTED[2].second);
     }
     catch (const xtree::dom_error& ex)
     {
@@ -211,6 +224,12 @@ BOOST_AUTO_TEST_CASE(test_df_element_iterator)
                 BOOST_CHECK_EQUAL(index, 0);
             }
         }
+        // Test iterator category with std::advance().
+        xtree::df_element_iterator x(tree);
+        std::advance(x, 5);
+        BOOST_CHECK_EQUAL(x->name(), "e5");
+        std::advance(x, -2);
+        BOOST_CHECK_EQUAL(x->name(), "e3");
     }
     catch (const xtree::dom_error& ex)
     {

@@ -9,6 +9,8 @@
 #include "xtree/exceptions.hpp"
 #include "xtree/basic_node_ptr.hpp"
 
+#include <iterator>
+
 
 namespace xtree {
 
@@ -34,18 +36,13 @@ namespace xtree {
     //!
     //! \todo TODO: decreasing an end iterator may result in undefined behavior, fix this.
     template<class T>
-    class basic_node_iterator
+    class basic_node_iterator: public std::iterator<std::bidirectional_iterator_tag, T>
     {
 
-        template<class U> friend class basic_node_iterator;
+        template<class U>
+        friend class basic_node_iterator;
 
         typedef basic_node_iterator<T> this_type;
-
-    public:
-
-        typedef T           value_type;
-        typedef value_type& reference;
-        typedef value_type* pointer;
 
     public:
 

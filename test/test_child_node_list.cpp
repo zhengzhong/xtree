@@ -16,36 +16,71 @@
 
 #include <xtree/xtree.hpp>
 
+#include <iterator>
 #include <iostream>
 #include <memory>
 #include <string>
 
 
+namespace {
+
+    template<typename Iterator>
+    void do_test_advance(Iterator begin)
+    {
+        BOOST_CHECK_EQUAL(begin->content(), "0");
+        std::advance(begin, 4);
+        BOOST_CHECK_EQUAL(begin->content(), "4");
+        std::advance(begin, -3);
+        BOOST_CHECK_EQUAL(begin->content(), "1");
+    }
+
+}  // anonymous namespace
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_iterate_child_node_list)
+namespace {
+
+    template<typename Iterator>
+    void do_test_iterate_subelements(Iterator begin, Iterator end)
+    {
+        unsigned int index = 0;
+        for (Iterator i = begin; i != end; ++i, ++index)
+        {
+            BOOST_CHECK_EQUAL(i->type(), xtree::element_node);
+            BOOST_CHECK_EQUAL(i->name(), "item");
+            BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
+        }
+    }
+
+}  // anonymous namespace
+
+
+BOOST_AUTO_TEST_CASE(test_iterate_subelements)
 {
-    std::cout << "test_iterate_child_node_list\n";
+    std::cout << "test_iterate_subelements\n";
     const char* TEST_XML =
         "<root>"
         "  <item>0</item>"
         "  <item>1</item>"
         "  <item>2</item>"
+        "  <item>3</item>"
+        "  <item>4</item>"
+        "  <item>5</item>"
         "</root>"
     ;
     try
     {
         std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
         xtree::element_ptr root = doc->root();
+        do_test_iterate_subelements<xtree::child_iterator>(root->begin(), root->end());
+        do_test_iterate_subelements<xtree::const_child_iterator>(root->begin(), root->end());
         xtree::child_node_list& children = root->children();
-        unsigned int index = 0;
-        for (xtree::child_iterator i = children.begin(); i != children.end(); ++i, ++index)
-        {
-            BOOST_CHECK_EQUAL(i->type(), xtree::element_node);
-            BOOST_CHECK_EQUAL(i->name(), "item");
-            BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
-        }
+        do_test_iterate_subelements<xtree::child_iterator>(children.begin(), children.end());
+        do_test_iterate_subelements<xtree::const_child_iterator>(children.begin(), children.end());
+        do_test_advance<xtree::child_iterator>(root->begin());
+        do_test_advance<xtree::const_child_iterator>(root->begin());
     }
     catch (const xtree::dom_error& ex)
     {
@@ -57,54 +92,76 @@ BOOST_AUTO_TEST_CASE(test_iterate_child_node_list)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_iterate_child_node_list_2)
+namespace {
+
+    template<typename Iterator>
+    void do_test_iterate_child_nodes(Iterator begin,
+                                     Iterator end,
+                                     const xtree::node_t types[],
+                                     unsigned int max_size)
+    {
+        unsigned int index = 0;
+        for (Iterator i = begin; i != end; ++i, ++index)
+        {
+            BOOST_REQUIRE(index < max_size);
+            BOOST_CHECK_EQUAL(i->type(), types[index]);
+            BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
+            if (i->type() == xtree::element_node)
+            {
+                BOOST_CHECK_EQUAL(i->name(), "element");
+            }
+            else if (i->type() == xtree::xml_pi_node)
+            {
+                BOOST_CHECK_EQUAL(i->name(), "processing-instruction");
+            }
+        }
+    }
+
+}  // anonymous namespace
+
+
+BOOST_AUTO_TEST_CASE(test_iterate_child_nodes)
 {
-    std::cout << "test_iterate_child_node_list_2\n";
+    std::cout << "test_iterate_child_nodes\n";
     const char* TEST_XML =
         "<root>"
-        "one"
-        "<b>two</b>"
-        "three"
-        "<![CDATA[four]]>"
-        "<!--five-->"
-        "<?processing-instruction six?>"
-        "<b>seven</b>"
+        "0"
+        "<element>1</element>"
+        "2"
+        "<![CDATA[3]]>"
+        "<!--4-->"
+        "<?processing-instruction 5?>"
+        "<element>6</element>"
         "</root>";
-    std::pair<xtree::node_t, std::string> EXPECTED_NODES[] = {
-        std::make_pair(xtree::text_node, "one"),
-        std::make_pair(xtree::element_node, "two"),
-        std::make_pair(xtree::text_node, "three"),
-        std::make_pair(xtree::cdata_node, "four"),
-        std::make_pair(xtree::comment_node, "five"),
-        std::make_pair(xtree::xml_pi_node, "six"),
-        std::make_pair(xtree::element_node, "seven"),
+    const xtree::node_t TYPES[] = {
+        xtree::text_node,
+        xtree::element_node,
+        xtree::text_node,
+        xtree::cdata_node,
+        xtree::comment_node,
+        xtree::xml_pi_node,
+        xtree::element_node,
     };
-    const unsigned int MAX_SIZE = sizeof(EXPECTED_NODES)
-                                / sizeof(std::pair<xtree::node_t, std::string>);
+    const unsigned int MAX_SIZE = sizeof(TYPES) / sizeof(xtree::node_t);
     try
     {
         std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
         xtree::element_ptr root = doc->root();
+        do_test_iterate_child_nodes<xtree::child_iterator>(
+            root->begin(), root->end(), TYPES, MAX_SIZE
+        );
+        do_test_iterate_child_nodes<xtree::const_child_iterator>(
+            root->begin(), root->end(), TYPES, MAX_SIZE
+        );
         xtree::child_node_list& children = root->children();
-        unsigned int index = 0;
-        for (xtree::child_iterator i = children.begin(); i != children.end(); ++i, ++index)
-        {
-            BOOST_REQUIRE(index < MAX_SIZE);
-            BOOST_CHECK_EQUAL(i->type(), EXPECTED_NODES[index].first);
-            BOOST_CHECK_EQUAL(i->content(), EXPECTED_NODES[index].second);
-            if (i->type() == xtree::element_node)
-            {
-                xtree::element_ptr e = xtree::dynamic_node_cast<xtree::element>(i.ptr());
-                BOOST_CHECK(e != 0);
-                BOOST_CHECK_EQUAL(e->name(), "b");
-            }
-            else if (i->type() == xtree::xml_pi_node)
-            {
-                xtree::xml_pi_ptr pi = xtree::dynamic_node_cast<xtree::xml_pi>(i.ptr());
-                BOOST_CHECK(pi != 0);
-                BOOST_CHECK_EQUAL(pi->name(), "processing-instruction");
-            }
-        }
+        do_test_iterate_child_nodes<xtree::child_iterator>(
+            children.begin(), children.end(), TYPES, MAX_SIZE
+        );
+        do_test_iterate_child_nodes<xtree::const_child_iterator>(
+            children.begin(), children.end(), TYPES, MAX_SIZE
+        );
+        do_test_advance<xtree::child_iterator>(root->begin());
+        do_test_advance<xtree::const_child_iterator>(root->begin());
     }
     catch (const xtree::dom_error& ex)
     {

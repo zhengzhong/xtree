@@ -10,6 +10,8 @@
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/element.hpp"
 
+#include <iterator>
+
 
 namespace xtree {
 
@@ -20,7 +22,7 @@ namespace xtree {
 
 
     template<class Element, class Mover>
-    class basic_element_iterator
+    class basic_element_iterator: public std::iterator<std::bidirectional_iterator_tag, Element>
     {
 
         template<class Element_, class Mover_>
@@ -28,13 +30,7 @@ namespace xtree {
 
         typedef basic_element_iterator<Element, Mover>  this_type;
 
-    public:
-
-        typedef Mover     mover_type;
-
-        typedef Element   value_type;
-        typedef Element&  reference;
-        typedef Element*  pointer;
+        typedef Mover  mover_type;
 
     public:
 

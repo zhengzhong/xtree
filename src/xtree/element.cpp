@@ -168,107 +168,6 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // children
-    //
-
-
-    child_node_list& element::children()
-    {
-        return children_;
-    }
-
-
-    const child_node_list& element::children() const
-    {
-        return children_;
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // subelement access
-    //
-
-
-    basic_node_ptr<element> element::find_first_elem()
-    {
-        return basic_node_ptr<element>( const_cast<element*>(find_first_elem_()) );
-    }
-
-
-    basic_node_ptr<const element> element::find_first_elem() const
-    {
-        return basic_node_ptr<const element>( find_first_elem_() );
-    }
-
-
-    basic_node_ptr<element> element::find_last_elem()
-    {
-        return basic_node_ptr<element>( const_cast<element*>(find_last_elem_()) );
-    }
-
-
-    basic_node_ptr<const element> element::find_last_elem() const
-    {
-        return basic_node_ptr<const element>( find_last_elem_() );
-    }
-
-
-    basic_node_ptr<element> element::find_elem_by_name(const std::string& name)
-    {
-        return basic_node_ptr<element>( const_cast<element*>(find_elem_by_name_(name)) );
-    }
-
-
-    basic_node_ptr<const element> element::find_elem_by_name(const std::string& name) const
-    {
-        return basic_node_ptr<const element>( find_elem_by_name_(name) );
-    }
-
-
-    basic_node_ptr<element> element::find_elem(const std::string& name,
-                                               const std::string& uri)
-    {
-        return basic_node_ptr<element>( const_cast<element*>(find_elem_(name, uri)) );
-    }
-
-
-    basic_node_ptr<const element> element::find_elem(const std::string& name,
-                                                     const std::string& uri) const
-    {
-        return basic_node_ptr<const element>( find_elem_(name, uri) );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // sibling element access
-    //
-
-
-    basic_node_ptr<element> element::prev_sibling_elem()
-    {
-        return basic_node_ptr<element>( const_cast<element*>(prev_sibling_elem_()) );
-    }
-
-
-    basic_node_ptr<element> element::next_sibling_elem()
-    {
-        return basic_node_ptr<element>( const_cast<element*>(next_sibling_elem_()) );
-    }
-
-
-    basic_node_ptr<const element> element::prev_sibling_elem() const
-    {
-        return basic_node_ptr<const element>( prev_sibling_elem_() );
-    }
-
-
-    basic_node_ptr<const element> element::next_sibling_elem() const
-    {
-        return basic_node_ptr<const element>( next_sibling_elem_() );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     // XPath
     //
 
@@ -396,12 +295,15 @@ namespace xtree {
 
     const element* element::find_last_elem_() const
     {
-        const element* current = find_first_elem_();
-        for (const element* i = current; i != 0; i = i->next_sibling_elem_())
+        const element* found = 0;
+        for (const xmlNode* i = raw()->children; i != 0; i = i->next)
         {
-            current = i;
+            if (i->type == XML_ELEMENT_NODE)
+            {
+                found = static_cast<const element*>(i->_private);
+            }
         }
-        return current;
+        return found;
     }
 
 
@@ -416,6 +318,33 @@ namespace xtree {
                 if (child->name() == name)
                 {
                     found = child;
+                }
+            }
+        }
+        return found;
+    }
+
+
+    const element* element::find_elem_by_path_(const std::string& path) const
+    {
+        // If the path does not contain slash, call find_elem_by_name_().
+        std::string::size_type pos = path.find_first_of('/');
+        if (pos == std::string::npos)
+        {
+            return find_elem_by_name_(path);
+        }
+        // Otherwise, make recursive call to elem_by_path_().
+        std::string name = path.substr(0, pos);
+        std::string rest = path.substr(pos + 1);
+        const element* found = 0;
+        for (const xmlNode* i = raw()->children; found == 0 && i != 0; i = i->next)
+        {
+            if (i->type == XML_ELEMENT_NODE)
+            {
+                const element* child = static_cast<const element*>(i->_private);
+                if (child->name() == name)
+                {
+                    found = child->find_elem_by_path_(rest);
                 }
             }
         }
@@ -441,7 +370,7 @@ namespace xtree {
     }
 
 
-    const element* element::prev_sibling_elem_() const
+    const element* element::get_prev_sibling_elem_() const
     {
         xmlNode* prev = raw()->prev;
         while (prev != 0 && prev->type != XML_ELEMENT_NODE)
@@ -459,7 +388,7 @@ namespace xtree {
     }
 
 
-    const element* element::next_sibling_elem_() const
+    const element* element::get_next_sibling_elem_() const
     {
         xmlNode* next = raw()->next;
         while (next != 0 && next->type != XML_ELEMENT_NODE)

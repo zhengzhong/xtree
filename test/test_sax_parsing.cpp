@@ -92,6 +92,7 @@ namespace {
 
         void ignorable_whitespace(const char* chars, int length)
         {
+            chars;  // remove compiler warning.
             std::cout << "ignorable_whitespace: ";
             for (int i = 0; i < length; ++i)
             {

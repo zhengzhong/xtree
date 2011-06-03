@@ -94,7 +94,7 @@ namespace xtree {
         const_iterator end() const;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // child nodes
+        // modifiers
         //
 
         //! Returns a reference to the first child node of this list.
@@ -114,10 +114,6 @@ namespace xtree {
 
         //! Const version of back().
         const child_node& back() const;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers/clear
-        //
 
         //! Removes all the child_node objects from this list.
         //! \post empty() == true
@@ -232,7 +228,7 @@ namespace xtree {
         void push_front_adopt(child_node& child);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers/pop_*
+        // modifiers/pop
         //
 
         //! Pops the last child node from the list. The child node popped out is destroyed.

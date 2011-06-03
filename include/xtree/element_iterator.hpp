@@ -220,7 +220,7 @@ namespace xtree {
             {
                 throw bad_dom_operation("increment() called on end position");
             }
-            current_ = current_->next_sibling_elem();
+            current_ = current_->get_next_sibling_elem();
         }
 
         void decrement()
@@ -231,7 +231,7 @@ namespace xtree {
                 throw bad_dom_operation("decrement() called on end position");
             }
             // Ensure the current position is not begin.
-            basic_node_ptr<const element> prev = current_->prev_sibling_elem();
+            basic_node_ptr<const element> prev = current_->get_prev_sibling_elem();
             if (prev == 0)
             {
                 throw bad_dom_operation("decrement() called on begin position");
@@ -287,7 +287,7 @@ namespace xtree {
                 return;
             }
             // Try to move to next sibling element.
-            next = current_->next_sibling_elem();
+            next = current_->get_next_sibling_elem();
             if (next != 0)
             {
                 current_ = next;
@@ -297,7 +297,7 @@ namespace xtree {
             while (current_ != parent_ && current_->parent() != parent_)
             {
                 current_ = current_->parent();
-                next = current_->next_sibling_elem();
+                next = current_->get_next_sibling_elem();
                 if (next != 0)
                 {
                     current_ = next;
@@ -320,7 +320,7 @@ namespace xtree {
                 throw bad_dom_operation("decrement() called on begin position");
             }
             // Try to move to last subelement of previous sibling element.
-            basic_node_ptr<const element> prev = current_->prev_sibling_elem();
+            basic_node_ptr<const element> prev = current_->get_prev_sibling_elem();
             if (prev != 0)
             {
                 basic_node_ptr<const element> last_elem = prev;

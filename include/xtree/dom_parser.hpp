@@ -2,11 +2,11 @@
 // Created by ZHENG Zhong on 2008-01-17.
 //
 
-#ifndef XTREE_PARSER_HPP_20080717__
-#define XTREE_PARSER_HPP_20080717__
+#ifndef XTREE_DOM_PARSER_HPP_20080717__
+#define XTREE_DOM_PARSER_HPP_20080717__
 
 #include "xtree/config.hpp"
-#include "xtree/dom_base.hpp"
+#include "xtree/xml_base.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
@@ -21,16 +21,16 @@ namespace xtree {
 
     //! This class represents an XML DOM parser. A parser is used to parse an XML file or string
     //! and return the document object.
-    class XTREE_DECL parser: private dom_base
+    class XTREE_DECL dom_parser: private xml_base
     {
 
     public:
 
         //! Default constructor.
-        explicit parser();
+        explicit dom_parser();
 
         //! Destructor.
-        ~parser();
+        ~dom_parser();
 
         //! Parses an XML file to a document object. It is up to the user to free the document
         //! object. It is recommended that user use the RAII idiom and put the returned document
@@ -51,10 +51,10 @@ namespace xtree {
     private:
 
         //! Non-implemented copy constructor.
-        parser(const parser&);
+        dom_parser(const dom_parser&);
 
         //! Non-implemented copy assignment.
-        parser& operator=(const parser&);
+        dom_parser& operator=(const dom_parser&);
 
     };
 
@@ -62,7 +62,7 @@ namespace xtree {
     //! Parses an XML file to a document object.
     inline document* parse_file(const std::string& file_name)
     {
-        parser p;
+        dom_parser p;
         return p.parse_file(file_name);
     }
 
@@ -70,7 +70,7 @@ namespace xtree {
     //! Parses an XML string to a document object.
     inline document* parse_string(const char* str)
     {
-        parser p;
+        dom_parser p;
         return p.parse_string(str);
     }
 
@@ -78,7 +78,7 @@ namespace xtree {
 }  // namespace xtree
 
 
-#endif  // XTREE_PARSER_HPP_20080717__
+#endif  // XTREE_DOM_PARSER_HPP_20080717__
 
 
 

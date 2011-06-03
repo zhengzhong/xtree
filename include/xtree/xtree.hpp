@@ -9,7 +9,14 @@
 #include "xtree/config.hpp"
 #include "xtree/xtree_fwd.hpp"
 
-#include "xtree/parser.hpp"
+#include "xtree/sax_attribute_list.hpp"
+#include "xtree/sax_error_info.hpp"
+#include "xtree/sax_features.hpp"
+#include "xtree/sax_handler.hpp"
+#include "xtree/sax_parser.hpp"
+#include "xtree/sax_xmlns_context.hpp"
+
+#include "xtree/dom_parser.hpp"
 #include "xtree/document.hpp"
 
 #include "xtree/node.hpp"

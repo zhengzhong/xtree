@@ -9,7 +9,7 @@
 #include "xtree/types.hpp"
 #include "xtree/basic_node_ptr.hpp"
 
-#include "xtree/dom_base.hpp"
+#include "xtree/xml_base.hpp"
 #include "xtree/child_node_list.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
@@ -41,7 +41,7 @@ namespace xtree {
 
 
     //! This class represents an XML document.
-    class XTREE_DECL document: private dom_base
+    class XTREE_DECL document: private xml_base
     {
 
     public:

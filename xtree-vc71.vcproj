@@ -130,7 +130,7 @@
 				RelativePath=".\src\xtree\document.cpp">
 			</File>
 			<File
-				RelativePath=".\src\xtree\dom_base.cpp">
+				RelativePath=".\src\xtree\dom_parser.cpp">
 			</File>
 			<File
 				RelativePath=".\src\xtree\element.cpp">
@@ -151,7 +151,16 @@
 				RelativePath=".\src\xtree\node_set.cpp">
 			</File>
 			<File
-				RelativePath=".\src\xtree\parser.cpp">
+				RelativePath=".\src\xtree\sax_attribute_list.cpp">
+			</File>
+			<File
+				RelativePath=".\src\xtree\sax_handler.cpp">
+			</File>
+			<File
+				RelativePath=".\src\xtree\sax_parser.cpp">
+			</File>
+			<File
+				RelativePath=".\src\xtree\sax_xmlns_context.cpp">
 			</File>
 			<File
 				RelativePath=".\src\xtree\schema.cpp">
@@ -161,6 +170,9 @@
 			</File>
 			<File
 				RelativePath=".\src\xtree\validity.cpp">
+			</File>
+			<File
+				RelativePath=".\src\xtree\xml_base.cpp">
 			</File>
 			<File
 				RelativePath=".\src\xtree\xml_pi.cpp">
@@ -204,7 +216,7 @@
 				RelativePath=".\include\xtree\document.hpp">
 			</File>
 			<File
-				RelativePath=".\include\xtree\dom_base.hpp">
+				RelativePath=".\include\xtree\dom_parser.hpp">
 			</File>
 			<File
 				RelativePath=".\include\xtree\element.hpp">
@@ -234,10 +246,25 @@
 				RelativePath=".\include\xtree\node_set.hpp">
 			</File>
 			<File
-				RelativePath=".\include\xtree\parser.hpp">
+				RelativePath=".\include\xtree\phoenix_singleton.hpp">
 			</File>
 			<File
-				RelativePath=".\include\xtree\phoenix_singleton.hpp">
+				RelativePath=".\include\xtree\sax_attribute_list.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\sax_error_info.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\sax_features.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\sax_handler.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\sax_parser.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\sax_xmlns_context.hpp">
 			</File>
 			<File
 				RelativePath=".\include\xtree\schema.hpp">
@@ -256,6 +283,9 @@
 			</File>
 			<File
 				RelativePath=".\include\xtree\validity.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\xml_base.hpp">
 			</File>
 			<File
 				RelativePath=".\include\xtree\xml_pi.hpp">

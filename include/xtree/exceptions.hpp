@@ -14,9 +14,41 @@
 namespace xtree {
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // dom_error
-    //
+    //! This class represents an error related to XML DOM.
+    class sax_error: public std::exception
+    {
+
+    public:
+
+        //! Default constructor.
+        explicit sax_error(): what_()
+        {
+            // Do nothing.
+        }
+
+        explicit sax_error(const std::string& what): what_(what)
+        {
+            // Do nothing.
+        }
+
+        virtual ~sax_error() throw()
+        {
+            // Do nothing.
+        }
+
+        // Use auto-generated copy constructor.
+        // Use auto-generated copy assignment.
+
+        virtual const char* what() const throw()
+        {
+            return what_.c_str();
+        }
+
+    private:
+
+        std::string what_;
+
+    };
 
 
     //! This class represents an error related to XML DOM.

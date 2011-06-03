@@ -6,7 +6,7 @@
 #define XTREE_SCHEMA_HPP_20090715__
 
 #include "xtree/config.hpp"
-#include "xtree/dom_base.hpp"
+#include "xtree/xml_base.hpp"
 #include "xtree/validity.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
@@ -19,7 +19,7 @@ namespace xtree {
     class XTREE_DECL document;  // forward declaration.
 
 
-    class XTREE_DECL schema: private dom_base
+    class XTREE_DECL schema: private xml_base
     {
 
     public:

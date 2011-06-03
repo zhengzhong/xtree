@@ -10,7 +10,7 @@
 #include "xtree/types.hpp"
 #include "xtree/basic_node_ptr.hpp"
 
-#include "xtree/dom_base.hpp"
+#include "xtree/xml_base.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
 #include <cassert>
@@ -26,7 +26,7 @@ namespace xtree {
 
 
     //! This class is the abstract base class representing an XML node. It is non-copyable.
-    class XTREE_DECL node: private dom_base
+    class XTREE_DECL node: private xml_base
     {
 
         typedef basic_node_ptr<node>       pointer;

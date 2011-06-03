@@ -6,7 +6,7 @@
 #define XTREE_SOURCE
 #endif
 
-#include "xtree/parser.hpp"
+#include "xtree/dom_parser.hpp"
 #include "xtree/document.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/exceptions.hpp"
@@ -65,17 +65,17 @@ namespace xtree {
         };
 
 
-        class parser_context_wrapper
+        class dom_parser_context_wrapper
         {
 
         public:
 
-            explicit parser_context_wrapper(xmlParserCtxt* px): raw_(px)
+            explicit dom_parser_context_wrapper(xmlParserCtxt* px): raw_(px)
             {
                 // Do nothing.
             }
 
-            ~parser_context_wrapper()
+            ~dom_parser_context_wrapper()
             {
                 if (raw_ != 0)
                 {
@@ -98,10 +98,10 @@ namespace xtree {
         private:
 
             //! Non-implemented copy constructor.
-            parser_context_wrapper(const parser_context_wrapper&);
+            dom_parser_context_wrapper(const dom_parser_context_wrapper&);
 
             //! Non-implemented copy assignment.
-            parser_context_wrapper& operator=(const parser_context_wrapper&);
+            dom_parser_context_wrapper& operator=(const dom_parser_context_wrapper&);
 
         private:
 
@@ -115,9 +115,9 @@ namespace xtree {
         //! uses a global function, such as xmlKeepBlanksDefault(), could cause this to use the
         //! wrong settings.
         //! \param context  the libxml2 parser context to initialize.
-        void init_parser_context(xmlParserCtxt* context)
+        void init_dom_parser_context(xmlParserCtxt* context)
         {
-            assert(context != 0 && "init_parser_context() called with null parser context");
+            assert(context != 0 && "init_dom_parser_context() called with null parser context");
             if (context->sax != 0)
             {
                 context->sax->warning = 0; // Shut up for all warnings.
@@ -145,7 +145,7 @@ namespace xtree {
             set_global_variables global_variables;
 
             // Initialize libxml2 parser context.
-            init_parser_context(context);
+            init_dom_parser_context(context);
 
             // Parse xml document under the parser context.
             xmlParseDocument(context);
@@ -178,29 +178,29 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // parser
+    // dom_parser
     //
 
 
-    parser::parser()
+    dom_parser::dom_parser()
     {
         // Do nothing.
     }
 
 
-    parser::~parser()
+    dom_parser::~dom_parser()
     {
         // Do nothing.
     }
 
 
-    document* parser::parse_file(const std::string& file_name)
+    document* dom_parser::parse_file(const std::string& file_name)
     {
 
         set_global_variables global_variables;
 
         // Create a libxml2 parser context for parsing the xml file.
-        parser_context_wrapper context( xmlCreateFileParserCtxt(file_name.c_str()) );
+        dom_parser_context_wrapper context( xmlCreateFileParserCtxt(file_name.c_str()) );
         if (context.get() == 0)
         {
             std::string what = "fail to parse xml file " + file_name + ": "
@@ -220,7 +220,7 @@ namespace xtree {
     }
 
 
-    document* parser::parse_string(const char* str)
+    document* dom_parser::parse_string(const char* str)
     {
 
         set_global_variables global_variables;
@@ -235,7 +235,7 @@ namespace xtree {
         {
             throw dom_error("fail to parse xml string: string is empty");
         }
-        parser_context_wrapper context( xmlCreateMemoryParserCtxt(str, size) );
+        dom_parser_context_wrapper context( xmlCreateMemoryParserCtxt(str, size) );
         if (context.get() == 0)
         {
             throw dom_error("Fail to parse xml string: unable to create libxml2 parser context");

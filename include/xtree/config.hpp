@@ -93,5 +93,9 @@
 #include "xtree/user_config.hpp"
 
 
+//! The namespace of xtree library.
+namespace xtree { }
+
+
 #endif  // XTREE_CONFIG_HPP_20080703__
 

@@ -11,6 +11,8 @@
 #include <new>      // for placement new
 
 
+//! \cond DEV
+
 namespace xtree {
 namespace detail {
 
@@ -193,6 +195,8 @@ namespace detail {
 
 } // namespace xtree::detail
 } // namespace xtree
+
+//! \endcond
 
 
 #endif // XTREE_PHOENIX_SINGLETON_HPP_20080721__

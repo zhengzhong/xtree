@@ -7,57 +7,33 @@
 # > doxygen xtree.doxyfile
 #
 
-#-------------------------------------------------------------------------------
-# project meta info
-#-------------------------------------------------------------------------------
-
 PROJECT_NAME = xtree
 PROJECT_NUMBER = 0.9.2
 
-#-------------------------------------------------------------------------------
-# output settings
-#-------------------------------------------------------------------------------
-
-OUTPUT_DIRECTORY = ./_build/doxygen
+OUTPUT_DIRECTORY = ./_build
 CREATE_SUBDIRS = NO
 OUTPUT_LANGUAGE = English
 DOXYFILE_ENCODING = UTF-8
 
-#-------------------------------------------------------------------------------
-# input settings
-#-------------------------------------------------------------------------------
-
-INPUT = ./include
+INPUT = ./include ./docs
 RECURSIVE = YES
-
-#-------------------------------------------------------------------------------
-# pre-processing
-#-------------------------------------------------------------------------------
-
+FILE_PATTERNS = *.h *.hpp *.c *.cpp *.txt
 MACRO_EXPANSION = YES
 SEARCH_INCLUDES = YES
 INCLUDE_PATH = ./include
 #PREDEFINED =
-
-#-------------------------------------------------------------------------------
-# generation of API documentations
-#-------------------------------------------------------------------------------
-
+#ENABLED_SECTIONS = DEV
 BUILTIN_STL_SUPPORT = YES
 EXTRACT_ALL = YES
-
-#-------------------------------------------------------------------------------
-# generation of source code fragments
-#-------------------------------------------------------------------------------
-
+EXTRACT_PRIVATE = NO
+EXTRACT_STATIC = YES
 SOURCE_BROWSER = YES
 TAB_SIZE = 4
 INLINE_SOURCES = NO
 STRIP_CODE_COMMENTS = NO
 
-#-------------------------------------------------------------------------------
-# documentation formats
-#-------------------------------------------------------------------------------
+EXAMPLE_PATH = ./test
+EXAMPLE_RECURSIVE = YES
 
 GENERATE_HTML = YES
 GENERATE_LATEX = NO
@@ -66,5 +42,7 @@ GENERATE_MAN = NO
 GENERATE_XML = NO
 GENERATE_AUTOGEN_DEF = NO
 GENERATE_PERLMOD = NO
+
+HTML_FOOTER = ./docs/xtree_footer.html
 
 # EOF

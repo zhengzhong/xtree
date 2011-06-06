@@ -9,6 +9,8 @@
 #include "xtree/libxml2_fwd.hpp"
 
 
+//! \cond DEV
+
 namespace xtree {
 namespace detail {
 
@@ -25,6 +27,8 @@ namespace detail {
 
 } // namespace xtree::detail
 } // namespace xtree
+
+//! \endcond
 
 
 #endif // XTREE_LIBXML2_CALLBACKS_HPP_20080717__

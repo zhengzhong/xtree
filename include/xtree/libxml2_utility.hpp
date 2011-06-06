@@ -14,6 +14,8 @@
 #include <utility>
 
 
+//! \cond DEV
+
 namespace xtree {
 namespace detail {
 
@@ -95,6 +97,8 @@ namespace detail {
 
 }  // namespace xtree::detail
 }  // namespace xtree
+
+//! \endcond
 
 
 #endif  // XTREE_LIBXML2_UTILITY_HPP_20080716__

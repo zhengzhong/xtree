@@ -267,6 +267,17 @@ namespace xtree {
     }
 
 
+    document* document::clone() const
+    {
+        xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(raw()), 1);
+        if (px == 0)
+        {
+            throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returns null");
+        }
+        return new document(px);
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // modifiers
     //
@@ -328,6 +339,12 @@ namespace xtree {
     basic_node_ptr<element> document::reset_root_clone(const element& elem)
     {
         return reset_root_(elem.clone_raw(true));
+    }
+
+
+    basic_node_ptr<element> document::reset_root_adopt(element& elem)
+    {
+        return reset_root_(elem.raw());
     }
 
 

@@ -110,11 +110,9 @@ namespace xtree {
         //! \param file_name  the file name.
         void save_to_file(const std::string& file_name) const;
 
-        //! Clones a document.
-        //! \param recursive  true to make a recursive (deep) clone.
+        //! Clones the document.
         //! \return the cloned document.
-        //! \todo TODO: implement me!
-        //document* clone(bool recursive) const;
+        document* clone() const;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // modifiers
@@ -155,8 +153,7 @@ namespace xtree {
         //! \post all the original nodes within this document are invalidated.
         //! \param elem  the element to reset as root.
         //! \return pointer to the new root element of this document.
-        //! \todo TODO: implement me!
-        //basic_node_ptr<element> reset_root_adopt(element& elem);
+        basic_node_ptr<element> reset_root_adopt(element& elem);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // XPath

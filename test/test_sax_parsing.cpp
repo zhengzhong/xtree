@@ -2,16 +2,7 @@
 // Created by ZHENG Zhong on 2011-05-12.
 //
 
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable: 4127)
-#endif
-
-#include <boost/test/auto_unit_test.hpp>
-
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
+#include "xtree_test_utils.hpp"
 
 #include <xtree/xtree.hpp>
 
@@ -117,7 +108,7 @@ namespace {
 
 BOOST_AUTO_TEST_CASE(test_sax_parsing_no_handler)
 {
-    std::cout << "test_sax_parsing_no_handler\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root a='A' xmlns='http://www.example.com/xtree'>hello,world!</root>";
     try
     {
@@ -133,7 +124,7 @@ BOOST_AUTO_TEST_CASE(test_sax_parsing_no_handler)
 
 BOOST_AUTO_TEST_CASE(test_sax_parsing_2)
 {
-    std::cout << "test_sax_parsing_2\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root xmlns='http://www.example.com/xtree' xmlns:x='http://www.example.com/xtree/x'>"
         "  <x:sub xmlns:x='http://www.example.com/xtree/x2'>"

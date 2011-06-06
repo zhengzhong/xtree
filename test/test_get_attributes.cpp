@@ -2,20 +2,10 @@
 // Created by ZHENG Zhong on 2011-03-16.
 //
 
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable: 4127)
-#endif
-
-#include <boost/test/auto_unit_test.hpp>
-
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
+#include "xtree_test_utils.hpp"
 
 #include <xtree/xtree.hpp>
 
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -53,7 +43,7 @@ namespace {
 
 BOOST_AUTO_TEST_CASE(test_get_attributes_no_ns)
 {
-    std::cout << "test_get_attributes_no_ns\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root a='one' b='two &amp; three' c='four'/>"
     ;
@@ -86,7 +76,7 @@ BOOST_AUTO_TEST_CASE(test_get_attributes_no_ns)
 
 BOOST_AUTO_TEST_CASE(test_get_attributes_default_ns)
 {
-    std::cout << "test_get_attributes_default_ns\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root xmlns='http://www.zhengzhong.net' a='one' b='two &amp; three' c='four'/>"
     ;
@@ -119,7 +109,7 @@ BOOST_AUTO_TEST_CASE(test_get_attributes_default_ns)
 
 BOOST_AUTO_TEST_CASE(test_get_attributes_mixed_ns)
 {
-    std::cout << "test_get_attributes_mixed_ns\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root xmlns:x='http://www.zhengzhong.net/x/' xmlns:y='http://www.zhengzhong.net/y/'"
         "      a='one' x:b='two &amp; three' y:b='four' y:c='five'/>"

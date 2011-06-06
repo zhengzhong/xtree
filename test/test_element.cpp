@@ -2,20 +2,10 @@
 // Created by ZHENG Zhong on 2011-03-16.
 //
 
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable: 4127)
-#endif
-
-#include <boost/test/auto_unit_test.hpp>
-
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
+#include "xtree_test_utils.hpp"
 
 #include <xtree/xtree.hpp>
 
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -25,7 +15,7 @@
 
 BOOST_AUTO_TEST_CASE(test_root_element_no_ns)
 {
-    std::cout << "test_root_element_no_ns\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<?xml version='1.0' encoding='UTF-8'?>"
         "<!-- comment before root -->"
@@ -54,7 +44,7 @@ BOOST_AUTO_TEST_CASE(test_root_element_no_ns)
 
 BOOST_AUTO_TEST_CASE(test_root_element_default_ns)
 {
-    std::cout << "test_root_element_default_ns\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<?xml version='1.0' encoding='UTF-8'?>"
         "<!-- comment before root -->"
@@ -83,7 +73,7 @@ BOOST_AUTO_TEST_CASE(test_root_element_default_ns)
 
 BOOST_AUTO_TEST_CASE(test_root_element_prefixed_ns)
 {
-    std::cout << "test_root_element_prefixed_ns\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<?xml version='1.0' encoding='UTF-8'?>"
         "<!-- comment before root -->"
@@ -112,7 +102,7 @@ BOOST_AUTO_TEST_CASE(test_root_element_prefixed_ns)
 
 BOOST_AUTO_TEST_CASE(test_root_element_head_tail_1)
 {
-    std::cout << "test_root_element_head_tail_1\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root>"
         "head<![CDATA[before]]>"
@@ -142,7 +132,7 @@ BOOST_AUTO_TEST_CASE(test_root_element_head_tail_1)
 
 BOOST_AUTO_TEST_CASE(test_root_element_head_tail_2)
 {
-    std::cout << "test_root_element_head_tail_2\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root>"
         "head<?xmlpi?><![CDATA[before]]>"

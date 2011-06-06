@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BOOST_ALL_NO_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL;BOOST_ALL_NO_LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -153,13 +153,16 @@
 			<File
 				RelativePath=".\test\xtree_test_main.cpp">
 			</File>
+			<File
+				RelativePath=".\test\xtree_test_utils.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\test\utils.hpp">
+				RelativePath=".\test\xtree_test_utils.hpp">
 			</File>
 		</Filter>
 	</Files>

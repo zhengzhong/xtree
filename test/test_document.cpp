@@ -2,12 +2,13 @@
 // Created by ZHENG Zhong on 2011-03-23.
 //
 
+#include "xtree_test_utils.hpp"
+
 #ifdef _MSC_VER
 #  pragma warning(push)
 #  pragma warning(disable: 4127 4511 4512)
 #endif
 
-#include <boost/test/auto_unit_test.hpp>
 #include <boost/lexical_cast.hpp>
 
 #ifdef _MSC_VER
@@ -16,7 +17,6 @@
 
 #include <xtree/xtree.hpp>
 
-#include <iostream>
 #include <memory>
 #include <string>
 #include <utility>
@@ -27,7 +27,7 @@
 
 BOOST_AUTO_TEST_CASE(test_document_clone)
 {
-    std::cout << "test_document_clone\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root xmlns='http://www.example.com/xtree' attr='some value'>"
         "  <item index='zero'>0</item>"
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(test_document_clone)
 
 BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
 {
-    std::cout << "test_document_reset_root_clone\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root xmlns='http://www.example.com/xtree' attr='some value'>"
         "  <item>0</item>"
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
 
 BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
 {
-    std::cout << "test_document_reset_root_adopt\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root xmlns='http://www.example.com/xtree' attr='some value'>"
         "  <item>0</item>"

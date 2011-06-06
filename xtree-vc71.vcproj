@@ -318,6 +318,9 @@
 				RelativePath=".\include\xtree\xtree_sax_fwd.hpp">
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\xtree.doxyfile">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

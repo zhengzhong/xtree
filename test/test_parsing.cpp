@@ -2,12 +2,14 @@
 // Created by ZHENG Zhong on 2011-03-16.
 //
 
+#include "xtree_test_utils.hpp"
+
 #ifdef _MSC_VER
 #  pragma warning(push)
-#  pragma warning(disable: 4127)
+#  pragma warning(disable: 4127 4511 4512)
 #endif
 
-#include <boost/test/auto_unit_test.hpp>
+#include <boost/lexical_cast.hpp>
 
 #ifdef _MSC_VER
 #  pragma warning(pop)
@@ -25,22 +27,21 @@
 
 BOOST_AUTO_TEST_CASE(test_parse_string)
 {
-    std::cout << "test_parse_string\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<?xml version='1.0' encoding='UTF-8'?>"
-        "<!--one-->"
-        "<root>two</root>"
-        "<?processing-instructions three?>"
-        "<!--four-->"
+        "<!--0-->"
+        "<root>1</root>"
+        "<?processing-instructions 2?>"
+        "<!--3-->"
     ;
-    const std::pair<xtree::node_t, std::string> EXPECTED_NODES[] = {
-        std::make_pair(xtree::comment_node, "one"),
-        std::make_pair(xtree::element_node, "two"),
-        std::make_pair(xtree::xml_pi_node, "three"),
-        std::make_pair(xtree::comment_node, "four"),
+    const xtree::node_t TYPES[] = {
+        xtree::comment_node,
+        xtree::element_node,
+        xtree::xml_pi_node,
+        xtree::comment_node,
     };
-    const unsigned int MAX_SIZE = sizeof(EXPECTED_NODES)
-                                / sizeof(const std::pair<xtree::node_t, std::string>);
+    const unsigned int MAX_SIZE = sizeof(TYPES) / sizeof(const xtree::node_t);
 
     try
     {
@@ -54,8 +55,8 @@ BOOST_AUTO_TEST_CASE(test_parse_string)
         for (xtree::child_iterator i = children.begin(); i != children.end(); ++i, ++index)
         {
             BOOST_REQUIRE(index < MAX_SIZE);
-            BOOST_CHECK_EQUAL(i->type(), EXPECTED_NODES[index].first);
-            BOOST_CHECK_EQUAL(i->content(), EXPECTED_NODES[index].second);
+            BOOST_CHECK_EQUAL(i->type(), TYPES[index]);
+            BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
         }
     }
     catch (const xtree::dom_error& ex)
@@ -70,7 +71,7 @@ BOOST_AUTO_TEST_CASE(test_parse_string)
 
 BOOST_AUTO_TEST_CASE(test_parse_bad_xml)
 {
-    std::cout << "test_parse_bad_xml\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML[] = {
         "<root><bad element/></root>",  // invalid element tag.
         "<root a='A1' b='B' a='A2'/>",  // attributes with the same name.

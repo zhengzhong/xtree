@@ -2,12 +2,13 @@
 // Created by ZHENG Zhong on 2011-03-18.
 //
 
+#include "xtree_test_utils.hpp"
+
 #ifdef _MSC_VER
 #  pragma warning(push)
 #  pragma warning(disable: 4127 4511 4512)
 #endif
 
-#include <boost/test/auto_unit_test.hpp>
 #include <boost/lexical_cast.hpp>
 
 #ifdef _MSC_VER
@@ -17,7 +18,6 @@
 #include <xtree/xtree.hpp>
 
 #include <iterator>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <utility>
@@ -28,7 +28,7 @@
 
 BOOST_AUTO_TEST_CASE(test_subelement_iterator)
 {
-    std::cout << "test_subelement_iterator\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root>"
         "<item>one</item>two"
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator)
 
 BOOST_AUTO_TEST_CASE(test_subelement_iterator_conversion)
 {
-    std::cout << "test_subelement_iterator_conversion\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root><item/><item/></root>";
     try
     {
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator_conversion)
 
 BOOST_AUTO_TEST_CASE(test_subelement_iterator_errors)
 {
-    std::cout << "test_subelement_iterator_errors\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root><item/><item/></root>";
     try
     {
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator_errors)
 
 BOOST_AUTO_TEST_CASE(test_df_element_iterator)
 {
-    std::cout << "test_df_element_iterator\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<root>"
         "  <e0>"
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(test_df_element_iterator)
 
 BOOST_AUTO_TEST_CASE(test_df_element_iterator_errors)
 {
-    std::cout << "test_df_element_iterator_errors\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root><item><item/></item><item/></root>";
     try
     {

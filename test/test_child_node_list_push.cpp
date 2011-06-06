@@ -2,12 +2,13 @@
 // Created by ZHENG Zhong on 2011-05-09.
 //
 
+#include "xtree_test_utils.hpp"
+
 #ifdef _MSC_VER
 #  pragma warning(push)
 #  pragma warning(disable: 4127 4511 4512)
 #endif
 
-#include <boost/test/auto_unit_test.hpp>
 #include <boost/lexical_cast.hpp>
 
 #ifdef _MSC_VER
@@ -16,7 +17,6 @@
 
 #include <xtree/xtree.hpp>
 
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -26,7 +26,7 @@
 
 BOOST_AUTO_TEST_CASE(test_child_node_list_push_elements)
 {
-    std::cout << "test_child_node_list_push_elements\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root/>";
     try
     {
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(test_child_node_list_push_elements)
 
 BOOST_AUTO_TEST_CASE(test_child_node_list_push_bad_element)
 {
-    std::cout << "test_child_node_list_push_bad_element\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root/>";
     try
     {
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(test_child_node_list_push_bad_element)
 
 BOOST_AUTO_TEST_CASE(test_child_node_list_push_texts)
 {
-    std::cout << "test_child_node_list_push_texts\n";
+    XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root/>";
     try
     {

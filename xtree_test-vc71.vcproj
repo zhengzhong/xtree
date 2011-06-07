@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL;BOOST_ALL_NO_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				WarningLevel="4"
@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_ALL_NO_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				WarningLevel="4"/>
 			<Tool
@@ -109,7 +109,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL;XTREE_STATIC_LIB;BOOST_ALL_NO_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL;XTREE_STATIC_LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				WarningLevel="4"
@@ -155,7 +155,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;XTREE_STATIC_LIB;BOOST_ALL_NO_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;XTREE_STATIC_LIB"
 				RuntimeLibrary="2"
 				WarningLevel="4"/>
 			<Tool
@@ -191,6 +191,9 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{7C66C338-367C-4F7B-8ACA-AB755FE7C1B9}"
+			Name="xtree-vc71"/>
 	</References>
 	<Files>
 		<Filter

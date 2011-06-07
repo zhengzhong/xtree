@@ -4,7 +4,12 @@
 
 #include "xtree_test_utils.hpp"
 
-#ifdef XTREE_MSVC
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#  define XTREE_TEST_WIN32
+#endif
+
+
+#ifdef _MSC_VER
 #  pragma warning(push)
 #  pragma warning(disable: 4127 4512 4702)
 #endif
@@ -13,11 +18,11 @@
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_array.hpp>
 
-#ifdef XTREE_MSVC
+#ifdef _MSC_VER
 #  pragma warning(pop)
 #endif
 
-#ifdef XTREE_WIN32
+#ifdef XTREE_TEST_WIN32
 #  include <windows.h>
 #endif
 
@@ -41,7 +46,7 @@ namespace test_utils {
         };
 
 
-#ifdef XTREE_WIN32  // windows platform ............................................................
+#ifdef XTREE_TEST_WIN32  // windows platform .......................................................
 
 
         std::string file_sep_()

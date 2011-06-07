@@ -5,16 +5,15 @@
 #ifndef XTREE_XTREE_TEST_UTILS_20110316__
 #define XTREE_XTREE_TEST_UTILS_20110316__
 
-#include <xtree/config.hpp>
 
-#ifdef XTREE_MSVC
+#ifdef _MSC_VER
 #  pragma warning(push)
 #  pragma warning(disable: 4127 4512 4702)
 #endif
 
 #include <boost/test/auto_unit_test.hpp>
 
-#ifdef XTREE_MSVC
+#ifdef _MSC_VER
 #  pragma warning(pop)
 #endif
 

@@ -23,16 +23,14 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL;BOOST_ALL_NO_LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
 				WarningLevel="4"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libboost_unit_test_framework-mt-gd.lib"
 				OutputFile="$(OutDir)/xtree_test-vc71-d.exe"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(BOOST_LIB)&quot;"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
 				SubSystem="1"
@@ -69,15 +67,13 @@
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;BOOST_ALL_NO_LIB"
 				RuntimeLibrary="2"
-				RuntimeTypeInfo="TRUE"
 				WarningLevel="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libboost_unit_test_framework-mt.lib"
 				OutputFile="$(OutDir)/xtree_test-vc71.exe"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(BOOST_LIB)&quot;"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -116,17 +112,14 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL;XTREE_STATIC_LIB;BOOST_ALL_NO_LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
 				WarningLevel="4"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libboost_unit_test_framework-mt-gd.lib"
 				OutputFile="$(OutDir)/xtree_test-static-vc71-d.exe"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(BOOST_LIB)&quot;;&quot;$(LIBXML2_LIB)&quot;;&quot;$(ICONV_LIB)&quot;;&quot;$(ZLIB_LIB)&quot;"
-				IgnoreDefaultLibraryNames=""
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(LIBXML2_LIB)&quot;;&quot;$(ICONV_LIB)&quot;;&quot;$(ZLIB_LIB)&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
 				SubSystem="1"
@@ -163,15 +156,13 @@
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;XTREE_STATIC_LIB;BOOST_ALL_NO_LIB"
 				RuntimeLibrary="2"
-				RuntimeTypeInfo="TRUE"
 				WarningLevel="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libboost_unit_test_framework-mt.lib"
 				OutputFile="$(OutDir)/xtree_test-static-vc71.exe"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(BOOST_LIB)&quot;;&quot;$(ICONV_LIB)&quot;;&quot;$(LIBXML2_LIB)&quot;;&quot;$(ZLIB_LIB)&quot;"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(LIBXML2_LIB)&quot;;&quot;$(ICONV_LIB)&quot;;&quot;$(ZLIB_LIB)&quot;"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -205,6 +196,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\test\boost_unit_test_framework.cpp">
+			</File>
 			<File
 				RelativePath=".\test\test_child_node_list.cpp">
 			</File>

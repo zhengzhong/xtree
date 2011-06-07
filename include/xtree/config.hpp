@@ -21,11 +21,11 @@
 #ifdef _MSC_VER
 #  define XTREE_MSVC _MSC_VER
 #  if (XTREE_MSVC == 1310)
-#    define XTREE_MSVC_VERSION "vc71"
+#    define XTREE_MSVC_VERSION_STR "vc71"
 #  elif (XTREE_MSVC == 1400)
-#    define XTREE_MSVC_VERSION "vc80"
+#    define XTREE_MSVC_VERSION_STR "vc80"
 #  elif (XTREE_MSVC == 1500)
-#    define XTREE_MSVC_VERSION "vc90"
+#    define XTREE_MSVC_VERSION_STR "vc90"
 #  endif
 #endif  // _MSC_VER
 
@@ -77,10 +77,10 @@
 //
 
 #ifndef XTREE_SHARED_LIB
-#  define LIBXML_STATIC
-#  define LIBXSLT_STATIC
-#  define LIBEXSLT_STATIC
-#  define XMLSEC_STATIC
+#  define LIBXML_STATIC   1
+#  define LIBXSLT_STATIC  1
+#  define LIBEXSLT_STATIC 1
+#  define XMLSEC_STATIC   1
 #endif
 
 

@@ -120,6 +120,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/xtree_test-static-vc71-d.exe"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(LIBXML2_LIB)&quot;;&quot;$(ICONV_LIB)&quot;;&quot;$(ZLIB_LIB)&quot;"
+				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
 				SubSystem="1"

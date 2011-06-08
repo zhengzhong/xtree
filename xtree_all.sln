@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xtree_test-vc71", "xtree_te
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xtree_examples-vc71", "xtree_examples-vc71.vcproj", "{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -31,6 +35,14 @@ Global
 		{DCA9E5C8-C84C-4DF7-993A-1955C5EAFF55}.StaticDebug.Build.0 = StaticDebug|Win32
 		{DCA9E5C8-C84C-4DF7-993A-1955C5EAFF55}.StaticRelease.ActiveCfg = StaticRelease|Win32
 		{DCA9E5C8-C84C-4DF7-993A-1955C5EAFF55}.StaticRelease.Build.0 = StaticRelease|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.Debug.ActiveCfg = Debug|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.Debug.Build.0 = Debug|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.Release.ActiveCfg = Release|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.Release.Build.0 = Release|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.StaticDebug.ActiveCfg = StaticDebug|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.StaticDebug.Build.0 = StaticDebug|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.StaticRelease.ActiveCfg = StaticRelease|Win32
+		{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}.StaticRelease.Build.0 = StaticRelease|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -1,0 +1,30 @@
+//
+// Created by ZHENG Zhong on 2011-06-08.
+//
+
+/**
+
+\page tutorials_overview  Tutorials Overview
+
+
+\section header_files  Header Files
+
+Before using xtree, you need to include the appropriate header file(s) into your source code.
+The xtree project provides the following header files:
+
+<b><code>xtree/xtree.hpp</code></b>
+
+This header file contains the xtree classes and functions. Typically this is the only header file
+that you need to pull into your source code.
+
+<b><code>xtree/xtree_fwd.hpp</code></b>
+
+This header file contains forward declarations of the xtree components.
+
+<b><code>xtree/auto_link.hpp</code></b>
+
+This header file will activate auto-linking to the appropriate xtree library.
+
+
+*/
+

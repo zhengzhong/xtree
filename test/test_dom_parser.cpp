@@ -25,21 +25,20 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_parse_string)
+BOOST_AUTO_TEST_CASE(test_dom_parse_string)
 {
     XTREE_LOG_TEST_NAME;
+
     const char* TEST_XML =
         "<?xml version='1.0' encoding='UTF-8'?>"
-        "<!--0-->"
-        "<root>1</root>"
-        "<?processing-instructions 2?>"
-        "<!--3-->"
+        "<?processing-instructions 0?>"
+        "<!--1-->"
+        "<root>2</root>"
     ;
     const xtree::node_t TYPES[] = {
-        xtree::comment_node,
-        xtree::element_node,
         xtree::xml_pi_node,
-        xtree::comment_node,
+            xtree::comment_node,
+            xtree::element_node,
     };
     const unsigned int MAX_SIZE = sizeof(TYPES) / sizeof(const xtree::node_t);
 
@@ -50,6 +49,7 @@ BOOST_AUTO_TEST_CASE(test_parse_string)
         BOOST_CHECK_EQUAL(doc->version(), "1.0");
         BOOST_CHECK_EQUAL(doc->encoding(), "UTF-8");
         BOOST_CHECK_EQUAL(doc->root()->name(), "root");
+
         xtree::child_node_list& children = doc->children();
         unsigned int index = 0;
         for (xtree::child_iterator i = children.begin(); i != children.end(); ++i, ++index)
@@ -58,6 +58,10 @@ BOOST_AUTO_TEST_CASE(test_parse_string)
             BOOST_CHECK_EQUAL(i->type(), TYPES[index]);
             BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
         }
+
+        xtree::element_ptr root = doc->root();
+        BOOST_CHECK_EQUAL(root->name(), "root");
+        BOOST_CHECK_EQUAL(root->content(), "2");
     }
     catch (const xtree::dom_error& ex)
     {
@@ -69,9 +73,10 @@ BOOST_AUTO_TEST_CASE(test_parse_string)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_parse_bad_xml)
+BOOST_AUTO_TEST_CASE(test_dom_parse_bad_xml)
 {
     XTREE_LOG_TEST_NAME;
+
     const char* TEST_XML[] = {
         "<root><bad element/></root>",  // invalid element tag.
         "<root a='A1' b='B' a='A2'/>",  // attributes with the same name.

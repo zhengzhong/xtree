@@ -1,0 +1,63 @@
+//
+// Created by ZHENG Zhong on 2011-06-08.
+//
+
+/**
+
+\page dom_parser_example  Parsing XML into a DOM Document
+\dontinclude dom_parser_example.hpp
+
+Imagine that we have the following XML:
+
+\skip  dom_parse_string_example: xml-string-begin
+\until dom_parse_string_example: xml-string-end
+
+To parse the XML string into a DOM document object, use xtree::parse_string (alternatively, you can
+use the function xtree::parse_file to parse an XML file):
+
+\skip  dom_parse_string_example: parse-string-begin
+\until dom_parse_string_example: parse-string-end
+
+Note that the function xtree::parse_string returns a pointer to the xtree::document object.
+It is up to the caller to free the pointer. So it is a good practice to put the pointer into a
+smart pointer (std::auto_ptr<xtree::document> in the example).
+
+Then you can use the xtree::document object to access information about the XML document:
+
+\skip  dom_parse_string_example: access-document-info-begin
+\until dom_parse_string_example: access-document-info-end
+
+In the above XML string, the document contains three child nodes: a processing instruction,
+a comment and a subelement. You can access the document's children like this:
+
+\skip  dom_parse_string_example: access-children-begin
+\until dom_parse_string_example: access-children-end
+
+You can also get the root element directly from the document:
+
+\skip  dom_parse_string_example: access-root-begin
+\until dom_parse_string_example: access-root-end
+
+Note that the returned xtree::element_ptr is a pointer to the root element. The resource of
+this pointer is managed by the document object itself. It will be freed when the document is freed.
+You do not need to delete it (in fact, you cannot delete it).
+
+If you pass a non-well-formed XML string to xtree::parse_string, you'll get an xtree::dom_error
+exception. Following code snippet tests various non-well-formed XML strings:
+
+\skip  dom_parse_bad_xml_example: xml-string-begin
+\until dom_parse_bad_xml_example: xml-string-end
+
+Trying to parsing such strings will raise exceptions:
+
+\skip  dom_parse_bad_xml_example: parse-string-begin
+\until dom_parse_bad_xml_example: parse-string-end
+
+
+\section example_source  Full source code of this example:
+
+\include dom_parser_example.hpp
+
+
+*/
+

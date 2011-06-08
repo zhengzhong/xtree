@@ -1,9 +1,63 @@
-/** \mainpage xtree - a C++ wrapper for libxml2
+/**
 
- <b>xtree</b> is a C++ wrapper for the popular <a href="http://xmlsoft.org/">libxml2</a> XML parser
- library. Though libxml2 is famous for its high performance and compliance to standard
- specifications, its C API is quite difficult to use. Built on top of libxml2, xtree provides an
- easy-to-use, STL-like API for accessing and manipulating the underlying DOM tree.
+\mainpage xtree - a C++ wrapper for libxml2
 
- */
+<b>xtree</b> is a C++ wrapper for the popular <a href="http://xmlsoft.org/">libxml2</a> XML parser
+library. Though libxml2 is famous for its high performance and compliance to standard
+specifications, its C API is quite difficult to use. Built on top of libxml2, xtree provides an
+easy-to-use, STL-like API for accessing and manipulating the underlying DOM tree.
+
+The source code of xtree is kept under Git at
+<a href="http://github.com/zhengzhong/xtree">http://github.com/zhengzhong/xtree</a>.
+You can connect to the xtree Git repository here:
+
+\verbatim
+  git clone git://github.com/zhengzhong/xtree.git
+\endverbatim
+
+
+\section building_xtree  Building xtree
+
+To build xtree, you need to download some required packages first, including:
+
+- <a href="http://xmlsoft.org/">libxml2</a> and its dependencies (zlib and iconv) :
+  windows binaries can be found at
+  <a href="http://www.zlatkovic.com/libxml.en.html">http://www.zlatkovic.com/libxml.en.html</a>
+- <a href="http://www.boost.org/">boost C++ libraries</a> (boost test framework and boost lexical
+  cast) : required by xtree unit tests.
+
+The xtree project contains following project files for Visual C++ 7.1 (2003):
+
+- <code>xtree-vc71.vcproj</code> : xtree library project file.
+- <code>xtree_test-vc71.vcproj</code> : xtree unit tests project file.
+- <code>xtree_all.sln</code> : solution file containing the above projects.
+
+The xtree project files use following variables to locate required packages:
+
+- <code>LIBXML2_INC</code>, <code>LIBXML2_LIB</code> and <code>LIBXML2_BIN</code> for libxml2.
+- <code>ICONV_INC</code>, <code>ICONV_LIB</code> and <code>ICONV_BIN</code> for iconv.
+- <code>ZLIB_INC</code>, <code>ZLIB_LIB</code> and <code>ZLIB_BIN</code> for zlib.
+- <code>BOOST_INC</code> for boost test library.
+
+where <code><i>XXX</i>_INC</code> should point to the include directory, <code><i>XXX</i>_LIB</code>
+should point to the library directory, and <code><i>XXX</i>_BIN</code> should point to the binary
+directory.
+
+You can change these settings in xtree's project files, or set environment variables accordingly.
+
+To run the test cases for xtree's dynamic library, you'll also need to add <code>LIBXML2_BIN</code>,
+<code>ICONV_BIN</code> and <code>ZLIB_BIN</code> to your <code>PATH</code>.
+
+The following packages have been tested:
+
+- libxml2 2.6.24 , iconv 1.9.2 , zlib 1.2.3
+- libxml2 2.7.7  , iconv 1.9.2 , zlib 1.2.5
+
+
+\section tutorials  Tutorials
+
+- \subpage tutorials_overview
+- \subpage dom_parser_example
+
+*/
 

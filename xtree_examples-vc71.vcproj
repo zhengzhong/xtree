@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="xtree_test-vc71"
-	ProjectGUID="{DCA9E5C8-C84C-4DF7-993A-1955C5EAFF55}"
+	Name="xtree_examples-vc71"
+	ProjectGUID="{890BA724-3F0C-43A7-99C9-9AC4FB41C65A}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -29,7 +29,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/xtree_test-vc71-d.exe"
+				OutputFile="$(OutDir)/xtree_examples-vc71-d.exe"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
@@ -64,7 +64,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				WarningLevel="4"/>
@@ -72,7 +72,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/xtree_test-vc71.exe"
+				OutputFile="$(OutDir)/xtree_examples-vc71.exe"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -108,7 +108,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;XTREE_TEST_DETAIL;XTREE_STATIC_LIB"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -118,7 +118,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/xtree_test-static-vc71-d.exe"
+				OutputFile="$(OutDir)/xtree_examples-static-vc71-d.exe"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(LIBXML2_LIB)&quot;;&quot;$(ICONV_LIB)&quot;;&quot;$(ZLIB_LIB)&quot;"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="TRUE"
@@ -154,7 +154,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)test&quot;;&quot;$(ProjectDir)include&quot;;&quot;$(BOOST_INC)&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;XTREE_STATIC_LIB"
 				RuntimeLibrary="2"
 				WarningLevel="4"/>
@@ -162,7 +162,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/xtree_test-static-vc71.exe"
+				OutputFile="$(OutDir)/xtree_examples-static-vc71.exe"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(LIBXML2_LIB)&quot;;&quot;$(ICONV_LIB)&quot;;&quot;$(ZLIB_LIB)&quot;"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -201,55 +201,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\test\boost_unit_test_framework.cpp">
+				RelativePath=".\examples\examples_auto_link.cpp">
 			</File>
 			<File
-				RelativePath=".\test\test_child_node_list.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_child_node_list_push.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_document.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_document_select.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_dom_parser.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_dummy.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_element.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_element_iterator.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_element_select.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_get_attributes.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_node_cast.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_sax_parsing.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_set_attributes.cpp">
-			</File>
-			<File
-				RelativePath=".\test\xtree_auto_link.cpp">
-			</File>
-			<File
-				RelativePath=".\test\xtree_test_main.cpp">
-			</File>
-			<File
-				RelativePath=".\test\xtree_test_utils.cpp">
+				RelativePath=".\examples\examples_main.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -257,7 +212,17 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\test\xtree_test_utils.hpp">
+				RelativePath=".\examples\dom_parser_example.hpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Documentation Files"
+			Filter="">
+			<File
+				RelativePath=".\docs\dom_parser_example.txt">
+			</File>
+			<File
+				RelativePath=".\docs\tutorials_overview.txt">
 			</File>
 		</Filter>
 	</Files>

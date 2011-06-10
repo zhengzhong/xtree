@@ -29,8 +29,14 @@ namespace xtree {
         friend class basic_element_iterator;
 
         typedef basic_element_iterator<Element, Mover>  this_type;
-
+        typedef std::iterator<std::bidirectional_iterator_tag, Element>  base_type;
         typedef Mover  mover_type;
+
+    public:
+
+        typedef typename base_type::value_type  value_type;
+        typedef typename base_type::pointer     pointer;
+        typedef typename base_type::reference   reference;
 
     public:
 

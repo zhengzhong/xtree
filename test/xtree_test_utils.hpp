@@ -6,6 +6,9 @@
 #define XTREE_XTREE_TEST_UTILS_20110316__
 
 
+#include <limits.h>  // workaround for g++: http://svn.boost.org/trac/boost/ticket/4468
+
+
 #ifdef _MSC_VER
 #  pragma warning(push)
 #  pragma warning(disable: 4127 4512 4702)

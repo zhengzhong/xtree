@@ -42,7 +42,15 @@ namespace xtree {
         template<class U>
         friend class basic_node_iterator;
 
-        typedef basic_node_iterator<T> this_type;
+        typedef basic_node_iterator<T>  this_type;
+
+        typedef std::iterator<std::bidirectional_iterator_tag, T>  base_type;
+
+    public:
+
+        typedef typename base_type::value_type  value_type;
+        typedef typename base_type::pointer     pointer;
+        typedef typename base_type::reference   reference;
 
     public:
 

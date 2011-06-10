@@ -3,7 +3,8 @@
 #
 
 .hg/
-_build/
+tmp/
+dist/
 
 ~*
 *.bak

@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)_build\"
-			IntermediateDirectory="$(ProjectDir)_build\$(ProjectName)\$(ConfigurationName)\"
+			OutputDirectory="$(ProjectDir)dist\"
+			IntermediateDirectory="$(ProjectDir)tmp\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -58,8 +58,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ProjectDir)_build\"
-			IntermediateDirectory="$(ProjectDir)_build\$(ProjectName)\$(ConfigurationName)\"
+			OutputDirectory="$(ProjectDir)dist\"
+			IntermediateDirectory="$(ProjectDir)tmp\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -101,8 +101,8 @@
 		</Configuration>
 		<Configuration
 			Name="StaticDebug|Win32"
-			OutputDirectory="$(ProjectDir)_build\"
-			IntermediateDirectory="$(ProjectDir)_build\$(ProjectName)\$(ConfigurationName)\"
+			OutputDirectory="$(ProjectDir)dist\"
+			IntermediateDirectory="$(ProjectDir)tmp\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -148,8 +148,8 @@
 		</Configuration>
 		<Configuration
 			Name="StaticRelease|Win32"
-			OutputDirectory="$(ProjectDir)_build\"
-			IntermediateDirectory="$(ProjectDir)_build\$(ProjectName)\$(ConfigurationName)\"
+			OutputDirectory="$(ProjectDir)dist\"
+			IntermediateDirectory="$(ProjectDir)tmp\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool

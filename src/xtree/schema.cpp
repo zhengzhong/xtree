@@ -15,6 +15,7 @@
 #include <libxml/xmlschemas.h>
 
 #include <cassert>
+#include <cstring>
 #include <functional>
 #include <string>
 

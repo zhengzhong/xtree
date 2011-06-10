@@ -53,6 +53,12 @@ The following packages have been tested:
 - libxml2 2.6.24 , iconv 1.9.2 , zlib 1.2.3
 - libxml2 2.7.7  , iconv 1.9.2 , zlib 1.2.5
 
+The following compilers have been tested:
+
+- Visual C++: 7.1 (2003), 9.0 (2008)
+- GCC/MinGW: 4.5.2
+- GCC/MinGW, c++0x mode: 4.5.2
+
 
 \section tutorials  Tutorials
 

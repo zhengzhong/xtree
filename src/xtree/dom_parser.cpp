@@ -12,8 +12,9 @@
 #include "xtree/exceptions.hpp"
 #include "xtree/libxml2_utility.hpp"
 
-#include <libxml/globals.h>         // used by set_global_variables
-#include <libxml/parserInternals.h> // for xmlCreateFileParserCtxt()
+#include <libxml/globals.h>          // used by set_global_variables
+#include <libxml/nanohttp.h>         // for xmlNanoHTTPScanProxy()
+#include <libxml/parserInternals.h>  // for xmlCreateFileParserCtxt()
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
@@ -120,15 +121,15 @@ namespace xtree {
             assert(context != 0 && "init_dom_parser_context() called with null parser context");
             if (context->sax != 0)
             {
-                context->sax->warning = 0; // Shut up for all warnings.
-                context->sax->error   = 0; // Shut up for all errors.
+                context->sax->warning = 0;  // Shut up for all warnings.
+                context->sax->error   = 0;  // Shut up for all errors.
             }
-            context->_private         = 0; // Private data: not so necessary at this moment.
-            context->linenumbers      = 1; // Set line number (this is the default anyway).
-            context->validate         = 0; // Turn off validation.
-            context->vctxt.error      = 0; // Clear the validator's error callback.
-            context->vctxt.warning    = 0; // Clear the validator's warning callback.
-            context->replaceEntities  = 1; // Replace entities automatically.
+            context->_private         = 0;  // Private data: not so necessary at this moment.
+            context->linenumbers      = 1;  // Set line number (this is the default anyway).
+            context->validate         = 0;  // Turn off validation.
+            context->vctxt.error      = 0;  // Clear the validator's error callback.
+            context->vctxt.warning    = 0;  // Clear the validator's warning callback.
+            context->replaceEntities  = 1;  // Replace entities automatically.
         }
 
 
@@ -138,18 +139,13 @@ namespace xtree {
         //! \throws dom_error if the XML is not well-formed, or if an error occurs.
         xmlDoc* parse_in_context(xmlParserCtxt* context)
         {
-
             assert(context != 0 && "parse_in_context() called with null parser context");
-
             // Overwrite global configuration value.
             set_global_variables global_variables;
-
             // Initialize libxml2 parser context.
             init_dom_parser_context(context);
-
             // Parse xml document under the parser context.
             xmlParseDocument(context);
-
             // Check the return value.
             if (!context->wellFormed)
             {
@@ -166,7 +162,6 @@ namespace xtree {
                 // We should not be here: if (errNo == 0), myDoc should be available.
                 throw dom_error("fail to parse xml using libxml2: null document returned");
             }
-
             // Return the xml document parsed.
             xmlDoc* xdoc = context->myDoc;
             context->myDoc = 0;
@@ -196,9 +191,7 @@ namespace xtree {
 
     document* dom_parser::parse_file(const std::string& file_name)
     {
-
         set_global_variables global_variables;
-
         // Create a libxml2 parser context for parsing the xml file.
         dom_parser_context_wrapper context( xmlCreateFileParserCtxt(file_name.c_str()) );
         if (context.get() == 0)
@@ -212,7 +205,6 @@ namespace xtree {
             const xmlChar* dir = detail::to_xml_chars(xmlParserGetDirectory(file_name.c_str()));
             context.get()->directory = const_cast<char*>(detail::to_chars(xmlStrdup(dir)));
         }
-
         // Parse xml file under the constructed parser context.
         xmlDoc* px = parse_in_context(context.get());
         assert(px != 0);
@@ -222,9 +214,7 @@ namespace xtree {
 
     document* dom_parser::parse_string(const char* str)
     {
-
         set_global_variables global_variables;
-
         // Create a libxml2 parser context for parsing the xml string.
         if (str == 0)
         {
@@ -240,8 +230,33 @@ namespace xtree {
         {
             throw dom_error("Fail to parse xml string: unable to create libxml2 parser context");
         }
-
         // Parse xml string under the constructed parser context.
+        xmlDoc* px = parse_in_context(context.get());
+        assert(px != 0);
+        return new document(px);
+    }
+
+
+    document* dom_parser::parse_url(const std::string& url, const std::string& proxy)
+    {
+        set_global_variables global_variables;
+        // Create a libxml2 parser context for parsing the xml string.
+        if (url.empty())
+        {
+            throw dom_error("fail to parse remote xml: URL is null");
+        }
+        // Set the HTTP proxy if provided.
+        if (!proxy.empty())
+        {
+            xmlNanoHTTPScanProxy(proxy.c_str());
+        }
+        // Create a libxml2 parser context for parsing the URL.
+        dom_parser_context_wrapper context( xmlCreateURLParserCtxt(url.c_str(), 0) );
+        if (context.get() == 0)
+        {
+            throw dom_error("Fail to parse remote xml: unable to create libxml2 parser context");
+        }
+        // Parse remote xml under the constructed parser context.
         xmlDoc* px = parse_in_context(context.get());
         assert(px != 0);
         return new document(px);

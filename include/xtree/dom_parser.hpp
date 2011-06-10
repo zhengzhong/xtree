@@ -41,12 +41,19 @@ namespace xtree {
         document* parse_file(const std::string& file_name);
 
         //! Parses a memory block containing XML to a document object. It is up to the user to free
-        //! the document object. It is recommended that user use the RAII idiom and put the
-        //! returned document into a smart pointer (std::auto_ptr or boost::shared_ptr).
+        //! the document object.
         //! \param str  the string containing XML to parse.
         //! \return a document object parsed from the string, never null.
         //! \throws dom_error  if fail to parse the XML string.
         document* parse_string(char const* str);
+
+        //! Parses an XML file from a given URL to a document object. It is up to the user to free
+        //! the document object.
+        //! \param url    the URL to the XML file to parse.
+        //! \param proxy  the HTTP proxy. Default to an empty string (no proxy).
+        //! \return a document object parsed from the remote XML, never null.
+        //! \throws dom_error  if fail to parse the remote XML.
+        document* parse_url(const std::string& url, const std::string& proxy = std::string());
 
     private:
 
@@ -72,6 +79,14 @@ namespace xtree {
     {
         dom_parser p;
         return p.parse_string(str);
+    }
+
+
+    //! Parses an XML file from a URL to a document object.
+    inline document* parse_url(const std::string& url, const std::string& proxy = std::string())
+    {
+        dom_parser p;
+        return p.parse_url(url, proxy);
     }
 
 

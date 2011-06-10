@@ -73,6 +73,47 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_string)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+BOOST_AUTO_TEST_CASE(test_dom_parse_url)
+{
+    XTREE_LOG_TEST_NAME;
+
+    const std::string URL = "http://www.w3schools.com/xml/note.xml";
+    const std::string PROXY = std::string();  // no proxy.
+    const std::pair<std::string, std::string> SUBELEMENTS[] = {
+        std::make_pair("to", "Tove"),
+        std::make_pair("from", "Jani"),
+        std::make_pair("heading", "Reminder"),
+        std::make_pair("body", "Don't forget me this weekend!"),
+    };
+    const unsigned int MAX_SIZE = sizeof(SUBELEMENTS)
+                                / sizeof(const std::pair<std::string, std::string>);
+
+    try
+    {
+        std::auto_ptr<xtree::document> doc(xtree::parse_url(URL, PROXY));
+        BOOST_REQUIRE(!doc->empty());
+        xtree::element_ptr root = doc->root();
+        BOOST_CHECK_EQUAL(root->name(), "note");
+
+        unsigned int index = 0;
+        for (xtree::child_iterator i = root->begin(); i != root->end(); ++i, ++index)
+        {
+            BOOST_REQUIRE(index < MAX_SIZE);
+            BOOST_CHECK_EQUAL(i->type(), xtree::element_node);
+            BOOST_CHECK_EQUAL(i->name(), SUBELEMENTS[index].first);
+            BOOST_CHECK_EQUAL(i->content(), SUBELEMENTS[index].second);
+        }
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 BOOST_AUTO_TEST_CASE(test_dom_parse_bad_xml)
 {
     XTREE_LOG_TEST_NAME;

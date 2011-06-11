@@ -7,3 +7,5 @@ Though libxml2 is famous for its high performance and compliance to standard spe
 its C API is quite difficult to use. Built on top of libxml2, xtree provides an easy-to-use,
 STL-like API for accessing and manipulating the underlying DOM tree.
 
+View `xtree documentations <http://zhengzhong.github.com/xtree>`_
+

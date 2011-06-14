@@ -1,0 +1,17 @@
+#
+# Created by ZHENG Zhong on 2011-02-09.
+#
+
+.hg/
+tmp/
+dist/
+
+*~
+*~.*
+*.bak
+*.ccscc
+*.ncb
+*.suo
+*.cmd
+*.py[co]
+

@@ -1,10 +1,12 @@
 #
 # Created by ZHENG Zhong on 2011-03-21.
 #
-# Doxyfile for xtree project. To generate documentations:
+# Doxyfile for xtree project. To generate documentations::
 #
 # > cd path/to/xtree/codebase
 # > doxygen xtree.doxyfile
+#
+# Tested with `doxygen <http://www.stack.nl/~dimitri/doxygen/>`_ 1.7.4.
 #
 
 PROJECT_NAME = xtree

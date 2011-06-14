@@ -366,6 +366,9 @@
 				RelativePath=".\include\xtree\types.hpp">
 			</File>
 			<File
+				RelativePath=".\include\xtree\unused_arg.hpp">
+			</File>
+			<File
 				RelativePath=".\include\xtree\user_config.hpp">
 			</File>
 			<File

@@ -4,6 +4,11 @@
 
 #include "xtree_test_utils.hpp"
 
+#if defined(__GNUC__) && __GNUC__ >= 4
+#  pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
+
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #  define XTREE_TEST_WIN32
 #endif

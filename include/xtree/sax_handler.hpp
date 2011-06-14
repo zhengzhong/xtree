@@ -8,6 +8,7 @@
 #include "xtree/config.hpp"
 #include "xtree/sax_attribute_list.hpp"
 #include "xtree/sax_error_info.hpp"
+#include "xtree/unused_arg.hpp"
 
 #include <string>
 
@@ -56,7 +57,9 @@ namespace xtree {
         //! \param uri     the namespace URI the prefix is mapped to.
         virtual void begin_xmlns(const std::string& prefix, const std::string& uri)
         {
-            prefix; uri;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(prefix);
+            detail::unused_arg(uri);
         }
 
         //! Receives notification of the end of a namespace scope.
@@ -64,7 +67,8 @@ namespace xtree {
         //!                default mapping scope ends.
         virtual void end_xmlns(const std::string& prefix)
         {
-            prefix;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(prefix);
         }
 
         //! Receives notification of the beginning of an element.
@@ -77,7 +81,11 @@ namespace xtree {
                                    const std::string& qname,
                                    const sax_attribute_list& attrs)
         {
-            name; uri; qname; attrs;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(name);
+            detail::unused_arg(uri);
+            detail::unused_arg(qname);
+            detail::unused_arg(attrs);
         }
 
         //! Receives notification of the end of an element.
@@ -88,27 +96,37 @@ namespace xtree {
                                  const std::string& uri,
                                  const std::string& qname)
         {
-            name; uri; qname;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(name);
+            detail::unused_arg(uri);
+            detail::unused_arg(qname);
         }
 
         virtual void characters(const char* chars, int length)
         {
-            chars; length;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(chars);
+            detail::unused_arg(length);
         }
 
         virtual void cdata_block(const char* chars, int length)
         {
-            chars; length; // Do nothing.
+            // Do nothing.
+            detail::unused_arg(chars);
+            detail::unused_arg(length);
         }
 
         virtual void ignorable_whitespace(const char* chars, int length)
         {
-            chars; length; // Do nothing.
+            // Do nothing.
+            detail::unused_arg(chars);
+            detail::unused_arg(length);
         }
 
         virtual void comment(const char* chars)
         {
-            chars;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(chars);
         }
 
     };
@@ -125,17 +143,20 @@ namespace xtree {
 
         virtual void warning(const sax_error_info& info)
         {
-            info;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(info);
         }
 
         virtual void error(const sax_error_info& info)
         {
-            info;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(info);
         }
 
         virtual void fatal(const sax_error_info& info)
         {
-            info;  // Do nothing.
+            // Do nothing.
+            detail::unused_arg(info);
         }
 
     };

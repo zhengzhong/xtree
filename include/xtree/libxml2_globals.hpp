@@ -12,11 +12,12 @@
 #include <libxml/tree.h>
 
 
+//! \cond DEV
+
 #ifdef XTREE_MSVC
 #  pragma warning(push)
 #  pragma warning(disable: 4511 4512)  // noncopyable warnings
 #endif
-
 
 namespace xtree {
 namespace detail {
@@ -59,6 +60,8 @@ namespace detail {
 #ifdef XTREE_MSVC
 #  pragma warning(pop)  // noncopyable warnings
 #endif
+
+//! \endcond
 
 
 #endif  // XTREE_LIBXML2_GLOBALS_HPP_20091126__

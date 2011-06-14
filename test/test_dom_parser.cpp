@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_bad_xml)
         "<root>hello",                  // unclosed tag.
         "<root>hello</Root>",           // unmatched begin/close tag.
     };
-    for (int i = 0; i < sizeof(TEST_XML) / sizeof(const char*); ++i)
+    for (unsigned int i = 0; i < sizeof(TEST_XML) / sizeof(const char*); ++i)
     {
         BOOST_CHECK_THROW(xtree::parse_string(TEST_XML[i]), xtree::dom_error);
     }

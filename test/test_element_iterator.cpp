@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator)
         std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
         xtree::element_ptr root = doc->root();
         // Test iterating from begin to end.
-        int index = 0;
+        unsigned int index = 0;
         xtree::subelement_iterator last;
         xtree::subelement_iterator end;
         for (xtree::subelement_iterator i(root); i != end; ++i, ++index)
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator)
         // Test iterating in reversed order.
         xtree::subelement_iterator begin(root);
         xtree::subelement_iterator current = last;
-        for (index = MAX_SIZE - 1; index >= 0; --index)
+        for (index = MAX_SIZE - 1; static_cast<int>(index) >= 0; --index)
         {
             BOOST_CHECK_EQUAL(current->type(), xtree::element_node);
             BOOST_CHECK_EQUAL(current->name(), "item");
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(test_subelement_iterator)
             }
             else
             {
-                BOOST_CHECK_EQUAL(index, 0);
+                BOOST_CHECK_EQUAL(index, 0U);
             }
         }
         // Test iterator category with std::advance().

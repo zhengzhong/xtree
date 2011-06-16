@@ -20,7 +20,6 @@
 #include "xtree/comment.hpp"
 #include "xtree/xml_pi.hpp"
 
-#include "xtree/child_node_list.hpp"
 #include "xtree/attribute_map.hpp"
 
 #include "xtree/xpath_context.hpp"

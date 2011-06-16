@@ -128,6 +128,9 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
 {
     XTREE_LOG_TEST_NAME;
@@ -137,7 +140,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
         "  <item>1</item>"
         "  <item>2</item>"
         "</root>"
-        ;
+    ;
     try
     {
         std::auto_ptr<xtree::document> doc1(xtree::parse_string(TEST_XML));
@@ -157,4 +160,79 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
     }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_document_push)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        doc->push_front_comment("front comment");
+        doc->push_front_xml_pi("target", "front");
+        doc->push_back_comment("back comment");
+        doc->push_back_xml_pi("target", "back");
+        BOOST_CHECK_EQUAL(doc->size(), 5U);
+        unsigned int index = 0;
+        for (xtree::child_iterator i = doc->begin(); i != doc->end(); ++i, ++index)
+        {
+            if (index == 0U || index == 4U)
+            {
+                BOOST_CHECK_EQUAL(i->type(), xtree::xml_pi_node);
+                BOOST_CHECK_EQUAL(i->name(), "target");
+                BOOST_CHECK_EQUAL(i->content(), (index == 0U ? "front" : "back"));
+            }
+            else if (index == 1U || index == 3U)
+            {
+                BOOST_CHECK_EQUAL(i->type(), xtree::comment_node);
+                BOOST_CHECK_EQUAL(i->content(), (index == 1U ? "front comment" : "back comment"));
+            }
+            else
+            {
+                BOOST_CHECK_EQUAL(i->type(), xtree::element_node);
+                BOOST_CHECK_EQUAL(i->name(), "root");
+            }
+        }
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_document_push_failure)
+{
+    XTREE_LOG_TEST_NAME;
+    try
+    {
+        std::auto_ptr<xtree::document> doc(new xtree::document());
+        BOOST_CHECK_EQUAL(doc->empty(), true);
+        BOOST_CHECK_EQUAL(doc->size(), 0U);
+        // We should be able to push the very first element.
+        doc->push_back_element("root");
+        BOOST_CHECK_EQUAL(doc->size(), 1U);
+        // But pushing the second element should fail.
+        BOOST_CHECK_THROW(doc->push_back_element("root2"), xtree::bad_dom_operation);
+        BOOST_CHECK_EQUAL(doc->size(), 1U);
+        // After clearing the document, we can start again.
+        doc->clear();
+        BOOST_CHECK_EQUAL(doc->empty(), true);
+        BOOST_CHECK_EQUAL(doc->size(), 0U);
+        doc->push_front_element("root");
+        BOOST_CHECK_EQUAL(doc->size(), 1U);
+        BOOST_CHECK_THROW(doc->push_front_element("root2"), xtree::bad_dom_operation);
+        BOOST_CHECK_EQUAL(doc->size(), 1U);
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
 

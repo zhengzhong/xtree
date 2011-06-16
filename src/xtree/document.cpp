@@ -182,28 +182,6 @@ namespace xtree {
     }
 
 
-    bool document::empty() const
-    {
-        return ( root_() == 0 );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // children access
-    //
-
-    child_node_list& document::children()
-    {
-        return children_;
-    }
-
-
-    const child_node_list& document::children() const
-    {
-        return children_;
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // root element access
     //
@@ -279,31 +257,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers
+    // root element
     //
-
-
-    void document::clear()
-    {
-        // TODO: Free all orphan nodes.
-        for (std::vector<node*>::iterator i = orphans_.begin(); i != orphans_.end(); ++i) {
-            if (is_my_orphan_(*i))
-            {
-                node* orphan = *i;
-                xmlUnlinkNode(orphan->raw());
-                xmlFreeNode(orphan->raw());
-            }
-        }
-        // Remove and free the root element from the document.
-        xmlNode* root = xmlDocGetRootElement(raw());
-        if (root != 0)
-        {
-            xmlUnlinkNode(root);
-            xmlFreeNode(root);
-        }
-        // TODO: Reset the namespace prefix counter.
-        // counter_ = 0;
-    }
 
 
     basic_node_ptr<element> document::reset_root(const std::string& name)
@@ -345,6 +300,29 @@ namespace xtree {
     basic_node_ptr<element> document::reset_root_adopt(element& elem)
     {
         return reset_root_(elem.raw());
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // children
+    //
+
+
+    void document::clear()
+    {
+        // TODO: Free all orphan nodes.
+        for (std::vector<node*>::iterator i = orphans_.begin(); i != orphans_.end(); ++i) {
+            if (is_my_orphan_(*i))
+            {
+                node* orphan = *i;
+                xmlUnlinkNode(orphan->raw());
+                xmlFreeNode(orphan->raw());
+            }
+        }
+        // Free the DOM tree.
+        children_.clear();
+        // TODO: Reset the namespace prefix counter.
+        // counter_ = 0;
     }
 
 

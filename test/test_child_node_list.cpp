@@ -24,6 +24,9 @@
 
 namespace {
 
+
+    //! This function tests the iterator category (required by std::advance).
+    //! The Iterator template parameter could be child_iterator or const_child_iterator.
     template<typename Iterator>
     void do_test_advance(Iterator begin)
     {
@@ -34,6 +37,7 @@ namespace {
         BOOST_CHECK_EQUAL(begin->content(), "1");
     }
 
+
 }  // anonymous namespace
 
 
@@ -42,6 +46,8 @@ namespace {
 
 namespace {
 
+
+    //! The Iterator template parameter could be child_iterator or const_child_iterator.
     template<typename Iterator>
     void do_test_iterate_subelements(Iterator begin, Iterator end)
     {
@@ -53,6 +59,7 @@ namespace {
             BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
         }
     }
+
 
 }  // anonymous namespace
 
@@ -76,9 +83,6 @@ BOOST_AUTO_TEST_CASE(test_iterate_subelements)
         xtree::element_ptr root = doc->root();
         do_test_iterate_subelements<xtree::child_iterator>(root->begin(), root->end());
         do_test_iterate_subelements<xtree::const_child_iterator>(root->begin(), root->end());
-        xtree::child_node_list& children = root->children();
-        do_test_iterate_subelements<xtree::child_iterator>(children.begin(), children.end());
-        do_test_iterate_subelements<xtree::const_child_iterator>(children.begin(), children.end());
         do_test_advance<xtree::child_iterator>(root->begin());
         do_test_advance<xtree::const_child_iterator>(root->begin());
     }
@@ -94,6 +98,8 @@ BOOST_AUTO_TEST_CASE(test_iterate_subelements)
 
 namespace {
 
+
+    //! The Iterator template parameter could be child_iterator or const_child_iterator.
     template<typename Iterator>
     void do_test_iterate_child_nodes(Iterator begin,
                                      Iterator end,
@@ -116,6 +122,7 @@ namespace {
             }
         }
     }
+
 
 }  // anonymous namespace
 
@@ -152,13 +159,6 @@ BOOST_AUTO_TEST_CASE(test_iterate_child_nodes)
         );
         do_test_iterate_child_nodes<xtree::const_child_iterator>(
             root->begin(), root->end(), TYPES, MAX_SIZE
-        );
-        xtree::child_node_list& children = root->children();
-        do_test_iterate_child_nodes<xtree::child_iterator>(
-            children.begin(), children.end(), TYPES, MAX_SIZE
-        );
-        do_test_iterate_child_nodes<xtree::const_child_iterator>(
-            children.begin(), children.end(), TYPES, MAX_SIZE
         );
         do_test_advance<xtree::child_iterator>(root->begin());
         do_test_advance<xtree::const_child_iterator>(root->begin());

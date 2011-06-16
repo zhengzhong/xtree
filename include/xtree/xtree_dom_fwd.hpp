@@ -31,7 +31,6 @@ namespace xtree {
     class XTREE_DECL comment;
     class XTREE_DECL xml_pi;
 
-    class XTREE_DECL child_node_list;
     class XTREE_DECL attribute_map;
 
     class XTREE_DECL xpath_context;

@@ -208,18 +208,18 @@ namespace xtree {
     }
 
 
-    void child_node_list::push_back_clone(const child_node& child)
+    basic_node_ptr<child_node> child_node_list::push_back_clone(const child_node& child)
     {
         xmlNode* px = child.clone_raw(true);  // recursive clone: never returns null.
         px = insert_(end(), px);
-        assert(px != 0);
+        return basic_node_ptr<child_node>( static_cast<child_node*>(px->_private) );
     }
 
 
-    void child_node_list::push_back_adopt(child_node& child)
+    basic_node_ptr<child_node> child_node_list::push_back_adopt(child_node& child)
     {
         xmlNode* px = insert_(end(), child.raw());
-        assert(px != 0);
+        return basic_node_ptr<child_node>( static_cast<child_node*>(px->_private) );
     }
 
 
@@ -276,18 +276,18 @@ namespace xtree {
     }
 
 
-    void child_node_list::push_front_clone(const child_node& child)
+    basic_node_ptr<child_node> child_node_list::push_front_clone(const child_node& child)
     {
         xmlNode* px = child.clone_raw(true);  // recursive clone: never returns null.
         px = insert_(begin(), px);
-        assert(px != 0);
+        return basic_node_ptr<child_node>( static_cast<child_node*>(px->_private) );
     }
 
 
-    void child_node_list::push_front_adopt(child_node& child)
+    basic_node_ptr<child_node> child_node_list::push_front_adopt(child_node& child)
     {
         xmlNode* px = insert_(begin(), child.raw());
-        assert(px != 0);
+        return basic_node_ptr<child_node>( static_cast<child_node*>(px->_private) );
     }
 
 

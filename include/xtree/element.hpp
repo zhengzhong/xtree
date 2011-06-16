@@ -177,23 +177,6 @@ namespace xtree {
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children
-        //
-
-        //! Returns a reference to the child node list of this element.
-        //! \return a reference to the child node list of this element.
-        child_node_list& children()
-        {
-            return children_;
-        }
-
-        //! Const version of children().
-        const child_node_list& children() const
-        {
-            return children_;
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
         // children: capacity
         //
 
@@ -294,14 +277,14 @@ namespace xtree {
             return children_.push_back_xml_pi(target, value);
         }
 
-        void push_back_clone(const child_node& child)
+        basic_node_ptr<child_node> push_back_clone(const child_node& child)
         {
-            children_.push_back_clone(child);
+            return children_.push_back_clone(child);
         }
 
-        void push_back_adopt(child_node& child)
+        basic_node_ptr<child_node> push_back_adopt(child_node& child)
         {
-            children_.push_back_adopt(child);
+            return children_.push_back_adopt(child);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,14 +321,14 @@ namespace xtree {
             return children_.push_front_xml_pi(target, value);
         }
 
-        void push_front_clone(const child_node& child)
+        basic_node_ptr<child_node> push_front_clone(const child_node& child)
         {
-            children_.push_front_clone(child);
+            return children_.push_front_clone(child);
         }
 
-        void push_front_adopt(child_node& child)
+        basic_node_ptr<child_node> push_front_adopt(child_node& child)
         {
-            children_.push_front_adopt(child);
+            return children_.push_front_adopt(child);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

@@ -32,13 +32,12 @@ void dom_parse_string_example()
         // dom_parse_string_example: access-document-info-begin
         std::cout << "XML document "
                   << "(version " << doc->version() << ", encoding: " << doc->encoding() << ") "
-                  << "contains " << doc->children().size() << " children.\n";
+                  << "contains " << doc->size() << " children.\n";
         // dom_parse_string_example: access-document-info-end
 
         // dom_parse_string_example: access-children-begin
-        xtree::child_node_list& children = doc->children();
         unsigned int index = 0;
-        for (xtree::child_iterator i = children.begin(); i != children.end(); ++i, ++index)
+        for (xtree::child_iterator i = doc->begin(); i != doc->end(); ++i, ++index)
         {
             std::cout << "content of child #" << index
                       << " (type ID: " << i->type() << ") : "

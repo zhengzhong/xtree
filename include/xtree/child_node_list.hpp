@@ -166,12 +166,14 @@ namespace xtree {
         //! Pushes a child node to the end of this list. This function makes a recursive clone of
         //! the child node and pushes the cloned one.
         //! \param child  the child node to clone and push.
-        void push_back_clone(const child_node& child);
+        //! \return pointer to the pushed child node.
+        basic_node_ptr<child_node> push_back_clone(const child_node& child);
 
         //! Pushes a child node to the end of this list. This function takes the ownership of the
         //! child node from the source DOM tree.
         //! \param child  the child node to push.
-        void push_back_adopt(child_node& child);
+        //! \return pointer to the pushed child node.
+        basic_node_ptr<child_node> push_back_adopt(child_node& child);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // modifiers/push_front
@@ -220,12 +222,14 @@ namespace xtree {
         //! Pushes a child node to the front of this list. This function makes a recursive clone of
         //! the child node and pushes the cloned one.
         //! \param child  the child node to clone and push.
-        void push_front_clone(const child_node& child);
+        //! \return pointer to the pushed child node.
+        basic_node_ptr<child_node> push_front_clone(const child_node& child);
 
         //! Pushes a child node to the front of this list. This function takes the ownership of the
         //! child node from the source DOM tree.
         //! \param child  the child node to push.
-        void push_front_adopt(child_node& child);
+        //! \return pointer to the pushed child node.
+        basic_node_ptr<child_node> push_front_adopt(child_node& child);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // modifiers/pop

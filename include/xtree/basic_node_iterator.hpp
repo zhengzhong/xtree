@@ -30,8 +30,6 @@ namespace xtree {
     //! basic_node_ptr<const T> T::prev_sibling() const;
     //! \endcode
     //!
-    //! This class template is used by child_node_list and attribute_map.
-    //!
     //! This class template is implemented in term of basic_node_ptr class template.
     //!
     //! \todo TODO: decreasing an end iterator may result in undefined behavior, fix this.

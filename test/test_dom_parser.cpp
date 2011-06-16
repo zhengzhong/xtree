@@ -50,9 +50,8 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_string)
         BOOST_CHECK_EQUAL(doc->encoding(), "UTF-8");
         BOOST_CHECK_EQUAL(doc->root()->name(), "root");
 
-        xtree::child_node_list& children = doc->children();
         unsigned int index = 0;
-        for (xtree::child_iterator i = children.begin(); i != children.end(); ++i, ++index)
+        for (xtree::child_iterator i = doc->begin(); i != doc->end(); ++i, ++index)
         {
             BOOST_REQUIRE(index < MAX_SIZE);
             BOOST_CHECK_EQUAL(i->type(), TYPES[index]);

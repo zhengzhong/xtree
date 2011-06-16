@@ -204,6 +204,9 @@
 				RelativePath=".\test\boost_unit_test_framework.cpp">
 			</File>
 			<File
+				RelativePath=".\test\test_bad_value.cpp">
+			</File>
+			<File
 				RelativePath=".\test\test_child_node_list.cpp">
 			</File>
 			<File

@@ -7,7 +7,9 @@
 #endif
 
 #include "xtree/attribute_map.hpp"
+#include "xtree/exceptions.hpp"
 #include "xtree/element.hpp"
+#include "xtree/check_rules.hpp"
 #include "xtree/libxml2_utility.hpp"
 
 #include <libxml/tree.h>
@@ -109,6 +111,7 @@ namespace xtree {
                             const std::string& uri,
                             const std::string& value)
     {
+        detail::check_name(name);
         attribute* existing = const_cast<attribute*>(find_attr_(name, uri));
         if (existing == 0)
         {
@@ -168,6 +171,7 @@ namespace xtree {
                                                                      const std::string& uri,
                                                                      const std::string& value)
     {
+        detail::check_name(name);
         attribute* existing = const_cast<attribute*>(find_attr_(name, uri));
         if (existing == 0)
         {
@@ -198,6 +202,7 @@ namespace xtree {
                                                     const std::string& uri,
                                                     const std::string& value)
     {
+        detail::check_name(name);
         std::pair<basic_node_ptr<attribute>, bool> inserted = insert(name, uri, value);
         if (!inserted.second)
         {

@@ -288,6 +288,9 @@
 				RelativePath=".\include\xtree\basic_node_ptr.hpp">
 			</File>
 			<File
+				RelativePath=".\include\xtree\check_rules.hpp">
+			</File>
+			<File
 				RelativePath=".\include\xtree\child_node.hpp">
 			</File>
 			<File

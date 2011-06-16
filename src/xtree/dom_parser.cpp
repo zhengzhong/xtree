@@ -19,9 +19,11 @@
 #include <libxml/tree.h>
 
 #include <cassert>
+#include <cstdlib>  // for std::getenv()
 #include <cstring>
 #include <string>
 
+#include <iostream> // DEBUG:
 
 namespace xtree {
 
@@ -245,10 +247,14 @@ namespace xtree {
         {
             throw dom_error("fail to parse remote xml: URL is null");
         }
-        // Set the HTTP proxy if provided.
+        // Set the HTTP proxy URL.
         if (!proxy.empty())
         {
             xmlNanoHTTPScanProxy(proxy.c_str());
+        }
+        else
+        {
+            xmlNanoHTTPScanProxy(std::getenv("http_proxy"));
         }
         // Create a libxml2 parser context for parsing the URL.
         dom_parser_context_wrapper context( xmlCreateURLParserCtxt(url.c_str(), 0) );

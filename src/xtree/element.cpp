@@ -14,6 +14,7 @@
 #include "xtree/xpath_result.hpp"
 #include "xtree/node_set.hpp"
 
+#include "xtree/check_rules.hpp"
 #include "xtree/libxml2_utility.hpp"
 
 #include <cassert>
@@ -138,7 +139,7 @@ namespace xtree {
 
     void element::set_name(const std::string& name)
     {
-        // TODO: check if the name is a valid name.
+        detail::check_name(name);
         xmlNodeSetName(raw(), detail::to_xml_chars(name.c_str()));
     }
 

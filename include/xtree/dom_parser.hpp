@@ -50,7 +50,7 @@ namespace xtree {
         //! Parses an XML file from a given URL to a document object. It is up to the user to free
         //! the document object.
         //! \param url    the URL to the XML file to parse.
-        //! \param proxy  the HTTP proxy. Default to an empty string (no proxy).
+        //! \param proxy  the HTTP proxy. If empty (by default), use system variable "http_proxy".
         //! \return a document object parsed from the remote XML, never null.
         //! \throws dom_error  if fail to parse the remote XML.
         document* parse_url(const std::string& url, const std::string& proxy = std::string());

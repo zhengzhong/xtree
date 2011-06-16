@@ -7,6 +7,8 @@
 #endif
 
 #include "xtree/attribute.hpp"
+#include "xtree/exceptions.hpp"
+#include "xtree/check_rules.hpp"
 #include "xtree/libxml2_utility.hpp"
 
 #include <libxml/tree.h>
@@ -81,7 +83,7 @@ namespace xtree {
 
     void attribute::set_name(const std::string& name)
     {
-        // TODO: check if the name is valid.
+        detail::check_name(name);
         xmlNodeSetName(raw(), detail::to_xml_chars(name.c_str()));
     }
 

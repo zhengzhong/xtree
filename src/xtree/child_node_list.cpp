@@ -7,12 +7,15 @@
 #endif
 
 #include "xtree/child_node_list.hpp"
+#include "xtree/exceptions.hpp"
+
 #include "xtree/element.hpp"
 #include "xtree/text.hpp"
 #include "xtree/comment.hpp"
 #include "xtree/xml_pi.hpp"
+
+#include "xtree/check_rules.hpp"
 #include "xtree/libxml2_utility.hpp"
-#include "xtree/exceptions.hpp"
 
 #include <libxml/tree.h>
 #include <string>
@@ -162,6 +165,7 @@ namespace xtree {
 
     basic_node_ptr<element> child_node_list::push_back_element(const std::string& name)
     {
+        detail::check_name(name);
         return push_back_element(name, std::string());
     }
 
@@ -169,6 +173,7 @@ namespace xtree {
     basic_node_ptr<element> child_node_list::push_back_element(const std::string& name,
                                                                const std::string& uri)
     {
+        detail::check_name(name);
         xmlNode* px = insert_(end(), create_element_(name));
         basic_node_ptr<element> pushed( static_cast<element*>(px->_private) );
         if (!uri.empty())

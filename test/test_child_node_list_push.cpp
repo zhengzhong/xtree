@@ -51,24 +51,6 @@ BOOST_AUTO_TEST_CASE(test_child_node_list_push_elements)
 }
 
 
-BOOST_AUTO_TEST_CASE(test_child_node_list_push_bad_element)
-{
-    XTREE_LOG_TEST_NAME;
-    const char* TEST_XML = "<root/>";
-    try
-    {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
-        xtree::element_ptr root = doc->root();
-        BOOST_REQUIRE(root != 0);
-        BOOST_CHECK_THROW(root->push_back_element("bad tag"), xtree::bad_dom_operation);
-    }
-    catch (const xtree::dom_error& ex)
-    {
-        BOOST_ERROR(ex.what());
-    }
-}
-
-
 BOOST_AUTO_TEST_CASE(test_child_node_list_push_texts)
 {
     XTREE_LOG_TEST_NAME;

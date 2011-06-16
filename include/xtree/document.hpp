@@ -428,7 +428,7 @@ namespace xtree {
         //! Inserts a new element to the position of the document's child node list.
         //! \param pos   the position before which the element is to be inserted.
         //! \param name  the local name of the element to insert.
-        //! \param name  the namespace URI of the element to insert.
+        //! \param uri   the namespace URI of the element to insert.
         //! \return a pointer to the new element.
         //! \throws bad_dom_operation  if the document already has a root element.
         basic_node_ptr<element> insert_element(child_iterator pos,
@@ -455,8 +455,9 @@ namespace xtree {
         }
 
         //! Inserts a new processing instruction to the position of the document's child node list.
-        //! \param pos   the position before which the processing instruction is to be inserted.
-        //! \param value  the content of the processing instruction to insert.
+        //! \param pos     the position before which the processing instruction is to be inserted.
+        //! \param target  the target of the processing instruction to insert.
+        //! \param value   the content of the processing instruction to insert.
         //! \return a pointer to the new processing instruction.
         basic_node_ptr<xml_pi> insert_xml_pi(child_iterator pos,
                                              const std::string& target,
@@ -466,6 +467,7 @@ namespace xtree {
         }
 
         //! Clones and inserts the child node to the position of the document's child node list.
+        //! \param pos    the position before which the child node is to be inserted.
         //! \param child  the child node to clone and insert.
         //! \return an iterator to the inserted child node.
         //! \throws bad_dom_operation  if the child node cannot be inserted (e.g. the child node is
@@ -488,6 +490,7 @@ namespace xtree {
         }
 
         //! Adopts and inserts the child node to the position of the document's child node list.
+        //! \param pos    the position before which the child node is to be inserted.
         //! \param child  the child node to clone and insert.
         //! \return an iterator to the inserted child node.
         //! \throws bad_dom_operation  if the child node cannot be inserted (e.g. the child node is

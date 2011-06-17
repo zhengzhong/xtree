@@ -207,12 +207,6 @@
 				RelativePath=".\test\test_bad_value.cpp">
 			</File>
 			<File
-				RelativePath=".\test\test_child_node_list.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_child_node_list_push.cpp">
-			</File>
-			<File
 				RelativePath=".\test\test_document.cpp">
 			</File>
 			<File
@@ -228,7 +222,13 @@
 				RelativePath=".\test\test_element.cpp">
 			</File>
 			<File
+				RelativePath=".\test\test_element_child_iterator.cpp">
+			</File>
+			<File
 				RelativePath=".\test\test_element_iterator.cpp">
+			</File>
+			<File
+				RelativePath=".\test\test_element_push.cpp">
 			</File>
 			<File
 				RelativePath=".\test\test_element_select.cpp">

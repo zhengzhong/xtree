@@ -49,7 +49,7 @@ namespace {
 
     //! The Iterator template parameter could be child_iterator or const_child_iterator.
     template<typename Iterator>
-    void do_test_iterate_subelements(Iterator begin, Iterator end)
+    void do_test_child_iterater(Iterator begin, Iterator end)
     {
         unsigned int index = 0;
         for (Iterator i = begin; i != end; ++i, ++index)
@@ -64,7 +64,7 @@ namespace {
 }  // anonymous namespace
 
 
-BOOST_AUTO_TEST_CASE(test_iterate_subelements)
+BOOST_AUTO_TEST_CASE(test_element_child_iterater)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
@@ -81,8 +81,8 @@ BOOST_AUTO_TEST_CASE(test_iterate_subelements)
     {
         std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
         xtree::element_ptr root = doc->root();
-        do_test_iterate_subelements<xtree::child_iterator>(root->begin(), root->end());
-        do_test_iterate_subelements<xtree::const_child_iterator>(root->begin(), root->end());
+        do_test_child_iterater<xtree::child_iterator>(root->begin(), root->end());
+        do_test_child_iterater<xtree::const_child_iterator>(root->begin(), root->end());
         do_test_advance<xtree::child_iterator>(root->begin());
         do_test_advance<xtree::const_child_iterator>(root->begin());
     }
@@ -101,10 +101,10 @@ namespace {
 
     //! The Iterator template parameter could be child_iterator or const_child_iterator.
     template<typename Iterator>
-    void do_test_iterate_child_nodes(Iterator begin,
-                                     Iterator end,
-                                     const xtree::node_t types[],
-                                     unsigned int max_size)
+    void do_test_child_iterater_2(Iterator begin,
+                                  Iterator end,
+                                  const xtree::node_t types[],
+                                  unsigned int max_size)
     {
         unsigned int index = 0;
         for (Iterator i = begin; i != end; ++i, ++index)
@@ -127,7 +127,7 @@ namespace {
 }  // anonymous namespace
 
 
-BOOST_AUTO_TEST_CASE(test_iterate_child_nodes)
+BOOST_AUTO_TEST_CASE(test_element_child_iterater_2)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
@@ -154,10 +154,10 @@ BOOST_AUTO_TEST_CASE(test_iterate_child_nodes)
     {
         std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
         xtree::element_ptr root = doc->root();
-        do_test_iterate_child_nodes<xtree::child_iterator>(
+        do_test_child_iterater_2<xtree::child_iterator>(
             root->begin(), root->end(), TYPES, MAX_SIZE
         );
-        do_test_iterate_child_nodes<xtree::const_child_iterator>(
+        do_test_child_iterater_2<xtree::const_child_iterator>(
             root->begin(), root->end(), TYPES, MAX_SIZE
         );
         do_test_advance<xtree::child_iterator>(root->begin());

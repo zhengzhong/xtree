@@ -24,7 +24,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_child_node_list_push_elements)
+BOOST_AUTO_TEST_CASE(test_element_push_elements)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root/>";
@@ -51,7 +51,10 @@ BOOST_AUTO_TEST_CASE(test_child_node_list_push_elements)
 }
 
 
-BOOST_AUTO_TEST_CASE(test_child_node_list_push_texts)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_element_push_texts)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root/>";

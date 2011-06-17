@@ -502,6 +502,8 @@ namespace xtree {
     {
         // Check the ownership of the iterator parameter.
         check_ownership_(pos);
+        // Unlink the child node from its previous owner.
+        xmlUnlinkNode(child);
         // Insert the libxml2 node to this child node list.
         xmlNode* px = 0;
         if (pos == end())
@@ -522,6 +524,8 @@ namespace xtree {
             }
             else
             {
+                // Error: free the unlinked child node before throwing.
+                xmlFreeNode(child);
                 assert(! "child_node_list should have an owner document or element");
                 throw internal_dom_error("fail to find owner of this child_node_list");
             }

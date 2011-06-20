@@ -46,19 +46,21 @@ namespace xtree {
     //
 
 
-    typedef basic_node_ptr<node>             node_ptr;
-    typedef basic_node_ptr<attribute>        attribute_ptr;  
-    typedef basic_node_ptr<element>          element_ptr;
-    typedef basic_node_ptr<text>             text_ptr;
-    typedef basic_node_ptr<comment>          comment_ptr;
-    typedef basic_node_ptr<xml_pi>           xml_pi_ptr;
+    typedef basic_node_ptr<node>              node_ptr;
+    typedef basic_node_ptr<attribute>         attribute_ptr;
+    typedef basic_node_ptr<child_node>        child_node_ptr;
+    typedef basic_node_ptr<element>           element_ptr;
+    typedef basic_node_ptr<text>              text_ptr;
+    typedef basic_node_ptr<comment>           comment_ptr;
+    typedef basic_node_ptr<xml_pi>            xml_pi_ptr;
 
-    typedef basic_node_ptr<const node>       const_node_ptr;
-    typedef basic_node_ptr<const attribute>  const_attribute_ptr;
-    typedef basic_node_ptr<const element>    const_element_ptr;
-    typedef basic_node_ptr<const text>       const_text_ptr;
-    typedef basic_node_ptr<const comment>    const_comment_ptr;
-    typedef basic_node_ptr<const xml_pi>     const_xml_pi_ptr;
+    typedef basic_node_ptr<const node>        const_node_ptr;
+    typedef basic_node_ptr<const attribute>   const_attribute_ptr;
+    typedef basic_node_ptr<const child_node>  const_child_node_ptr;
+    typedef basic_node_ptr<const element>     const_element_ptr;
+    typedef basic_node_ptr<const text>        const_text_ptr;
+    typedef basic_node_ptr<const comment>     const_comment_ptr;
+    typedef basic_node_ptr<const xml_pi>      const_xml_pi_ptr;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

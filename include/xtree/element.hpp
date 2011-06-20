@@ -388,9 +388,19 @@ namespace xtree {
             return children_.insert_clone(pos, child);
         }
 
+        void insert_clone(child_iterator pos, const_child_iterator first, const_child_iterator last)
+        {
+            return children_.insert_clone(pos, first, last);
+        }
+
         child_iterator insert_adopt(child_iterator pos, child_node& child)
         {
             return children_.insert_adopt(pos, child);
+        }
+
+        void insert_adopt(child_iterator pos, child_iterator first, child_iterator last)
+        {
+            return children_.insert_adopt(pos, first, last);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

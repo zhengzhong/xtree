@@ -171,6 +171,38 @@ namespace xtree {
         }
 
 
+        //! This class manages the HTTP proxy of libxml2's NanoHTTP library. It initializes
+        //! NanoHTTP at construction, and cleans up NanoHTTP at destruction.
+        class set_nano_http_proxy
+        {
+
+        public:
+
+            //! Constructs an object to set HTTP proxy and manage NanoHTTP's resource.
+            //! \param proxy  the HTTP proxy. If empty, use environment variable "http_proxy".
+            explicit set_nano_http_proxy(const std::string& proxy)
+            {
+                xmlNanoHTTPInit();
+                xmlNanoHTTPScanProxy(proxy.empty() ? std::getenv("http_proxy") : proxy.c_str());
+            }
+
+            //! Destructs the object and cleans up the resource of NanoHTTP.
+            ~set_nano_http_proxy()
+            {
+                xmlNanoHTTPCleanup();
+            }
+
+        private:
+
+            //! Non-implemented copy constructor.
+            set_nano_http_proxy(const set_nano_http_proxy&);
+
+            //! Non-implemented copy assignment.
+            set_nano_http_proxy& operator=(const set_nano_http_proxy&);
+
+        };
+
+
     }  // anonymous namespace
 
 
@@ -248,14 +280,7 @@ namespace xtree {
             throw dom_error("fail to parse remote xml: URL is null");
         }
         // Set the HTTP proxy URL.
-        if (!proxy.empty())
-        {
-            xmlNanoHTTPScanProxy(proxy.c_str());
-        }
-        else
-        {
-            xmlNanoHTTPScanProxy(std::getenv("http_proxy"));
-        }
+        set_nano_http_proxy set_proxy(proxy);
         // Create a libxml2 parser context for parsing the URL.
         dom_parser_context_wrapper context( xmlCreateURLParserCtxt(url.c_str(), 0) );
         if (context.get() == 0)

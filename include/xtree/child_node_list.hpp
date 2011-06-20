@@ -308,17 +308,35 @@ namespace xtree {
 
         //! Inserts a child node before a position of this list. This function makes a recursive
         //! clone of the child node and inserts the cloned one.
-        //! \param pos    the position before which the child_node object is to be inserted.
+        //! \param pos    the position before which the child node is to be inserted.
         //! \param child  the child node to clone and insert.
-        //! \return an iterator to the inserted child_node object.
+        //! \return an iterator to the inserted child node.
+        //! \throws bad_dom_operation  if $pos does not belong to this list.
         iterator insert_clone(iterator pos, const child_node& child);
+
+        //! Inserts a range of child nodes before a position of this list. This function makes a
+        //! recursive clone of the child nodes from the source DOM tree.
+        //! \param pos    the position before which the range of child nodes are to be inserted.
+        //! \param first  the first child node in the range.
+        //! \param last   the last (not including) child node in the range.
+        //! \throws bad_dom_operation  if $pos does not belong to this list.
+        void insert_clone(iterator pos, const_iterator first, const_iterator last);
 
         //! Inserts a child node before a position of this list. This function takes the ownership
         //! of the child node from the source DOM tree.
-        //! \param pos    the position before which the child_node object is to be inserted.
+        //! \param pos    the position before which the child node is to be inserted.
         //! \param child  the child node to insert.
+        //! \return an iterator to the inserted child node.
+        //! \throws bad_dom_operation  if $pos does not belong to this list.
         iterator insert_adopt(iterator pos, child_node& child);
 
+        //! Inserts a range of child nodes before a position of this list. This function takes the
+        //! ownership of the child nodes from the source DOM tree.
+        //! \param pos    the position before which the range of child nodes are to be inserted.
+        //! \param first  the first child node in the range.
+        //! \param last   the last (not including) child node in the range.
+        //! \throws bad_dom_operation  if $pos does not belong to this list.
+        void insert_adopt(iterator pos, iterator first, iterator last);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // modifiers/erase

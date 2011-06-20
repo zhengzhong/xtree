@@ -225,6 +225,9 @@
 				RelativePath=".\test\test_element_child_iterator.cpp">
 			</File>
 			<File
+				RelativePath=".\test\test_element_insert.cpp">
+			</File>
+			<File
 				RelativePath=".\test\test_element_iterator.cpp">
 			</File>
 			<File

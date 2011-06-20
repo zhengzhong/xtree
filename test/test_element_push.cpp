@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(test_element_push_texts)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_element_push_adopt)
+BOOST_AUTO_TEST_CASE(test_element_push_back_adopt)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root/>";
@@ -91,20 +91,67 @@ BOOST_AUTO_TEST_CASE(test_element_push_adopt)
     {
         std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
         xtree::element_ptr root = doc->root();
+        // Test push_back_adopt().
         const unsigned int MAX_SIZE = 4;
         for (unsigned int i = 0; i < MAX_SIZE; ++i)
         {
-            std::auto_ptr<xtree::document> doc2(xtree::parse_string(TEST_XML_2));
-            xtree::element_ptr root2 = doc2->root();
-            root->push_back_adopt(*root2);
-            BOOST_CHECK_EQUAL(doc2->empty(), true);
+            std::auto_ptr<xtree::document> doc_tmp(xtree::parse_string(TEST_XML_2));
+            xtree::element_ptr root_tmp = doc_tmp->root();
+            root_tmp->set_content(boost::lexical_cast<std::string>(i));
+            xtree::child_node_ptr child = root->push_back_adopt(*root_tmp);
+            BOOST_CHECK_EQUAL(doc_tmp->empty(), true);
+            BOOST_CHECK_EQUAL(child->type(), xtree::element_node);
+            BOOST_CHECK_EQUAL(child->name(), "item");
+            BOOST_CHECK_EQUAL(child->content(), boost::lexical_cast<std::string>(i));
         }
-        // At this point, all the 4 documents (doc2) should have been destroyed.
-        for (xtree::child_iterator i = root->begin(); i != root->end(); ++i)
+        // At this point, all the temporary documents should have been destroyed.
+        unsigned int index = 0;
+        for (xtree::child_iterator i = root->begin(); i != root->end(); ++i, ++index)
         {
             BOOST_CHECK_EQUAL(i->type(), xtree::element_node);
             BOOST_CHECK_EQUAL(i->name(), "item");
-            BOOST_CHECK_EQUAL(i->content(), "content");
+            BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
+        }
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_element_push_front_adopt)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root/>";
+    const char* TEST_XML_2 = "<item>content</item>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        xtree::element_ptr root = doc->root();
+        // Test push_front_adopt().
+        const unsigned int MAX_SIZE = 4;
+        for (unsigned int i = 0; i < MAX_SIZE; ++i)
+        {
+            std::auto_ptr<xtree::document> doc_tmp(xtree::parse_string(TEST_XML_2));
+            xtree::element_ptr root_tmp = doc_tmp->root();
+            root_tmp->set_content(boost::lexical_cast<std::string>(i));
+            xtree::child_node_ptr child = root->push_front_adopt(*root_tmp);
+            BOOST_CHECK_EQUAL(doc_tmp->empty(), true);
+            BOOST_CHECK_EQUAL(child->type(), xtree::element_node);
+            BOOST_CHECK_EQUAL(child->name(), "item");
+            BOOST_CHECK_EQUAL(child->content(), boost::lexical_cast<std::string>(i));
+        }
+        // At this point, all the temporary documents should have been destroyed.
+        unsigned int index = MAX_SIZE - 1;
+        for (xtree::child_iterator i = root->begin(); i != root->end(); ++i, --index)
+        {
+            BOOST_CHECK_EQUAL(i->type(), xtree::element_node);
+            BOOST_CHECK_EQUAL(i->name(), "item");
+            BOOST_CHECK_EQUAL(i->content(), boost::lexical_cast<std::string>(index));
         }
     }
     catch (const xtree::dom_error& ex)

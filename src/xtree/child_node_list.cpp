@@ -396,10 +396,33 @@ namespace xtree {
     }
 
 
+    void child_node_list::insert_clone(iterator pos, const_iterator first, const_iterator last)
+    {
+        for (const_iterator i = first; i != last; ++i)
+        {
+            xmlNode* px = i->clone_raw(true);  // recursive clone: never returns null.
+            px = insert_(pos, px);
+            pos = iterator( static_cast<child_node*>(px->_private) );
+            ++pos;
+        }
+    }
+
+
     child_node_list::iterator child_node_list::insert_adopt(iterator pos, child_node& child)
     {
         xmlNode* px = insert_(pos, child.raw());
         return iterator( static_cast<child_node*>(px->_private) );
+    }
+
+
+    void child_node_list::insert_adopt(iterator pos, iterator first, iterator last)
+    {
+        for (iterator i = first; i != last; )
+        {
+            xmlNode* px = insert_(pos, (i++)->raw());
+            pos = iterator( static_cast<child_node*>(px->_private) );
+            ++pos;
+        }
     }
 
 

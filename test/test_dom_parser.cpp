@@ -37,8 +37,8 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_string)
     ;
     const xtree::node_t TYPES[] = {
         xtree::xml_pi_node,
-            xtree::comment_node,
-            xtree::element_node,
+        xtree::comment_node,
+        xtree::element_node,
     };
     const unsigned int MAX_SIZE = sizeof(TYPES) / sizeof(const xtree::node_t);
 

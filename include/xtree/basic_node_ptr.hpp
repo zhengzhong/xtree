@@ -175,7 +175,7 @@ namespace xtree {
     //! // Add constness to pointer:
     //! basic_node_ptr<const element> ptr = static_node_cast<const element>(ptr_to_element);
     //! // Perform an up-cast:
-    //! basic_node_ptr<node> ptr = static_node_cast<element>(ptr_to_element);
+    //! basic_node_ptr<node> ptr = static_node_cast<node>(ptr_to_element);
     //! \endcode
     //!
     //! \param ptr  the pointer-to-U to cast.
@@ -217,7 +217,6 @@ namespace xtree {
     //!
     //! \param ptr  the pointer-to-U to cast.
     //! \return the resulting pointer-to-T.
-    //! \todo TODO: use library-dependent implementation.
     template<class T, class U>
     inline basic_node_ptr<T> dynamic_node_cast(const basic_node_ptr<U>& ptr)
     {

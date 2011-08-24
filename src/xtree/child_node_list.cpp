@@ -9,6 +9,7 @@
 #include "xtree/child_node_list.hpp"
 #include "xtree/exceptions.hpp"
 
+#include "xtree/document.hpp"
 #include "xtree/element.hpp"
 #include "xtree/text.hpp"
 #include "xtree/comment.hpp"
@@ -163,24 +164,20 @@ namespace xtree {
     //
 
 
-    basic_node_ptr<element> child_node_list::push_back_element(const std::string& name)
+    basic_node_ptr<element> child_node_list::push_back_element(const std::string& qname)
     {
-        detail::check_name(name);
-        return push_back_element(name, std::string());
+        detail::check_qname(qname);
+        xmlNode* px = insert_(end(), create_element_(qname));
+        return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
 
 
-    basic_node_ptr<element> child_node_list::push_back_element(const std::string& name,
+    basic_node_ptr<element> child_node_list::push_back_element(const std::string& qname,
                                                                const std::string& uri)
     {
-        detail::check_name(name);
-        xmlNode* px = insert_(end(), create_element_(name));
-        basic_node_ptr<element> pushed( static_cast<element*>(px->_private) );
-        if (!uri.empty())
-        {
-            pushed->set_uri(uri);
-        }
-        return pushed;
+        detail::check_qname(qname);
+        xmlNode* px = insert_(end(), create_element_(qname, uri));
+        return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
 
 
@@ -233,22 +230,20 @@ namespace xtree {
     //
 
 
-    basic_node_ptr<element> child_node_list::push_front_element(const std::string& name)
+    basic_node_ptr<element> child_node_list::push_front_element(const std::string& qname)
     {
-        return push_front_element(name, std::string());
+        detail::check_qname(qname);
+        xmlNode* px = insert_(begin(), create_element_(qname));
+        return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
 
 
-    basic_node_ptr<element> child_node_list::push_front_element(const std::string& name,
+    basic_node_ptr<element> child_node_list::push_front_element(const std::string& qname,
                                                                 const std::string& uri)
     {
-        xmlNode* px = insert_(begin(), create_element_(name));
-        basic_node_ptr<element> pushed( static_cast<element*>(px->_private) );
-        if (!uri.empty())
-        {
-            pushed->set_uri(uri);
-        }
-        return pushed;
+        detail::check_qname(qname);
+        xmlNode* px = insert_(begin(), create_element_(qname, uri));
+        return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
 
 
@@ -337,23 +332,21 @@ namespace xtree {
 
 
     basic_node_ptr<element> child_node_list::insert_element(iterator pos,
-                                                            const std::string& name)
+                                                            const std::string& qname)
     {
-        return insert_element(pos, name, std::string());
+        detail::check_qname(qname);
+        xmlNode* px = insert_(pos, create_element_(qname));
+        return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
 
 
     basic_node_ptr<element> child_node_list::insert_element(iterator pos,
-                                                            const std::string& name,
+                                                            const std::string& qname,
                                                             const std::string& uri)
     {
-        xmlNode* px = insert_(pos, create_element_(name));
-        basic_node_ptr<element> inserted( static_cast<element*>(px->_private) );
-        if (!uri.empty())
-        {
-            inserted->set_uri(uri);
-        }
-        return inserted;
+        detail::check_qname(qname);
+        xmlNode* px = insert_(pos, create_element_(qname, uri));
+        return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
 
 
@@ -473,6 +466,20 @@ namespace xtree {
     //
 
 
+    const document& child_node_list::doc_() const
+    {
+        xmlDoc* doc = ( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_ );
+        assert(doc != 0 && "owner document of child node list should not be null");
+        return *(static_cast<const document*>(doc->_private));
+    }
+
+
+    const element* child_node_list::owner_element_() const
+    {
+        return ( raw_elem_ != 0 ? static_cast<const element*>(raw_elem_->_private) : 0 );
+    }
+
+
     const child_node* child_node_list::first_() const
     {
         xmlNode* first = 0;
@@ -574,8 +581,48 @@ namespace xtree {
     //
 
 
-    xmlNode* child_node_list::create_element_(const std::string& name)
+    xmlNode* child_node_list::create_element_(const std::string& qname)
     {
+        // Split QName into prefix and local name.
+        std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
+        const std::string& prefix = name_pair.first;
+        const std::string& name = name_pair.second;
+        // Find xmlns by prefix.
+        xmlNs* ns = 0;
+        if (raw_elem_ != 0)
+        {
+            ns = xmlSearchNs( raw_elem_->doc,
+                              raw_elem_,
+                              prefix.empty() ? 0 : detail::to_xml_chars(prefix.c_str()) );
+        }
+        if (!prefix.empty() && ns == 0)
+        {
+            std::string what = "fail to create element " + qname
+                             + ": xmlns for prefix " + prefix + " not found";
+            throw bad_dom_operation(what);
+        }
+        // Create element under the xmlns.
+        xmlNode* px = xmlNewDocNode( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
+                                     ns,
+                                     detail::to_xml_chars(name.c_str()),
+                                     0 );
+        if (px == 0)
+        {
+            std::string what = "fail to create libxml2 element node for " + name;
+            throw internal_dom_error(what);
+        }
+        // Return the new element.
+        return px;
+    }
+
+
+    xmlNode* child_node_list::create_element_(const std::string& qname, const std::string& uri)
+    {
+        // Split QName into prefix and local name.
+        std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
+        const std::string& prefix = name_pair.first;
+        const std::string& name = name_pair.second;
+        // Create element without namespace.
         xmlNode* px = xmlNewDocNode( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
                                      0,
                                      detail::to_xml_chars(name.c_str()),
@@ -585,6 +632,18 @@ namespace xtree {
             std::string what = "fail to create libxml2 element node for " + name;
             throw internal_dom_error(what);
         }
+        // Declare XML namespace on the element, and put the element under it.
+        xmlNs* ns = xmlNewNs( px,
+                              uri.empty() ? 0 : detail::to_xml_chars(uri.c_str()),
+                              prefix.empty() ? 0 : detail::to_xml_chars(prefix.c_str()) );
+        if (ns == 0)
+        {
+            // TODO: delete the node.
+            std::string what = "fail to create libxml2 namespace for " + prefix + "=" + uri;
+            throw internal_dom_error(what);
+        }
+        xmlSetNs(px, ns);
+        // Return the new element.
         return px;
     }
 

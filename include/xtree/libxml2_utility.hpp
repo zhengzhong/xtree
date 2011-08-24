@@ -66,22 +66,33 @@ namespace detail {
         return reinterpret_cast<const xmlChar*>(chars);
     }
 
+
+    //! Splits QName into a pair of namespace prefix and local name.
+    //! \param qname  the QName to split.
+    //! \return a pair of namespace prefix and local name.
+    inline std::pair<std::string, std::string> split_qname(const std::string& qname)
+    {
+        std::string::size_type pos = qname.find_first_of(':');
+        if (pos != std::string::npos)
+        {
+            return std::make_pair(qname.substr(0, pos), qname.substr(pos + 1));
+        }
+        else
+        {
+            return std::make_pair(std::string(), qname);
+        }
+    }
+
+
     //! Splits QName into a pair of namespace prefix and local name.
     //! \param qname  the QName to split.
     //! \return a pair of namespace prefix and local name.
     inline std::pair<std::string, std::string> split_qname(const xmlChar* qname)
     {
         std::string qname_str = to_chars(qname);
-        std::string::size_type pos = qname_str.find_first_of(":");
-        if (pos == std::string::npos)
-        {
-            return std::make_pair(std::string(), qname_str);
-        }
-        else
-        {
-            return std::make_pair(qname_str.substr(0, pos), qname_str.substr(pos + 1));
-        }
+        return split_qname(qname_str);
     }
+
 
     //! Builds an error message from an error code.
     //! \param code  the error code.

@@ -252,6 +252,9 @@
 				RelativePath=".\test\test_set_attributes.cpp">
 			</File>
 			<File
+				RelativePath=".\test\test_xmlns.cpp">
+			</File>
+			<File
 				RelativePath=".\test\xtree_auto_link.cpp">
 			</File>
 			<File

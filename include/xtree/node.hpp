@@ -20,9 +20,8 @@
 namespace xtree {
 
 
-    class XTREE_DECL document;
-    class XTREE_DECL element;  // TODO: how to remove this?
-    class XTREE_DECL xpath;
+    class XTREE_DECL document;  // for accessing owner document.
+    class XTREE_DECL element;   // for accessing parent element.
 
 
     //! This class is the abstract base class representing an XML node. It is non-copyable.
@@ -61,7 +60,7 @@ namespace xtree {
         //
 
         //! Constructs an object to wrap the underlying libxml2 node object. This function should
-        //! NOT be caleld by client code.
+        //! NOT be called by client code.
         //! \param px  the underlying libxml2 node object to wrap.
         explicit node(xmlNode* px);
 
@@ -142,7 +141,7 @@ namespace xtree {
 
     public:
 
-        //! Returns the underlying libxml node. This function should NOT be called by client code.
+        //! Returns the underlying libxml2 node. This function should NOT be called by client code.
         xmlNode* raw()
         {
             assert(raw_ != 0 && "underlying libxml2 node should not be null");

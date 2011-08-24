@@ -97,11 +97,11 @@ namespace xtree {
         //! Resets the root element to this document. This function will firstly clear the document
         //! then reset the root element.
         //! \post all the original nodes within this document are invalidated.
-        //! \param name  the name of the element to reset as root.
-        //! \param uri   the namespace URI of the element to reset as root.
+        //! \param qname  the QName of the element to reset as root.
+        //! \param uri    the namespace URI of the element to reset as root.
         //! \return pointer to the new root element of this document.
         //! \throws bad_dom_operation  if $root is not an element.
-        basic_node_ptr<element> reset_root(const std::string& name, const std::string& uri);
+        basic_node_ptr<element> reset_root(const std::string& qname, const std::string& uri);
 
         //! Resets the root element to this document (the document will firstly be cleared).
         //! This function makes a recursive clone of the element and resets the cloned one as the
@@ -583,15 +583,6 @@ namespace xtree {
 
         basic_node_ptr<comment> make_comment(const std::string& value) const;
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // namespace prefix generation
-        //
-
-        //! Generates a namespace prefix which is guaranteed to be unique in the document scope.
-        //! \return a unique namespace prefix.
-        //! \todo TODO: how to generate document-scope unique namespace prefix?
-        std::string next_namespace_prefix() const;
-
     public:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -647,7 +638,6 @@ namespace xtree {
 
         xmlDoc* raw_;                         //!< Underlying libxml2 document.
         child_node_list children_;            //!< The child node list under this document.
-        mutable int counter_;                 //!< Namespace prefix counter.
         mutable std::vector<node*> orphans_;  //!< Orphans that belong to this document.
 
     };

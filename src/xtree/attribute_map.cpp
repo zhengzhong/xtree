@@ -9,6 +9,8 @@
 #include "xtree/attribute_map.hpp"
 #include "xtree/exceptions.hpp"
 #include "xtree/element.hpp"
+#include "xtree/basic_xmlns_ptr.hpp"
+#include "xtree/xmlns.hpp"
 #include "xtree/check_rules.hpp"
 #include "xtree/libxml2_utility.hpp"
 
@@ -88,34 +90,13 @@ namespace xtree {
     //
 
 
-    std::string attribute_map::get(const std::string& name) const
+    void attribute_map::set(const std::string& qname, const std::string& value)
     {
-        return get(name, std::string());
-    }
-
-
-    std::string attribute_map::get(const std::string& name, const std::string& uri) const
-    {
-        const attribute* attr = find_attr_(name, uri);
-        return (attr != 0 ? attr->value() : std::string());
-    }
-
-
-    void attribute_map::set(const std::string& name, const std::string& value)
-    {
-        set(name, std::string(), value);
-    }
-
-
-    void attribute_map::set(const std::string& name,
-                            const std::string& uri,
-                            const std::string& value)
-    {
-        detail::check_name(name);
-        attribute* existing = const_cast<attribute*>(find_attr_(name, uri));
+        detail::check_qname(qname);
+        attribute* existing = const_cast<attribute*>(find_attr_(qname));
         if (existing == 0)
         {
-            attribute* new_attribute = create_attr_(name, uri, value);
+            attribute* new_attribute = create_attr_(qname, value);
             assert(new_attribute != 0);
         }
         else
@@ -126,56 +107,18 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // find
-    //
-
-
-    attribute_map::iterator attribute_map::find(const std::string& name)
-    {
-        return iterator( const_cast<attribute*>(find_attr_(name, std::string())) );
-    }
-
-
-    attribute_map::const_iterator attribute_map::find(const std::string& name) const
-    {
-        return const_iterator( find_attr_(name, std::string()) );
-    }
-
-    attribute_map::iterator attribute_map::find(const std::string& name,
-                                                const std::string& uri)
-    {
-        return iterator( const_cast<attribute*>(find_attr_(name, uri)) );
-    }
-
-
-    attribute_map::const_iterator attribute_map::find(const std::string& name,
-                                                      const std::string& uri) const
-    {
-        return const_iterator( find_attr_(name, uri) );
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     // modifiers/insert
     //
 
 
-    std::pair<basic_node_ptr<attribute>, bool> attribute_map::insert(const std::string& name,
+    std::pair<basic_node_ptr<attribute>, bool> attribute_map::insert(const std::string& qname,
                                                                      const std::string& value)
     {
-        return insert(name, std::string(), value);
-    }
-
-
-    std::pair<basic_node_ptr<attribute>, bool> attribute_map::insert(const std::string& name,
-                                                                     const std::string& uri,
-                                                                     const std::string& value)
-    {
-        detail::check_name(name);
-        attribute* existing = const_cast<attribute*>(find_attr_(name, uri));
+        detail::check_qname(qname);
+        attribute* existing = const_cast<attribute*>(find_attr_(qname));
         if (existing == 0)
         {
-            attribute* new_attribute = create_attr_(name, uri, value);
+            attribute* new_attribute = create_attr_(qname, value);
             assert(new_attribute != 0);
             return std::make_pair(basic_node_ptr<attribute>(new_attribute), true);
         }
@@ -191,19 +134,11 @@ namespace xtree {
     //
 
 
-    basic_node_ptr<attribute> attribute_map::update(const std::string& name,
+    basic_node_ptr<attribute> attribute_map::update(const std::string& qname,
                                                     const std::string& value)
     {
-        return update(name, std::string(), value);
-    }
-
-
-    basic_node_ptr<attribute> attribute_map::update(const std::string& name,
-                                                    const std::string& uri,
-                                                    const std::string& value)
-    {
-        detail::check_name(name);
-        std::pair<basic_node_ptr<attribute>, bool> inserted = insert(name, uri, value);
+        detail::check_qname(qname);
+        std::pair<basic_node_ptr<attribute>, bool> inserted = insert(qname, value);
         if (!inserted.second)
         {
             inserted.first->set_value(value);
@@ -247,9 +182,9 @@ namespace xtree {
     }
 
 
-    size_type attribute_map::erase(const std::string& name)
+    size_type attribute_map::erase(const std::string& qname)
     {
-        iterator pos = find(name);
+        iterator pos = find(qname);
         if (pos != end())
         {
             erase(pos);
@@ -329,6 +264,22 @@ namespace xtree {
     }
 
 
+    const attribute* attribute_map::find_attr_(const std::string& qname) const
+    {
+        std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
+        const attribute* found = 0;
+        for (const xmlAttr* i = raw()->properties; found == 0 && i != 0; i = i->next)
+        {
+            const attribute* attr = static_cast<const attribute*>(i->_private);
+            if (attr->prefix() == name_pair.first && attr->name() == name_pair.second)
+            {
+                found = attr;
+            }
+        }
+        return found;
+    }
+
+
     const attribute* attribute_map::find_attr_(const std::string& name,
                                                const std::string& uri) const
     {
@@ -345,24 +296,31 @@ namespace xtree {
     }
 
 
-    attribute* attribute_map::create_attr_(const std::string& name,
-                                           const std::string& uri,
-                                           const std::string& value)
+    attribute* attribute_map::create_attr_(const std::string& qname, const std::string& value)
     {
-        // Declare the attribute's namespace URI on the owner element.
-        xmlNs* ns = 0;
-        if (!uri.empty())
+        // Find xmlns for the attribute prefix (if exists).
+        std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
+        basic_xmlns_ptr<xmlns> ns = owner().find_xmlns_by_prefix(name_pair.first);
+        // TODO: if the prefix is empty, we use null xmlns or the default one (if exists)?
+        if (!name_pair.first.empty() && ns == 0)
         {
-            ns = owner().declare_namespace_(uri);
-            assert(ns != 0);
+            std::string what = "fail to create attribute " + qname
+                             + ": xmlns for prefix " + name_pair.first + " not found";
+            throw bad_dom_operation(what);
         }
-        // Create the libxml2 attribute for the owner element, with namespace.
+        // Create the libxml2 attribute for the owner element.
         xmlAttr* px = xmlNewNsProp( raw(),
-                                    ns,
-                                    detail::to_xml_chars(name.c_str()),
+                                    (ns != 0 ? ns->raw() : 0),
+                                    detail::to_xml_chars(name_pair.second.c_str()),
                                     detail::to_xml_chars(value.c_str()) );
-        // TODO: how if an attribute with similar name and URI exists?
-        return (px != 0 ? static_cast<attribute*>(px->_private) : 0);
+        if (px == 0)
+        {
+            std::string what = "fail to create attribute " + qname
+                             + ": xmlNewNsProp returned null";
+            throw internal_dom_error(what);
+        }
+        // Return the new attribute.
+        return static_cast<attribute*>(px->_private);
     }
 
 

@@ -12,6 +12,7 @@
 #include "xtree/text.hpp"
 #include "xtree/comment.hpp"
 #include "xtree/xml_pi.hpp"
+#include "xtree/xmlns.hpp"
 
 #include <libxml/tree.h>
 #include <cassert>
@@ -27,6 +28,15 @@ namespace detail {
         template<class T>
         void delete_private(xmlNode* px)
         {
+            // Delete all the namespace declarations on this node (if it's an element).
+            if (px->type == XML_ELEMENT_NODE)
+            {
+                for (xmlNs* ns = px->nsDef; ns != 0; ns = ns->next)
+                {
+                    xmlns::delete_private(ns);
+                }
+            }
+            // Delete the wrapper object for this node.
             T* wrapper = static_cast<T*>(px->_private);
             // If libxml2 has been loaded before xtree is loaded, we may find xmlNode containing
             // a null private pointer when it is being destructed. So we do not assert the private

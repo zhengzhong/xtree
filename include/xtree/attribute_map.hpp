@@ -84,41 +84,54 @@ namespace xtree {
         // attribute access
         //
 
-        //! Returns the value of an attribute by name.
-        //! \param name  the attribute name.
+        //! Returns the value of an attribute by QName.
+        //! \param qname  the attribute QName.
         //! \return the attribute value, or an empty string if the attribute does not exist.
-        std::string get(const std::string& name) const;
+        std::string get(const std::string& qname) const
+        {
+            const attribute* attr = find_attr_(qname);
+            return (attr != 0 ? attr->value() : std::string());
+        }
 
         //! Returns the value of an attribute by name and namespace URI.
-        //! \param name  the attribute name.
-        //! \param uri   the attribute's namespace URI.
+        //! \param name  the attribute local name.
+        //! \param uri   the attribute namespace URI.
         //! \return the attribute value, or an empty string if the attribute does not exist.
-        std::string get(const std::string& name, const std::string& uri) const;
+        std::string get(const std::string& name, const std::string& uri) const
+        {
+            const attribute* attr = find_attr_(name, uri);
+            return (attr != 0 ? attr->value() : std::string());
+        }
 
         //! Sets an attribute to this element. If the attribute with the same name already exists,
         //! its value will be updated.
-        //! \param name   the attribute name.
+        //! \param qname   the attribute QName.
         //! \param value  the attribute value.
-        void set(const std::string& name, const std::string& value);
-
-        //! Sets an attribute to this element. If the attribute with the same name and URI already
-        //! exists, its value will be updated.
-        //! \param name   the attribute name.
-        //! \param uri    the attribute URI.
-        //! \param value  the attribute value.
-        void set(const std::string& name, const std::string& uri, const std::string& value);
+        void set(const std::string& qname, const std::string& value);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // find
         //
 
-        iterator find(const std::string& name);
+        iterator find(const std::string& qname)
+        {
+            return iterator( const_cast<attribute*>(find_attr_(qname)) );
+        }
 
-        const_iterator find(const std::string& name) const;
+        const_iterator find(const std::string& qname) const
+        {
+            return const_iterator( find_attr_(qname) );
+        }
 
-        iterator find(const std::string& name, const std::string& uri);
+        iterator find(const std::string& name, const std::string& uri)
+        {
+            return iterator( const_cast<attribute*>(find_attr_(name, uri)) );
+        }
 
-        const_iterator find(const std::string& name, const std::string& uri) const;
+        const_iterator find(const std::string& name, const std::string& uri) const
+        {
+            return const_iterator( find_attr_(name, uri) );
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // modifiers
@@ -127,25 +140,12 @@ namespace xtree {
         //! Inserts an attribute to the map. Like std::map::insert, this function will insert the
         //! attribute to the map only if no attribute with the same local name and namespace URI
         //! already exists.
-        //! \param name   name of the attribute to insert.
+        //! \param qname  QName of the attribute to insert.
         //! \param value  value of the attribute to insert.
         //! \return a std::pair containing a pointer to the attribute inserted (or an existing
         //!         attribute with the same name and namespace URI), and a boolean which is true
         //!         if an insertion took place.
-        std::pair<basic_node_ptr<attribute>, bool> insert(const std::string& name,
-                                                          const std::string& value);
-
-        //! Inserts an attribute to the map. Like std::map::insert, this function will insert the
-        //! attribute to the map only if no attribute with the same local name and namespace URI
-        //! already exists.
-        //! \param name   name of the attribute to insert.
-        //! \param uri    namespace URI of the attribute to insert.
-        //! \param value  value of the attribute to insert.
-        //! \return a std::pair containing a pointer to the attribute inserted (or an existing
-        //!         attribute with the same name and namespace URI), and a boolean which is true
-        //!         if an insertion took place.
-        std::pair<basic_node_ptr<attribute>, bool> insert(const std::string& name,
-                                                          const std::string& uri,
+        std::pair<basic_node_ptr<attribute>, bool> insert(const std::string& qname,
                                                           const std::string& value);
 
         //! \todo TODO: implement me!
@@ -153,21 +153,10 @@ namespace xtree {
 
         //! Updates attribute value in the map. If the attribute to update does not exist,
         //! this function will create a new attribute.
-        //! \param name   name of the attribute to update.
+        //! \param qname  QName of the attribute to update.
         //! \param value  value of the attribute to update.
         //! \return a pointer to the updated attribute.
-        basic_node_ptr<attribute> update(const std::string& name,
-                                         const std::string& value);
-
-        //! Updates attribute value in the map. If the attribute to update does not exist,
-        //! this function will create a new attribute.
-        //! \param name   name of the attribute to update.
-        //! \param uri    namespace URI of the attribute to update.
-        //! \param value  value of the attribute to update.
-        //! \return a pointer to the updated attribute.
-        basic_node_ptr<attribute> update(const std::string& name,
-                                         const std::string& uri,
-                                         const std::string& value);
+        basic_node_ptr<attribute> update(const std::string& qname, const std::string& value);
 
         //! Removes and destroys the attribute at the given position from the attribute map.
         //! \post size() is one less.
@@ -186,9 +175,9 @@ namespace xtree {
 
         //! Removes and destroys the attribute of the given name from the attribute map. If the
         //! attribute cannot be found, this function does nothing.
-        //! \param name  the name of the attribute to erase.
+        //! \param qname  the QName of the attribute to erase.
         //! \return 1 if the attribute is erased, 0 if the attribute is not found.
-        size_type erase(const std::string& name);
+        size_type erase(const std::string& qname);
 
         //! Removes and destroys the attribute of the given name and namespace URI from the
         //! attribute map. If the attribute cannot be found, this function does nothing.
@@ -239,11 +228,11 @@ namespace xtree {
         //! \throws bad_dom_operation  if the iterator does not belong to this attribute map.
         void check_ownership_(iterator pos);
 
+        const attribute* find_attr_(const std::string& qname) const;
+
         const attribute* find_attr_(const std::string& name, const std::string& uri) const;
 
-        attribute* create_attr_(const std::string& name,
-                                const std::string& uri,
-                                const std::string& value);
+        attribute* create_attr_(const std::string& qname, const std::string& value);
 
     private:
 

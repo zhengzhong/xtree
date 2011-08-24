@@ -149,22 +149,21 @@ namespace xtree {
     //
 
 
-    void element::set_uri(const std::string& uri)
+    void element::set_xmlns(const std::string& prefix, const std::string& uri)
     {
-        xmlNs* ns = 0;
-        if (!uri.empty())
-        {
-            ns = declare_namespace_(uri);
-        }
-        xmlSetNs(raw(), ns);
+        xmlns* px = declare_xmlns_(prefix, uri);
+        xmlSetNs(raw(), px->raw());
     }
 
 
-    std::string element::declare_namespace(const std::string& uri)
+    size_type element::reconciliate_xmlns()
     {
-        xmlNs* px = declare_namespace_(uri);
-        assert(px != 0);
-        return ( px->prefix != 0 ? detail::to_chars(px->prefix) : std::string() );
+        int count = xmlReconciliateNs(raw()->doc, raw());
+        if (count < 0)
+        {
+            throw internal_dom_error("fail to reconciliate xmlns: xmlReconciliateNs returned -1");
+        }
+        return static_cast<size_type>(count);
     }
 
 
@@ -237,7 +236,7 @@ namespace xtree {
     }
 
 
-    xmlNs* element::declare_namespace_(const std::string& uri)
+    xmlns* element::declare_xmlns_(const std::string& prefix, const std::string& uri)
     {
         // TODO: check the namespace URI is valid.
         if (uri.empty())
@@ -245,38 +244,42 @@ namespace xtree {
             std::string what = "invalid namespace URI: " + uri;
             throw bad_dom_operation(what);
         }
-
-        // Check if a namespace with the same URI has already been declared.
-        // Quoted from libxml2 documentation:
-        //   (xmlSearchNsByHref) Search a namespace aliasing a given URI. Recurse on the parents
-        //   until it finds the defined namespace or return NULL otherwise.
-        xmlNs* px = xmlSearchNsByHref( raw()->doc, raw(), detail::to_xml_chars(uri.c_str()) );
-
-        // If the namespace is not found, get a unique namespace prefix for the specified URI from
-        // the owner document, and create a new namespace declaration on this element.
-        // Quoted from libxml2 documentation:
-        //   (xmlNewNs) Creation of a new namespace. This function will refuse to create a
-        //   namespace with a similar prefix than an existing one present on this node. We use
-        //   href==NULL in the case of an element creation where the namespace was not defined.
-        // Note: xmlNewNs changes xmlNode::nsDef but not xmlNode::ns, which means, the created
-        // namespace is only declared on the element, but the element is not under the namespace.
+        // Create (declare) a new libxml2 xmlNs on the element.
+        xmlNs* px = xmlNewNs( raw(),
+                              detail::to_xml_chars(uri.c_str()),
+                              detail::to_xml_chars(prefix.c_str()) );
         if (px == 0)
         {
-            std::string prefix = doc().next_namespace_prefix();
-            px = xmlNewNs( raw(),
-                           detail::to_xml_chars(uri.c_str()),
-                           detail::to_xml_chars(prefix.c_str()) );
-            if (px == 0)
-            {
-                std::string what = "fail to declare namespace with URI " + uri
-                                 + " and prefix " + prefix
-                                 + ": xmlNewNs() returns null";
-                throw internal_dom_error(what);
-            }
+            std::string what = "fail to declare namespace " + prefix + "=" + uri
+                             + ": xmlNewNs() returns null";
+            throw internal_dom_error(what);
         }
+        // Return the libxml2 xmlNs.
+        return xmlns::get_or_create(px);
+    }
 
-        // Return the libxml2 namespace.
-        return px;
+
+    const xmlns* element::get_first_xmlns_() const
+    {
+        return xmlns::get_or_create(raw()->nsDef);
+    }
+
+
+    const xmlns* element::find_xmlns_by_prefix_(const std::string& prefix) const
+    {
+        xmlNs* px = xmlSearchNs( raw()->doc,
+                                 const_cast<xmlNode*>(raw()),
+                                 prefix.empty() ? 0 : detail::to_xml_chars(prefix.c_str()) );
+        return xmlns::get_or_create(px);
+    }
+
+
+    const xmlns* element::find_xmlns_by_uri_(const std::string& uri) const
+    {
+        xmlNs* px = xmlSearchNsByHref( raw()->doc,
+                                       const_cast<xmlNode*>(raw()),
+                                       uri.empty() ? 0 : detail::to_xml_chars(uri.c_str()) );
+        return xmlns::get_or_create(px);
     }
 
 

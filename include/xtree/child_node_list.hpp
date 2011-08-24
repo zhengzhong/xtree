@@ -56,12 +56,42 @@ namespace xtree {
         explicit child_node_list(xmlDoc* px);
 
         //! Constructs a child_node_list whose owner is a libxml2 element. This function should
-        //! NOT be caleld by client code.
+        //! NOT be called by client code.
         //! \param px  pointer to libxml2 element who owns the child nodes in this list.
         explicit child_node_list(xmlNode* px);
 
         //! Destructor. This function should NOT be called by client code.
         ~child_node_list();
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // owner access
+        //
+
+        //! Returns the owner document of this child node list.
+        //! \return the owner document of this child node list.
+        document& doc()
+        {
+            return const_cast<document&>(doc_());
+        }
+
+        //! Const version of doc().
+        const document& doc() const
+        {
+            return doc_();
+        }
+
+        //! Returns the owner element of this child node list.
+        //! \return the owner element of this child node list.
+        basic_node_ptr<element> owner_element()
+        {
+            return basic_node_ptr<element>(const_cast<element*>(owner_element_()));
+        }
+
+        //! Const version of parent().
+        basic_node_ptr<const element> owner_element() const
+        {
+            return basic_node_ptr<const element>(owner_element_());
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // capacity
@@ -125,16 +155,16 @@ namespace xtree {
 
         //! Pushes an element node to the end of this list.
         //! \post size() is one more.
-        //! \param name  the name of the element.
+        //! \param qname  the QName of the element.
         //! \return pointer to the inserted element.
-        basic_node_ptr<element> push_back_element(const std::string& name);
+        basic_node_ptr<element> push_back_element(const std::string& qname);
 
         //! Pushes an element node to the end of this list.
         //! \post size() is one more.
-        //! \param name  the name of the element.
-        //! \param uri   the namespace URI of the element.
+        //! \param qname  the QName of the element.
+        //! \param uri    the namespace URI of the element.
         //! \return pointer to the inserted element.
-        basic_node_ptr<element> push_back_element(const std::string& name,
+        basic_node_ptr<element> push_back_element(const std::string& qname,
                                                   const std::string& uri);
 
         //! Pushes a text node to the end of this list.
@@ -181,16 +211,16 @@ namespace xtree {
 
         //! Pushes an element node to the beginning of this list.
         //! \post size() is one more.
-        //! \param name  the name of the element.
+        //! \param qname  the QName of the element.
         //! \return pointer to the inserted element.
-        basic_node_ptr<element> push_front_element(const std::string& name);
+        basic_node_ptr<element> push_front_element(const std::string& qname);
 
         //! Pushes an element node to the beginning of this list.
         //! \post size() is one more.
-        //! \param name  the name of the element.
-        //! \param uri   the namespace URI of the element.
+        //! \param qname  the QName of the element.
+        //! \param uri    the namespace URI of the element.
         //! \return pointer to the inserted element.
-        basic_node_ptr<element> push_front_element(const std::string& name,
+        basic_node_ptr<element> push_front_element(const std::string& qname,
                                                    const std::string& uri);
 
         //! Pushes a text node to the beginning of this list.
@@ -253,21 +283,21 @@ namespace xtree {
 
         //! Inserts an element node to the node list before the specified position.
         //! \post size() is one more.
-        //! \param pos   the position before which the element is to be inserted.
-        //! \param name  the name of the element.
+        //! \param pos    the position before which the element is to be inserted.
+        //! \param qname  the QName of the element.
         //! \return pointer to the inserted element.
         //! \throws bad_dom_operation  if $pos does not belong to this list.
-        basic_node_ptr<element> insert_element(iterator pos, const std::string& name);
+        basic_node_ptr<element> insert_element(iterator pos, const std::string& qname);
 
         //! Inserts an element node to the node list before the specified position.
         //! \post size() is one more.
-        //! \param pos   the position before which the element is to be inserted.
-        //! \param name  the name of the element.
-        //! \param uri   the name of the element.
+        //! \param pos    the position before which the element is to be inserted.
+        //! \param qname  the QName of the element.
+        //! \param uri    the name of the element.
         //! \return pointer to the inserted element.
         //! \throws bad_dom_operation  if $pos does not belong to this list.
         basic_node_ptr<element> insert_element(iterator pos,
-                                               const std::string& name,
+                                               const std::string& qname,
                                                const std::string& uri);
 
         //! Inserts a text node to the node list before the specified position.
@@ -373,6 +403,14 @@ namespace xtree {
         // private functions
         //
 
+        //! Returns the owner document of this child node list.
+        //! \return the owner document of this child node list.
+        const document& doc_() const;
+
+        //! Returns the owner element of this child node list.
+        //! \return the owner element of this child node list, or null if it's owned by a document.
+        const element* owner_element_() const;
+
         //! Returns a pointer to the first child_node object, or null if this list is empty.
         const child_node* first_() const;
 
@@ -389,13 +427,11 @@ namespace xtree {
         //! \throws bad_dom_operation  if $pos does not belong to this list.
         xmlNode* insert_(iterator pos, xmlNode* child);
 
-        //! Creates a libxml2 element node without namespace. Note: after the libxml2 node is
-        //! created, this function sets its namespace to null. This is because namespace URI
-        //! should be looked up under the context of the element. This function creates a
-        //! stand-alone element but does not put the element into the DOM tree, so it is up to the
-        //! caller function to set the element's namespace URI properly, after this element has
-        //! been put into the DOM tree.
-        xmlNode* create_element_(const std::string& name);
+        //! Creates a libxml2 element node.
+        xmlNode* create_element_(const std::string& qname);
+
+        //! Creates a libxml2 element node under namespace.
+        xmlNode* create_element_(const std::string& qname, const std::string& uri);
 
         //! Creates a libxml2 text node.
         xmlNode* create_text_(const std::string& value);

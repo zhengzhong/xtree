@@ -10,6 +10,7 @@
 #include "xtree/types.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/basic_node_iterator.hpp"
+#include "xtree/basic_xmlns_ptr.hpp"
 
 
 namespace xtree {
@@ -32,6 +33,8 @@ namespace xtree {
     class XTREE_DECL xml_pi;
 
     class XTREE_DECL attribute_map;
+
+    class XTREE_DECL xmlns;
 
     class XTREE_DECL xpath_context;
     class XTREE_DECL xpath_result;
@@ -61,6 +64,15 @@ namespace xtree {
     typedef basic_node_ptr<const text>        const_text_ptr;
     typedef basic_node_ptr<const comment>     const_comment_ptr;
     typedef basic_node_ptr<const xml_pi>      const_xml_pi_ptr;
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // xmlns pointer typedefs
+    //
+
+
+    typedef basic_xmlns_ptr<xmlns>        xmlns_ptr;
+    typedef basic_xmlns_ptr<const xmlns>  const_xmlns_ptr;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

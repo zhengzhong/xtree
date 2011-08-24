@@ -18,7 +18,7 @@
 #include "xtree/element.hpp"
 #include "xtree/text.hpp"
 #include "xtree/comment.hpp"
-#include "xtree/xml_pi.hpp"
+#include "xtree/instruction.hpp"
 
 #include "xtree/attribute_map.hpp"
 

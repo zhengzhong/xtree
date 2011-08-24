@@ -43,7 +43,7 @@ namespace detail {
             target_type = comment_node;
             break;
         case XML_PI_NODE:
-            target_type = xml_pi_node;
+            target_type = instruction_node;
             break;
         default:
             assert(! "Unknown libxml2 node type");

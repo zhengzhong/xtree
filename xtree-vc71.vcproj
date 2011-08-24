@@ -217,6 +217,9 @@
 				RelativePath=".\src\xtree\element.cpp">
 			</File>
 			<File
+				RelativePath=".\src\xtree\instruction.cpp">
+			</File>
+			<File
 				RelativePath=".\src\xtree\libxml2_callbacks.cpp">
 			</File>
 			<File
@@ -257,9 +260,6 @@
 			</File>
 			<File
 				RelativePath=".\src\xtree\xml_base.cpp">
-			</File>
-			<File
-				RelativePath=".\src\xtree\xml_pi.cpp">
 			</File>
 			<File
 				RelativePath=".\src\xtree\xmlns.cpp">
@@ -327,6 +327,9 @@
 				RelativePath=".\include\xtree\exceptions.hpp">
 			</File>
 			<File
+				RelativePath=".\include\xtree\instruction.hpp">
+			</File>
+			<File
 				RelativePath=".\include\xtree\libxml2_callbacks.hpp">
 			</File>
 			<File
@@ -388,9 +391,6 @@
 			</File>
 			<File
 				RelativePath=".\include\xtree\xml_base.hpp">
-			</File>
-			<File
-				RelativePath=".\include\xtree\xml_pi.hpp">
 			</File>
 			<File
 				RelativePath=".\include\xtree\xmlns.hpp">

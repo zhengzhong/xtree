@@ -22,7 +22,7 @@ namespace xtree {
     class XTREE_DECL element;
     class XTREE_DECL text;
     class XTREE_DECL comment;
-    class XTREE_DECL xml_pi;
+    class XTREE_DECL instruction;
 
 
     //! This class represents a child node list under an element or a document. It may be viewed as
@@ -190,8 +190,8 @@ namespace xtree {
         //! \param target  the target of the PI node.
         //! \param value   the value of the PI node.
         //! \return pointer to the inserted PI.
-        basic_node_ptr<xml_pi> push_back_xml_pi(const std::string& target,
-                                                const std::string& value);
+        basic_node_ptr<instruction> push_back_instruction(const std::string& target,
+                                                          const std::string& value);
 
         //! Pushes a child node to the end of this list. This function makes a recursive clone of
         //! the child node and pushes the cloned one.
@@ -246,8 +246,8 @@ namespace xtree {
         //! \param target  the target of the PI node.
         //! \param value   the value of the PI node.
         //! \return pointer to the inserted PI.
-        basic_node_ptr<xml_pi> push_front_xml_pi(const std::string& target,
-                                                 const std::string& value);
+        basic_node_ptr<instruction> push_front_instruction(const std::string& target,
+                                                           const std::string& value);
 
         //! Pushes a child node to the front of this list. This function makes a recursive clone of
         //! the child node and pushes the cloned one.
@@ -332,9 +332,9 @@ namespace xtree {
         //! \param value   the target of the PI node.
         //! \return pointer to the inserted PI.
         //! \throws bad_dom_operation  if $pos does not belong to this list.
-        basic_node_ptr<xml_pi> insert_xml_pi(iterator pos,
-                                             const std::string& target,
-                                             const std::string& value);
+        basic_node_ptr<instruction> insert_instruction(iterator pos,
+                                                       const std::string& target,
+                                                       const std::string& value);
 
         //! Inserts a child node before a position of this list. This function makes a recursive
         //! clone of the child node and inserts the cloned one.
@@ -443,7 +443,7 @@ namespace xtree {
         xmlNode* create_comment_(const std::string& value);
 
         //! Creates a libxml2 processing instruction (PI) node.
-        xmlNode* create_xml_pi_(const std::string& target, const std::string& value);
+        xmlNode* create_instruction_(const std::string& target, const std::string& value);
 
     private:
 

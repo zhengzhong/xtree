@@ -40,14 +40,14 @@ BOOST_AUTO_TEST_CASE(test_node_cast)
         BOOST_CHECK_EQUAL(xtree::dynamic_node_cast<const xtree::element>(cnode), root);
         BOOST_CHECK_EQUAL(xtree::dynamic_node_cast<const xtree::child_node>(cnode), root);
         BOOST_CHECK(xtree::dynamic_node_cast<const xtree::attribute>(cnode) == 0);
-        BOOST_CHECK(xtree::dynamic_node_cast<const xtree::xml_pi>(cnode) == 0);
+        BOOST_CHECK(xtree::dynamic_node_cast<const xtree::instruction>(cnode) == 0);
         BOOST_CHECK(xtree::dynamic_node_cast<const xtree::text>(cnode) == 0);
         BOOST_CHECK(xtree::dynamic_node_cast<const xtree::comment>(cnode) == 0);
         // Following code should not compile.
         //xtree::dynamic_node_cast<xtree::child_node>(cnode);
         //xtree::dynamic_node_cast<xtree::element>(cnode);
         //xtree::dynamic_node_cast<xtree::attribute>(cnode);
-        //xtree::dynamic_node_cast<xtree::xml_pi>(cnode);
+        //xtree::dynamic_node_cast<xtree::instruction>(cnode);
         //xtree::dynamic_node_cast<xtree::text>(cnode);
         //xtree::dynamic_node_cast<xtree::comment>(cnode);
     }

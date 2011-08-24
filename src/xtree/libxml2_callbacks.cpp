@@ -11,7 +11,7 @@
 #include "xtree/element.hpp"
 #include "xtree/text.hpp"
 #include "xtree/comment.hpp"
-#include "xtree/xml_pi.hpp"
+#include "xtree/instruction.hpp"
 #include "xtree/xmlns.hpp"
 
 #include <libxml/tree.h>
@@ -76,7 +76,7 @@ namespace detail {
             px->_private = new comment(px);
             break;
         case XML_PI_NODE:
-            px->_private = new xml_pi(px);
+            px->_private = new instruction(px);
             break;
             //case XML_DTD_NODE:
             //case XML_ENTITY_REF_NODE:
@@ -110,7 +110,7 @@ namespace detail {
             delete_private<comment>(px);
             break;
         case XML_PI_NODE:
-            delete_private<xml_pi>(px);
+            delete_private<instruction>(px);
             break;
         default:
             // TODO: Unsupported node types.

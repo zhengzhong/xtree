@@ -33,7 +33,7 @@ namespace xtree {
     class XTREE_DECL attribute;
     class XTREE_DECL text;
     class XTREE_DECL comment;
-    class XTREE_DECL xml_pi;
+    class XTREE_DECL instruction;
 
     class XTREE_DECL node_set;
 
@@ -243,9 +243,10 @@ namespace xtree {
         //! \param target  the target of the process instruction to push.
         //! \param value   the value of the process instruction to push.
         //! \return a pointer to the new processing instruction.
-        basic_node_ptr<xml_pi> push_back_xml_pi(const std::string& target, const std::string& value)
+        basic_node_ptr<instruction> push_back_instruction(const std::string& target,
+                                                          const std::string& value)
         {
-            return children_.push_back_xml_pi(target, value);
+            return children_.push_back_instruction(target, value);
         }
 
         //! Clones and pushes the child node to the end of the document's child node list.
@@ -341,9 +342,10 @@ namespace xtree {
         //! \param target  the target of the process instruction to push.
         //! \param value   the value of the process instruction to push.
         //! \return a pointer to the new processing instruction.
-        basic_node_ptr<xml_pi> push_front_xml_pi(const std::string& target, const std::string& value)
+        basic_node_ptr<instruction> push_front_instruction(const std::string& target,
+                                                           const std::string& value)
         {
-            return children_.push_front_xml_pi(target, value);
+            return children_.push_front_instruction(target, value);
         }
 
         //! Clones and pushes the child node to the front of the document's child node list.
@@ -459,11 +461,11 @@ namespace xtree {
         //! \param target  the target of the processing instruction to insert.
         //! \param value   the content of the processing instruction to insert.
         //! \return a pointer to the new processing instruction.
-        basic_node_ptr<xml_pi> insert_xml_pi(child_iterator pos,
-                                             const std::string& target,
-                                             const std::string& value)
+        basic_node_ptr<instruction> insert_instruction(child_iterator pos,
+                                                       const std::string& target,
+                                                       const std::string& value)
         {
-            return children_.insert_xml_pi(pos, target, value);
+            return children_.insert_instruction(pos, target, value);
         }
 
         //! Clones and inserts the child node to the position of the document's child node list.

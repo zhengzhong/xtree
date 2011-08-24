@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_string)
         "<root>2</root>"
     ;
     const xtree::node_t TYPES[] = {
-        xtree::xml_pi_node,
+        xtree::instruction_node,
         xtree::comment_node,
         xtree::element_node,
     };

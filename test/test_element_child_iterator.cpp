@@ -116,7 +116,7 @@ namespace {
             {
                 BOOST_CHECK_EQUAL(i->name(), "element");
             }
-            else if (i->type() == xtree::xml_pi_node)
+            else if (i->type() == xtree::instruction_node)
             {
                 BOOST_CHECK_EQUAL(i->name(), "processing-instruction");
             }
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(test_element_child_iterater_2)
         xtree::text_node,
         xtree::cdata_node,
         xtree::comment_node,
-        xtree::xml_pi_node,
+        xtree::instruction_node,
         xtree::element_node,
     };
     const unsigned int MAX_SIZE = sizeof(TYPES) / sizeof(xtree::node_t);

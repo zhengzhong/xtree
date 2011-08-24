@@ -13,7 +13,7 @@
 #include "xtree/element.hpp"
 #include "xtree/text.hpp"
 #include "xtree/comment.hpp"
-#include "xtree/xml_pi.hpp"
+#include "xtree/instruction.hpp"
 
 #include "xtree/check_rules.hpp"
 #include "xtree/libxml2_utility.hpp"
@@ -202,11 +202,11 @@ namespace xtree {
     }
 
 
-    basic_node_ptr<xml_pi> child_node_list::push_back_xml_pi(const std::string& target,
-                                                             const std::string& value)
+    basic_node_ptr<instruction> child_node_list::push_back_instruction(const std::string& target,
+                                                                       const std::string& value)
     {
-        xmlNode* px = insert_(end(), create_xml_pi_(target, value));
-        return basic_node_ptr<xml_pi>( static_cast<xml_pi*>(px->_private) );
+        xmlNode* px = insert_(end(), create_instruction_(target, value));
+        return basic_node_ptr<instruction>( static_cast<instruction*>(px->_private) );
     }
 
 
@@ -268,11 +268,11 @@ namespace xtree {
     }
 
 
-    basic_node_ptr<xml_pi> child_node_list::push_front_xml_pi(const std::string& target,
-                                                              const std::string& value)
+    basic_node_ptr<instruction> child_node_list::push_front_instruction(const std::string& target,
+                                                                        const std::string& value)
     {
-        xmlNode* px = insert_(begin(), create_xml_pi_(target, value));
-        return basic_node_ptr<xml_pi>( static_cast<xml_pi*>(px->_private) );
+        xmlNode* px = insert_(begin(), create_instruction_(target, value));
+        return basic_node_ptr<instruction>( static_cast<instruction*>(px->_private) );
     }
 
 
@@ -372,12 +372,12 @@ namespace xtree {
     }
 
 
-    basic_node_ptr<xml_pi> child_node_list::insert_xml_pi(iterator pos,
-                                                          const std::string& target,
-                                                          const std::string& value)
+    basic_node_ptr<instruction> child_node_list::insert_instruction(iterator pos,
+                                                                    const std::string& target,
+                                                                    const std::string& value)
     {
-        xmlNode* px = insert_(pos, create_xml_pi_(target, value));
-        return basic_node_ptr<xml_pi>( static_cast<xml_pi*>(px->_private) );
+        xmlNode* px = insert_(pos, create_instruction_(target, value));
+        return basic_node_ptr<instruction>( static_cast<instruction*>(px->_private) );
     }
 
 
@@ -697,8 +697,8 @@ namespace xtree {
     }
 
 
-    xmlNode* child_node_list::create_xml_pi_(const std::string& target,
-                                             const std::string& value)
+    xmlNode* child_node_list::create_instruction_(const std::string& target,
+                                                  const std::string& value)
     {
         xmlNode* px = xmlNewDocPI( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
                                    detail::to_xml_chars(target.c_str()),

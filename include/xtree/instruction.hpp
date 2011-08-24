@@ -2,8 +2,8 @@
 // Created by ZHENG Zhong on 2009-07-27.
 //
 
-#ifndef XTREE_XML_PI_HPP_20090727__
-#define XTREE_XML_PI_HPP_20090727__
+#ifndef XTREE_INSTRUCTION_HPP_20090727__
+#define XTREE_INSTRUCTION_HPP_20090727__
 
 #include "xtree/config.hpp"
 #include "xtree/child_node.hpp"
@@ -21,17 +21,17 @@ namespace xtree {
 
 
     //! This class represents a processing instruction node.
-    class XTREE_DECL xml_pi: public child_node
+    class XTREE_DECL instruction: public child_node
     {
 
     public:
 
-        static xml_pi* cast(xmlNode* px)
+        static instruction* cast(xmlNode* px)
         {
-            return const_cast<xml_pi*>(cast_(px));
+            return const_cast<instruction*>(cast_(px));
         }
 
-        static const xml_pi* cast(const xmlNode* px)
+        static const instruction* cast(const xmlNode* px)
         {
             return cast_(px);
         }
@@ -39,10 +39,10 @@ namespace xtree {
     public:
 
         //! Constructor.
-        explicit xml_pi(xmlNode* px);
+        explicit instruction(xmlNode* px);
 
         //! Destructor.
-        ~xml_pi();
+        ~instruction();
 
         //! Returns the target of this processing instruction.
         std::string target() const
@@ -52,11 +52,11 @@ namespace xtree {
 
     private:
 
-        static const xml_pi* cast_(const xmlNode* px);
+        static const instruction* cast_(const xmlNode* px);
 
     private:
 
-        xml_pi* clone(bool recursive) const;
+        instruction* clone(bool recursive) const;
 
     };
 
@@ -69,7 +69,7 @@ namespace xtree {
 #endif
 
 
-#endif  // XTREE_XML_PI_HPP_20090727__
+#endif  // XTREE_INSTRUCTION_HPP_20090727__
 
 
 

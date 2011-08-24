@@ -26,7 +26,7 @@ namespace xtree {
         text_node,
         cdata_node,
         comment_node,
-        xml_pi_node,
+        instruction_node,
     };
 
 
@@ -48,8 +48,8 @@ namespace xtree {
             return "cdata";
         case comment_node:
             return "comment";
-        case xml_pi_node:
-            return "xml_pi";
+        case instruction_node:
+            return "instruction";
         default:
             return "unknown";
         }

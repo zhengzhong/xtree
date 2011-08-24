@@ -199,16 +199,16 @@ BOOST_AUTO_TEST_CASE(test_document_push)
     {
         std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
         doc->push_front_comment("front comment");
-        doc->push_front_xml_pi("target", "front");
+        doc->push_front_instruction("target", "front");
         doc->push_back_comment("back comment");
-        doc->push_back_xml_pi("target", "back");
+        doc->push_back_instruction("target", "back");
         BOOST_CHECK_EQUAL(doc->size(), 5U);
         unsigned int index = 0;
         for (xtree::child_iterator i = doc->begin(); i != doc->end(); ++i, ++index)
         {
             if (index == 0U || index == 4U)
             {
-                BOOST_CHECK_EQUAL(i->type(), xtree::xml_pi_node);
+                BOOST_CHECK_EQUAL(i->type(), xtree::instruction_node);
                 BOOST_CHECK_EQUAL(i->name(), "target");
                 BOOST_CHECK_EQUAL(i->content(), (index == 0U ? "front" : "back"));
             }

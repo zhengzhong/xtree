@@ -313,9 +313,10 @@ namespace xtree {
             return children_.push_back_comment(value);
         }
 
-        basic_node_ptr<xml_pi> push_back_xml_pi(const std::string& target, const std::string& value)
+        basic_node_ptr<instruction> push_back_instruction(const std::string& target,
+                                                          const std::string& value)
         {
-            return children_.push_back_xml_pi(target, value);
+            return children_.push_back_instruction(target, value);
         }
 
         basic_node_ptr<child_node> push_back_clone(const child_node& child)
@@ -357,9 +358,10 @@ namespace xtree {
             return children_.push_front_comment(value);
         }
 
-        basic_node_ptr<xml_pi> push_front_xml_pi(const std::string& target, const std::string& value)
+        basic_node_ptr<instruction> push_front_instruction(const std::string& target,
+                                                           const std::string& value)
         {
-            return children_.push_front_xml_pi(target, value);
+            return children_.push_front_instruction(target, value);
         }
 
         basic_node_ptr<child_node> push_front_clone(const child_node& child)
@@ -417,11 +419,11 @@ namespace xtree {
             return children_.insert_comment(pos, value);
         }
 
-        basic_node_ptr<xml_pi> insert_xml_pi(child_iterator pos,
-                                             const std::string& target,
-                                             const std::string& value)
+        basic_node_ptr<instruction> insert_instruction(child_iterator pos,
+                                                       const std::string& target,
+                                                       const std::string& value)
         {
-            return children_.insert_xml_pi(pos, target, value);
+            return children_.insert_instruction(pos, target, value);
         }
 
         child_iterator insert_clone(child_iterator pos, const child_node& child)

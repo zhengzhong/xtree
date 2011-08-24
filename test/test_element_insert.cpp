@@ -48,8 +48,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_clone)
         xtree::element_ptr root = doc->reset_root("root");
         {
             // Test insert_clone() to begin position.
-            std::auto_ptr<xtree::document> doc_tmp(xtree::parse_string(TEST_XML_1));
-            xtree::element_ptr root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp1 = xtree::parse_string(TEST_XML_1);
+            xtree::element_ptr root_tmp = doc_tmp1->root();
             for (xtree::child_iterator i = root_tmp->begin(); i != root_tmp->end(); ++i)
             {
                 xtree::child_iterator pos = root->insert_clone(root->begin(), *i);
@@ -58,8 +58,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_clone)
             BOOST_CHECK_EQUAL(root_tmp->empty(), false);
             BOOST_CHECK_EQUAL(root_tmp->size(), 4U);
             // Test insert_clone() to end position.
-            doc_tmp.reset(xtree::parse_string(TEST_XML_2));
-            root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp2 = xtree::parse_string(TEST_XML_2);
+            root_tmp = doc_tmp2->root();
             for (xtree::child_iterator i = root_tmp->begin(); i != root_tmp->end(); ++i)
             {
                 xtree::child_iterator pos = root->insert_clone(root->end(), *i);
@@ -112,14 +112,14 @@ BOOST_AUTO_TEST_CASE(test_element_insert_clone_range)
         xtree::element_ptr root = doc->reset_root("root");
         {
             // Test insert_clone() to begin position.
-            std::auto_ptr<xtree::document> doc_tmp(xtree::parse_string(TEST_XML_1));
-            xtree::element_ptr root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp1 = xtree::parse_string(TEST_XML_1);
+            xtree::element_ptr root_tmp = doc_tmp1->root();
             root->insert_clone(root->begin(), root_tmp->begin(), root_tmp->end());
             BOOST_CHECK_EQUAL(root_tmp->empty(), false);
             BOOST_CHECK_EQUAL(root_tmp->size(), 4U);
             // Test insert_clone() to end position.
-            doc_tmp.reset(xtree::parse_string(TEST_XML_2));
-            root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp2 = xtree::parse_string(TEST_XML_2);
+            root_tmp = doc_tmp2->root();
             root->insert_clone(root->end(), root_tmp->begin(), root_tmp->end());
             BOOST_CHECK_EQUAL(root_tmp->empty(), false);
             BOOST_CHECK_EQUAL(root_tmp->size(), 3U);
@@ -168,8 +168,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_adopt)
         xtree::element_ptr root = doc->reset_root("root");
         {
             // Test insert_adopt() to begin position.
-            std::auto_ptr<xtree::document> doc_tmp(xtree::parse_string(TEST_XML_1));
-            xtree::element_ptr root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp1 = xtree::parse_string(TEST_XML_1);
+            xtree::element_ptr root_tmp = doc_tmp1->root();
             for (xtree::child_iterator i = root_tmp->begin(); i != root_tmp->end(); )
             {
                 xtree::child_iterator pos = root->insert_adopt(root->begin(), *(i++));
@@ -177,8 +177,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_adopt)
             }
             BOOST_CHECK_EQUAL(root_tmp->empty(), true);
             // Test insert_adopt() to end position.
-            doc_tmp.reset(xtree::parse_string(TEST_XML_2));
-            root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp2 = xtree::parse_string(TEST_XML_2);
+            root_tmp = doc_tmp2->root();
             for (xtree::child_iterator i = root_tmp->begin(); i != root_tmp->end(); )
             {
                 xtree::child_iterator pos = root->insert_adopt(root->end(), *(i++));
@@ -230,13 +230,13 @@ BOOST_AUTO_TEST_CASE(test_element_insert_adopt_range)
         xtree::element_ptr root = doc->reset_root("root");
         {
             // Test insert_adopt() to begin position.
-            std::auto_ptr<xtree::document> doc_tmp(xtree::parse_string(TEST_XML_1));
-            xtree::element_ptr root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp1 = xtree::parse_string(TEST_XML_1);
+            xtree::element_ptr root_tmp = doc_tmp1->root();
             root->insert_adopt(root->begin(), root_tmp->begin(), root_tmp->end());
             BOOST_CHECK_EQUAL(root_tmp->empty(), true);
             // Test insert_adopt() to end position.
-            doc_tmp.reset(xtree::parse_string(TEST_XML_2));
-            root_tmp = doc_tmp->root();
+            std::auto_ptr<xtree::document> doc_tmp2 = xtree::parse_string(TEST_XML_2);
+            root_tmp = doc_tmp2->root();
             root->insert_adopt(root->end(), root_tmp->begin(), root_tmp->end());
             BOOST_CHECK_EQUAL(root_tmp->empty(), true);
         }

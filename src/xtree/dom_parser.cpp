@@ -21,6 +21,7 @@
 #include <cassert>
 #include <cstdlib>  // for std::getenv()
 #include <cstring>
+#include <memory>
 #include <string>
 
 #include <iostream> // DEBUG:
@@ -223,7 +224,7 @@ namespace xtree {
     }
 
 
-    document* dom_parser::parse_file(const std::string& file_name)
+    std::auto_ptr<document> dom_parser::parse_file(const std::string& file_name)
     {
         set_global_variables global_variables;
         // Create a libxml2 parser context for parsing the xml file.
@@ -242,11 +243,11 @@ namespace xtree {
         // Parse xml file under the constructed parser context.
         xmlDoc* px = parse_in_context(context.get());
         assert(px != 0);
-        return new document(px);
+        return std::auto_ptr<document>(new document(px));
     }
 
 
-    document* dom_parser::parse_string(const char* str)
+    std::auto_ptr<document> dom_parser::parse_string(const char* str)
     {
         set_global_variables global_variables;
         // Create a libxml2 parser context for parsing the xml string.
@@ -267,11 +268,11 @@ namespace xtree {
         // Parse xml string under the constructed parser context.
         xmlDoc* px = parse_in_context(context.get());
         assert(px != 0);
-        return new document(px);
+        return std::auto_ptr<document>(new document(px));
     }
 
 
-    document* dom_parser::parse_url(const std::string& url, const std::string& proxy)
+    std::auto_ptr<document> dom_parser::parse_url(const std::string& url, const std::string& proxy)
     {
         set_global_variables global_variables;
         // Create a libxml2 parser context for parsing the xml string.
@@ -290,7 +291,7 @@ namespace xtree {
         // Parse remote xml under the constructed parser context.
         xmlDoc* px = parse_in_context(context.get());
         assert(px != 0);
-        return new document(px);
+        return std::auto_ptr<document>(new document(px));
     }
 
 

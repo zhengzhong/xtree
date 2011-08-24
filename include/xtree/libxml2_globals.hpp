@@ -9,7 +9,7 @@
 #include "xtree/phoenix_singleton.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
-#include <libxml/tree.h>
+//TEMP: #include <libxml/tree.h>
 
 
 //! \cond DEV
@@ -35,6 +35,17 @@ namespace detail {
         //! Initializes the global resources of libxml2 as necessary.
         static void initialize();
 
+        //! Sets the cleanup parser flag to indicate whether to call xmlCleanupParser() at exit.
+        //! WARNING: in a multi-threaded environment, calling xmlCleanupParser() at exit may crash
+        //! the application if another thread is still using libxml2... So by default, this flag
+        //! is set to false. Use this function with caution!
+        //! \param flag  the new cleanup parser flag.
+        static void set_cleanup_parser(bool flag);
+
+        //! Returns the cleanup parser flag.
+        //! \return the cleanup parser flag.
+        static bool get_cleanup_parser();
+
     private:
 
         //! Constructor: initializes the global resources of libxml2.
@@ -45,10 +56,11 @@ namespace detail {
 
     private:
 
-        xmlRegisterNodeFunc   old_register_node_fn_;
-        xmlDeregisterNodeFunc old_deregister_node_fn_;
-        xmlRegisterNodeFunc   old_thr_def_register_node_fn_;
-        xmlDeregisterNodeFunc old_thr_def_deregister_node_fn_;
+        void* old_register_node_fn_;            //!< xmlRegisterNodeFunc
+        void* old_deregister_node_fn_;          //!< xmlDeregisterNodeFunc
+        void* old_thr_def_register_node_fn_;    //!< xmlRegisterNodeFunc
+        void* old_thr_def_deregister_node_fn_;  //!< xmlDeregisterNodeFunc
+        bool  cleanup_parser_;                  //!< indicates whether to cleanup parser at exit.
 
     };
 

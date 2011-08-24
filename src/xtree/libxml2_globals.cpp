@@ -22,10 +22,23 @@ namespace detail {
     }
 
 
+    void libxml2_globals::set_cleanup_parser(bool flag)
+    {
+        instance().cleanup_parser_ = flag;
+    }
+
+
+    bool libxml2_globals::get_cleanup_parser()
+    {
+        return instance().cleanup_parser_;
+    }
+
+
     libxml2_globals::libxml2_globals(): old_register_node_fn_(0)
                                       , old_deregister_node_fn_(0)
                                       , old_thr_def_register_node_fn_(0)
                                       , old_thr_def_deregister_node_fn_(0)
+                                      , cleanup_parser_(false)
     {
         // Initialize libxml2 resources.
         LIBXML_TEST_VERSION;
@@ -44,10 +57,18 @@ namespace detail {
     libxml2_globals::~libxml2_globals()
     {
         // Restore the old libxml2 callback functions.
-        xmlRegisterNodeDefault(old_register_node_fn_);
-        xmlDeregisterNodeDefault(old_deregister_node_fn_);
-        xmlThrDefRegisterNodeDefault(old_thr_def_register_node_fn_);
-        xmlThrDefDeregisterNodeDefault(old_thr_def_deregister_node_fn_);
+        xmlRegisterNodeDefault(
+            static_cast<xmlRegisterNodeFunc>(old_register_node_fn_)
+        );
+        xmlDeregisterNodeDefault(
+            static_cast<xmlDeregisterNodeFunc>(old_deregister_node_fn_)
+        );
+        xmlThrDefRegisterNodeDefault(
+            static_cast<xmlRegisterNodeFunc>(old_thr_def_register_node_fn_)
+        );
+        xmlThrDefDeregisterNodeDefault(
+            static_cast<xmlDeregisterNodeFunc>(old_thr_def_deregister_node_fn_)
+        );
         //
         // According to the libxml2 document on xmlCleanupParser():
         //
@@ -62,7 +83,10 @@ namespace detail {
         // doubt abstain from calling this function or do it just before calling exit() to avoid
         // leak reports from Valgrind!
         //
-        //xmlCleanupParser();
+        if (cleanup_parser_)
+        {
+            xmlCleanupParser();
+        }
     }
 
 

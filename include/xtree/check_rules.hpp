@@ -28,6 +28,12 @@
 //!                  | [#x10000-#xEFFFF]
 //! NameChar       ::= NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
 
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+#  pragma GCC diagnostic ignored "-Wtype-limits"
+#endif
+
+
 namespace xtree {
 namespace detail {
 
@@ -79,7 +85,7 @@ namespace detail {
         {
             throw bad_dom_operation("invalid start char in name " + name);
         }
-        for (String::size_type i = 1U; i < name.size(); ++i)
+        for (typename String::size_type i = 1U; i < name.size(); ++i)
         {
             if (!is_name_char(name.at(i)))
             {
@@ -96,7 +102,7 @@ namespace detail {
     template<class String>
     inline void check_qname(const String& qname)
     {
-        String::size_type pos = qname.find_first_of(':');
+        typename String::size_type pos = qname.find_first_of(':');
         if (pos != String::npos)
         {
             check_name(qname.substr(0, pos));

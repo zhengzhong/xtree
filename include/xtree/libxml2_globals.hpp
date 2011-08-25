@@ -9,8 +9,6 @@
 #include "xtree/phoenix_singleton.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
-//TEMP: #include <libxml/tree.h>
-
 
 //! \cond DEV
 
@@ -56,11 +54,12 @@ namespace detail {
 
     private:
 
-        void* old_register_node_fn_;            //!< xmlRegisterNodeFunc
-        void* old_deregister_node_fn_;          //!< xmlDeregisterNodeFunc
-        void* old_thr_def_register_node_fn_;    //!< xmlRegisterNodeFunc
-        void* old_thr_def_deregister_node_fn_;  //!< xmlDeregisterNodeFunc
-        bool  cleanup_parser_;                  //!< indicates whether to cleanup parser at exit.
+        xmlRegisterNodeFunc   old_register_node_fn_;
+        xmlDeregisterNodeFunc old_deregister_node_fn_;
+        xmlRegisterNodeFunc   old_thr_def_register_node_fn_;
+        xmlDeregisterNodeFunc old_thr_def_deregister_node_fn_;
+
+        bool cleanup_parser_;  //!< indicates whether to cleanup parser at exit.
 
     };
 

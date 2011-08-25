@@ -57,18 +57,10 @@ namespace detail {
     libxml2_globals::~libxml2_globals()
     {
         // Restore the old libxml2 callback functions.
-        xmlRegisterNodeDefault(
-            static_cast<xmlRegisterNodeFunc>(old_register_node_fn_)
-        );
-        xmlDeregisterNodeDefault(
-            static_cast<xmlDeregisterNodeFunc>(old_deregister_node_fn_)
-        );
-        xmlThrDefRegisterNodeDefault(
-            static_cast<xmlRegisterNodeFunc>(old_thr_def_register_node_fn_)
-        );
-        xmlThrDefDeregisterNodeDefault(
-            static_cast<xmlDeregisterNodeFunc>(old_thr_def_deregister_node_fn_)
-        );
+        xmlRegisterNodeDefault(old_register_node_fn_);
+        xmlDeregisterNodeDefault(old_deregister_node_fn_);
+        xmlThrDefRegisterNodeDefault(old_thr_def_register_node_fn_);
+        xmlThrDefDeregisterNodeDefault(old_thr_def_deregister_node_fn_);
         //
         // According to the libxml2 document on xmlCleanupParser():
         //

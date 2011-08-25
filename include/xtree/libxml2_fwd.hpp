@@ -34,6 +34,10 @@ typedef struct _xmlXPathObject   xmlXPathObject;
 typedef struct _xmlNodeSet       xmlNodeSet;
 
 
+typedef void (*xmlRegisterNodeFunc)   (xmlNode*);
+typedef void (*xmlDeregisterNodeFunc) (xmlNode*);
+
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif

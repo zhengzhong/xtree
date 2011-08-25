@@ -1,0 +1,133 @@
+#
+# Created by ZHENG Zhong on 2011-08-25.
+#
+# Makefile for xtree (MinGW/GCC 4.5.2)
+#
+# I am not a GNU make expert. In fact, I wrote this file after spending an hour
+# reading some GNU make tutorials on the internet. So I'm pretty sure it's not
+# well written... (For example, it does not manage header dependencies at all.)
+# It's used only to ensure that this project compiles under GCC.
+#
+
+
+INC_DIR = /c/zheng/MinGW/include
+LIB_DIR = /c/zheng/MinGW/lib
+BIN_DIR = /c/zheng/MinGW/bin
+
+
+CC = g++
+CFLAGS = -Wall -Wextra -I$(INC_DIR) -I./include -std=c++0x
+
+
+XTREE_MAIN_DIR = ./src/xtree
+XTREE_TEST_DIR = ./test
+XTREE_TEMP_DIR = ./temp
+XTREE_DIST_DIR = ./dist
+
+
+XTREE_MAIN_SRCS = \
+    attribute.cpp \
+    attribute_map.cpp \
+    child_node.cpp \
+    child_node_list.cpp \
+    comment.cpp \
+    config_diag.cpp \
+    document.cpp \
+    dom_parser.cpp \
+    element.cpp \
+    instruction.cpp \
+    libxml2_callbacks.cpp \
+    libxml2_globals.cpp \
+    libxml2_utility.cpp \
+    node.cpp \
+    node_set.cpp \
+    sax_attribute_list.cpp \
+    sax_error_info.cpp \
+    sax_handler.cpp \
+    sax_parser.cpp \
+    sax_xmlns_context.cpp \
+    schema.cpp \
+    text.cpp \
+    validity.cpp \
+    xml_base.cpp \
+    xmlns.cpp \
+    xpath_context.cpp \
+    xpath_result.cpp
+
+XTREE_MAIN_OBJS = $(XTREE_MAIN_SRCS:.cpp=.obj)
+
+XTREE_TEST_SRCS = \
+    boost_unit_test_framework.cpp \
+    test_bad_value.cpp \
+    test_cleanup_parser.cpp \
+    test_document.cpp \
+    test_document_select.cpp \
+    test_dom_parser.cpp \
+    test_dummy.cpp \
+    test_element.cpp \
+    test_element_child_iterator.cpp \
+    test_element_find.cpp \
+    test_element_insert.cpp \
+    test_element_iterator.cpp \
+    test_element_push.cpp \
+    test_element_select.cpp \
+    test_get_attributes.cpp \
+    test_node_cast.cpp \
+    test_sax_parsing.cpp \
+    test_set_attributes.cpp \
+    test_xmlns.cpp \
+    xtree_auto_link.cpp \
+    xtree_test_main.cpp \
+    xtree_test_utils.cpp
+
+XTREE_TEST_OBJS = $(XTREE_TEST_SRCS:.cpp=.testobj)
+
+
+################################################################################
+
+
+clean:
+	if [ -d $(XTREE_TEMP_DIR) ]; then rm -Rf $(XTREE_TEMP_DIR) ; fi
+	if [ -d $(XTREE_DIST_DIR) ]; then rm -Rf $(XTREE_DIST_DIR) ; fi
+
+
+# Run the `clean` target first, since we do not manage header dependencies.
+prepare: clean
+	mkdir -p $(XTREE_TEMP_DIR)
+	mkdir -p $(XTREE_DIST_DIR)
+
+
+$(XTREE_TEMP_DIR)/%.obj: $(XTREE_MAIN_DIR)/%.cpp prepare
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
+sharedlib: $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_MAIN_OBJS))
+	$(CC) $(CFLAGS) -shared -o $(XTREE_DIST_DIR)/libxtree.dll \
+          -Wl,-out-implib,$(XTREE_DIST_DIR)/libxtree.dll.a \
+          $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_MAIN_OBJS)) \
+          -L$(LIB_DIR) -lxml2
+	@echo [$@] ----------------------------------------
+	@echo [$@]   xtree shared lib built!
+	@echo [$@] ----------------------------------------
+
+
+$(XTREE_TEMP_DIR)/%.testobj: $(XTREE_TEST_DIR)/%.cpp prepare
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
+tests: $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_TEST_OBJS)) sharedlib
+	$(CC) $(CFLAGS) -o $(XTREE_DIST_DIR)/xtree_test.exe \
+          $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_TEST_OBJS)) \
+          -L$(XTREE_DIST_DIR) -lxtree
+	cp $(addprefix $(BIN_DIR)/,libxml2.dll iconv.dll zlib1.dll) $(XTREE_DIST_DIR)
+	@echo [$@] ----------------------------------------
+	@echo [$@]   xtree testsuites built!
+	@echo [$@] ----------------------------------------
+	$(XTREE_DIST_DIR)/xtree_test.exe
+
+
+all: sharedlib tests
+
+
+# EOF
+

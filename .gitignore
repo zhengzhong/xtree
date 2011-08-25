@@ -4,6 +4,7 @@
 
 .hg/
 tmp/
+temp/
 dist/
 
 *~

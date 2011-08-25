@@ -29,6 +29,11 @@
 #  endif
 #endif  // _MSC_VER
 
+#ifdef __GNUC__
+#  define XTREE_GNUC __GNUC__
+#endif  // __GNUC__
+
+
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)  // win32 platform
 #  define XTREE_WIN32 1
 #endif  // _WIN32 || __WIN32__ || WIN32

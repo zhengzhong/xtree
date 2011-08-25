@@ -542,7 +542,9 @@ namespace xtree {
 
         //! Saves the whole XML document to a file.
         //! \param file_name  the file name.
-        void save_to_file(const std::string& file_name) const;
+        //! \param encoding   the encoding to use.
+        void save_to_file(const std::string& file_name,
+                          const std::string& encoding = std::string()) const;
 
         //! Clones the document.
         //! \return the cloned document.

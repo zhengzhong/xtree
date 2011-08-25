@@ -196,6 +196,9 @@
 				RelativePath=".\src\xtree\attribute_map.cpp">
 			</File>
 			<File
+				RelativePath=".\src\xtree\check_rules.cpp">
+			</File>
+			<File
 				RelativePath=".\src\xtree\child_node.cpp">
 			</File>
 			<File

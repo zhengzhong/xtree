@@ -28,6 +28,7 @@ XTREE_DIST_DIR = ./dist
 XTREE_MAIN_SRCS = \
     attribute.cpp \
     attribute_map.cpp \
+	check_rules.cpp \
     child_node.cpp \
     child_node_list.cpp \
     comment.cpp \

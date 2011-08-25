@@ -12,8 +12,10 @@
 #define XTREE_CONFIG_DIAG_STR(x)   XTREE_CONFIG_DIAG_STR_(x)
 
 
-#ifdef XTREE_MSVC
+#if defined(XTREE_MSVC)
 #  pragma message("[xtree config] compiled using Microsoft Visual C++")
+#elif defined(XTREE_GNUC)
+#  pragma message("[xtree config] compiled using GNU C compiler")
 #else
 #  pragma message("[xtree config] compiled using unknown compiler")
 #endif

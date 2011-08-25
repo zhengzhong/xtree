@@ -10,6 +10,10 @@
 #include "xtree/document.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
+#if defined(XTREE_GNUC) && XTREE_GNUC >= 4
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // std::auto_ptr is deprecated.
+#endif
+
 #include <memory>
 #include <string>
 

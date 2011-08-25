@@ -151,12 +151,12 @@ namespace xtree {
     }
 
 
-    void document::save_to_file(const std::string& file_name) const
+    void document::save_to_file(const std::string& file_name, const std::string& encoding) const
     {
         int size = xmlSaveFormatFileEnc(
             file_name.c_str(),
             const_cast<xmlDoc*>(raw()),
-            0,
+            (encoding.empty() ? 0 : encoding.c_str()),
             0
         );
         (size > 0);

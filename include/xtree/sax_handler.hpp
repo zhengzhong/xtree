@@ -30,7 +30,7 @@ namespace xtree {
 
         //! Receives notification of the beginning of an XML document. The SAX parser will invoke
         //! this function only once, before any other event callbacks.
-        virtual void begin_document()
+        virtual void start_document()
         {
             // Do nothing.
         }
@@ -43,48 +43,20 @@ namespace xtree {
             // Do nothing.
         }
 
-        //! Receives notification of the beginning of a namespace scope. Note that begin_ns/end_ns
-        //! events are not guaranteed to be properly nested relative to each other: all begin_ns
-        //! events will occur immediately before the corresponding begin_elem event, and all end_ns
-        //! events will occur immediately after the corresponding end_elem event, but their order
-        //! is not otherwise guaranteed.
-        //!
-        //! There should never be begin_ns/end_ns events for the "xml" prefix, since it is
-        //! predeclared and immutable.
-        //!
-        //! \param prefix  the namespace prefix being declared. An empty string is used for the
-        //!                default element namespace, which has no prefix.
-        //! \param uri     the namespace URI the prefix is mapped to.
-        virtual void begin_xmlns(const std::string& prefix, const std::string& uri)
-        {
-            // Do nothing.
-            detail::unused_arg(prefix);
-            detail::unused_arg(uri);
-        }
-
-        //! Receives notification of the end of a namespace scope.
-        //! \param prefix  the namespace prefix that was being mapped, or an empty string when a
-        //!                default mapping scope ends.
-        virtual void end_xmlns(const std::string& prefix)
-        {
-            // Do nothing.
-            detail::unused_arg(prefix);
-        }
-
         //! Receives notification of the beginning of an element.
-        //! \param name   the local name of this element.
-        //! \param uri    the namespace URI of this element.
-        //! \param qname  the qualified (prefixed) name of this element.
-        //! \param attrs  the attribute list associated with this element.
-        virtual void begin_element(const std::string& name,
+        //! \param name    the local name of this element.
+        //! \param prefix  the namespace prefix of this element.
+        //! \param uri     the namespace URI of this element.
+        //! \param attrs   the attribute list associated with this element.
+        virtual void start_element(const std::string& name,
+                                   const std::string& prefix,
                                    const std::string& uri,
-                                   const std::string& qname,
                                    const sax_attribute_list& attrs)
         {
             // Do nothing.
             detail::unused_arg(name);
+            detail::unused_arg(prefix);
             detail::unused_arg(uri);
-            detail::unused_arg(qname);
             detail::unused_arg(attrs);
         }
 

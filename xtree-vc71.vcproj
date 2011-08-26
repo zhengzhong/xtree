@@ -250,9 +250,6 @@
 				RelativePath=".\src\xtree\sax_parser.cpp">
 			</File>
 			<File
-				RelativePath=".\src\xtree\sax_xmlns_context.cpp">
-			</File>
-			<File
 				RelativePath=".\src\xtree\schema.cpp">
 			</File>
 			<File
@@ -367,9 +364,6 @@
 			</File>
 			<File
 				RelativePath=".\include\xtree\sax_parser.hpp">
-			</File>
-			<File
-				RelativePath=".\include\xtree\sax_xmlns_context.hpp">
 			</File>
 			<File
 				RelativePath=".\include\xtree\schema.hpp">

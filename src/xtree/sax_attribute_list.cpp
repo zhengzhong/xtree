@@ -7,7 +7,6 @@
 #endif
 
 #include "xtree/sax_attribute_list.hpp"
-#include "xtree/sax_xmlns_context.hpp"
 #include "xtree/libxml2_utility.hpp"
 
 #include <libxml/xmlstring.h>
@@ -19,19 +18,20 @@
 namespace xtree {
 
 
-    sax_attribute::sax_attribute(): name_(), uri_(), prefix_(), value_()
+    sax_attribute::sax_attribute(int index, const xmlChar** attrs)
+    : name_(), prefix_(), uri_(), value_()
     {
-        // Do nothing.
-    }
-
-
-    sax_attribute::sax_attribute(const std::string& name,
-                                 const std::string& uri,
-                                 const std::string& prefix,
-                                 const std::string& value)
-    : name_(name), uri_(uri), prefix_(prefix), value_(value)
-    {
-        // Do nothing.
+        name_ = ( attrs[index * 5] != 0
+                ? detail::to_chars(attrs[index * 5])
+                : std::string() );
+        prefix_ = ( attrs[index * 5 + 1] != 0
+                  ? detail::to_chars(attrs[index * 5 + 1])
+                  : std::string() );
+        uri_ = ( attrs[index * 5 + 2] != 0
+               ? detail::to_chars(attrs[index * 5 + 2])
+               : std::string() );
+        value_ = std::string( detail::to_chars(attrs[index * 5 + 3]),
+                              detail::to_chars(attrs[index * 5 + 4]) );
     }
 
 

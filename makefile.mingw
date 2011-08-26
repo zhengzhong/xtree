@@ -46,7 +46,6 @@ XTREE_MAIN_SRCS = \
     sax_error_info.cpp \
     sax_handler.cpp \
     sax_parser.cpp \
-    sax_xmlns_context.cpp \
     schema.cpp \
     text.cpp \
     validity.cpp \

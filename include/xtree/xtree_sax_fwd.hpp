@@ -19,7 +19,6 @@ namespace xtree {
     class XTREE_DECL sax_error_handler;
     class XTREE_DECL sax_error_info;
     class XTREE_DECL sax_attribute;
-    class XTREE_DECL sax_xmlns_context;
 
 
 }  // namespace xtree

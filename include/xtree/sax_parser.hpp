@@ -7,53 +7,24 @@
 
 #include "xtree/config.hpp"
 #include "xtree/xml_base.hpp"
-#include "xtree/sax_attribute_list.hpp"
-#include "xtree/sax_error_info.hpp"
 #include "xtree/sax_handler.hpp"
-#include "xtree/sax_xmlns_context.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
-#include <map>
 #include <set>
 #include <string>
-#include <vector>
 
 
 namespace xtree {
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // libxml2 SAX callbacks
-    //
+    namespace detail {
 
+        //! Initializes a libxml2 SAX2 handler with all the callback functions registered.
+        //! See: http://www.xmlsoft.org/html/libxml-tree.html#xmlSAXHandler
+        //! \param handler  the libxml2 SAX2 handler to initialize.
+        void initialize_libxml2_sax2_handler(xmlSAXHandler& handler);
 
-    //! Libxml2 SAX startDocumentSAXFunc.
-    void libxml2_begin_document(void* user_data);
-
-    //! Libxml2 SAX endDocumentSAXFunc.
-    void libxml2_end_document(void* user_data);
-
-    //! Libxml2 SAX startElementSAXFunc.
-    void libxml2_begin_element(void* user_data, const xmlChar* qname, const xmlChar** attrs);
-
-    //! Libxml2 SAX endElementSAXFunc.
-    void libxml2_end_element(void* user_data, const xmlChar* qname);
-
-    //! Libxml2 SAX charactersSAXFunc.
-    void libxml2_characters(void* user_data, const xmlChar* chars, int length);
-
-    //! Libxml2 SAX cdataBlockSAXFunc.
-    void libxml2_cdata_block(void* user_data, const xmlChar* cdata, int length);
-
-    //! Libxml2 SAX ignorableWhitespaceSAXFunc.
-    void libxml2_ignorable_whitespace(void* user_data, const xmlChar* spaces, int length);
-
-    //! Libxml2 SAX commentSAXFunc.
-    void libxml2_comment(void* user_data, const xmlChar* comment);
-
-    //! Libxml2 SAX xmlStructuredErrorFunc.
-    //! See: http://www.xmlsoft.org/html/libxml-xmlerror.html#xmlError
-    void libxml2_structured_error(void* user_data, xmlError* err);
+    }  // namespace xtree::detail
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,19 +36,7 @@ namespace xtree {
     class XTREE_DECL sax_parser: private xml_base
     {
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // friend functions
-        //
-
-        friend void libxml2_begin_document(void*);
-        friend void libxml2_end_document(void*);
-        friend void libxml2_begin_element(void*, const xmlChar*, const xmlChar**);
-        friend void libxml2_end_element(void*, const xmlChar*);
-        friend void libxml2_characters(void*, const xmlChar*, int);
-        friend void libxml2_cdata_block(void*, const xmlChar*, int);
-        friend void libxml2_ignorable_whitespace(void*, const xmlChar*, int);
-        friend void libxml2_comment(void*, const xmlChar*);
-        friend void libxml2_structured_error(void*, xmlError*);
+        friend void detail::initialize_libxml2_sax2_handler(xmlSAXHandler&);
 
     public:
 
@@ -112,72 +71,48 @@ namespace xtree {
     private:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // private callback member functions
+        // private static libxml2 callback functions
         //
 
         //! Receives notification of the beginning of an XML document.
-        void begin_document();
+        static void start_document(void* context);
 
         //! Receives notification of the end of an XML document.
-        void end_document();
+        static void end_document(void* context);
 
-        //! Receives notification of the beginning of an element.
-        void begin_element(const xmlChar* qname, const xmlChar** attrs);
+        static void start_element_ns(void* context,
+                                     const xmlChar* name,
+                                     const xmlChar* prefix,
+                                     const xmlChar* uri,
+                                     int nb_xmlns_attrs,
+                                     const xmlChar** xmlns_attrs,
+                                     int nb_attrs,
+                                     int nb_defaulted,
+                                     const xmlChar** attrs);
 
-        //! Receives notification of the end of an element.
-        void end_element(const xmlChar* qname);
+        static void end_element_ns(void* context,
+                                   const xmlChar* name,
+                                   const xmlChar* prefix,
+                                   const xmlChar* uri);
 
-        void characters(const xmlChar* chars, int length);
+        static void characters(void* context, const xmlChar* chars, int length);
 
-        void cdata_block(const xmlChar* chars, int length);
+        static void cdata_block(void* context, const xmlChar* chars, int length);
 
-        void ignorable_whitespace(const xmlChar* chars, int length);
+        static void ignorable_whitespace(void* context, const xmlChar* chars, int length);
 
         //! Receives notification of an XML comment.
         //! \param chars  the XML comment.
         //! \param start  the starting position in the XML comment.
         //! \param length  the length of the XML comment.
-        void comment(const xmlChar* chars);
+        static void comment(void* context, const xmlChar* chars);
 
-        void structured_error(xmlError* err);
+        static void structured_error(void* context, xmlError* err);
 
-    private:
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // private utility member functions
-        //
-
-        std::string find_uri(const std::string& prefix) const;
-
-        const std::vector<std::string>& get_deprecated_prefixes() const;
-
-    private:
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // private struct and typedef's
-        //
-
-        //! This class represents an element in the element stack.
-        struct element {
-
-            explicit element(): qname_(), prefixes_() {
-                // Do nothing.
-            }
-
-            // Use auto-generated copy constructor.
-            // Use auto-generated destructor.
-            // Use auto-generated copy assignment.
-
-            std::string              qname_;
-            std::vector<std::string> prefixes_;
-
-        };  // struct element
-
-        //! The element stack.
-        typedef std::vector<element> element_stack;
-
-        //! The namespace prefix mappings: key is the prefix, value is a stack of URIs.
-        //typedef std::map<std::string, std::vector<std::string> > prefix_uris_map;
+        //! Casts the context pointer to the SAX parser.
+        //! \param context  pointer to the context pointer.
+        //! \return the SAX parser.
+        static sax_parser& get_sax_parser(void* context);
 
     private:
 
@@ -193,9 +128,7 @@ namespace xtree {
         // private members
         //
 
-        std::set<std::string> features_;         //!< The feature and value map.
-        int                   level_;            //!< The level of the current element.
-        sax_xmlns_context     context_;          //!< XML namespace mappings.
+        std::set<std::string> features_;         //!< SAX2 features.
         sax_content_handler*  content_handler_;  //!< Pointer to content handler.
         sax_error_handler*    error_handler_;    //!< Pointer to error handler.
 

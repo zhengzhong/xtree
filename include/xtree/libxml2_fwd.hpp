@@ -13,6 +13,10 @@ extern "C" {
 #endif
 
 
+struct _xmlSAXHandler;
+typedef struct _xmlSAXHandler  xmlSAXHandler;
+
+
 typedef unsigned char xmlChar;
 
 struct _xmlError;

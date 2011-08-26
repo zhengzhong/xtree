@@ -14,7 +14,6 @@
 #include "xtree/sax_features.hpp"
 #include "xtree/sax_handler.hpp"
 #include "xtree/sax_parser.hpp"
-#include "xtree/sax_xmlns_context.hpp"
 
 
 #endif  // XTREE_XTREE_SAX_HPP_20110603__

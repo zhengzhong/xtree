@@ -6,100 +6,8 @@
 
 #include <xtree/xtree.hpp>
 
-#include <iostream>
 #include <memory>
 #include <string>
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-namespace {
-
-
-    class dummy_content_hander: public xtree::sax_content_handler
-    {
-
-    public:
-
-        void begin_document()
-        {
-            std::cout << "begin document\n";
-        }
-
-        void end_document()
-        {
-            std::cout << "end document\n";
-        }
-
-        void begin_xmlns(const std::string& prefix, const std::string& uri)
-        {
-            std::cout << "begin_xmlns: " << prefix << " -> " << uri << "\n";
-        }
-
-        void end_xmlns(const std::string& prefix)
-        {
-            std::cout << "end_xmlns: " << prefix << "\n";
-        }
-
-        void begin_element(const std::string& name,
-                           const std::string& uri,
-                           const std::string& qname,
-                           const xtree::sax_attribute_list& attrs)
-        {
-            std::cout << "begin_element: " << name << ", " << uri << ", " << qname << "\n";
-            for (xtree::sax_attribute_list::const_iterator i = attrs.begin(); i != attrs.end(); ++i)
-            {
-                std::cout << "  @" << i->name() << ", " << i->uri() << ", " << i->prefix() << ", " << i->qname() << " = " << i->value() << "\n";
-            }
-        }
-
-        void end_element(const std::string& name,
-                         const std::string& uri,
-                         const std::string& qname)
-        {
-            std::cout << "end_element: " << name << ", " << uri << ", " << qname << "\n";
-        }
-
-        void characters(const char* chars, int length)
-        {
-            std::cout << "characters: ";
-            for (int i = 0; i < length; ++i)
-            {
-                std::cout << chars[i];
-            }
-            std::cout << "\n";
-        }
-
-        void cdata_block(const char* chars, int length)
-        {
-            std::cout << "cdata_block: ";
-            for (int i = 0; i < length; ++i)
-            {
-                std::cout << chars[i];
-            }
-            std::cout << "\n";
-        }
-
-        void ignorable_whitespace(const char*, int length)
-        {
-            std::cout << "ignorable_whitespace: ";
-            for (int i = 0; i < length; ++i)
-            {
-                std::cout << ".";
-            }
-            std::cout << "\n";
-        }
-
-        void comment(const char* chars)
-        {
-            std::cout << "comment: " << chars << "\n";
-        }
-
-    };
-
-
-}  // anonymous namespace
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,20 +29,121 @@ BOOST_AUTO_TEST_CASE(test_sax_parsing_no_handler)
 }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+namespace {
+
+
+    static const std::string EXPECTED_[] = {
+        "start_document: ",
+        "start_element: {http://example.com/xtree}:root",
+        "start_element: {http://example.com/xtree/x1}x:sub1",
+        "start_element: {http://example.com/xtree/x2}x:sub2",
+        "start_element: {http://example.com/xtree/x2}x:sub3",
+        "attribute: {}@:a=A",
+        "attribute: {http://example.com/xtree/x2}@x:b=B",
+        "characters: hello,world",
+        "end_element: {http://example.com/xtree/x2}x:sub3",
+        "end_element: {http://example.com/xtree/x2}x:sub2",
+        "end_element: {http://example.com/xtree/x1}x:sub1",
+        "end_element: {http://example.com/xtree}:root",
+        "end_document: ",
+    };
+
+    static const unsigned int MAX_INDEX_ = sizeof(EXPECTED_) / sizeof(const std::string);
+
+
+    class dummy_content_handler: public xtree::sax_content_handler
+    {
+
+    public:
+
+        dummy_content_handler(): index_(0)
+        {
+            // Do nothing.
+        }
+
+        void start_document()
+        {
+            check_("start_document: ");
+        }
+
+        void end_document()
+        {
+            check_("end_document: ");
+            BOOST_CHECK_EQUAL(index_, MAX_INDEX_);
+        }
+
+        void start_element(const std::string& name,
+                           const std::string& prefix,
+                           const std::string& uri,
+                           const xtree::sax_attribute_list& attrs)
+        {
+            check_("start_element: {" + uri + "}" + prefix + ":" + name);
+            for (xtree::sax_attribute_list::const_iterator i = attrs.begin(); i != attrs.end(); ++i)
+            {
+                check_( "attribute: {" + i->uri() + "}@" + i->prefix() + ":" + i->name()
+                      + "=" + i->value() );
+            }
+        }
+
+        void end_element(const std::string& name,
+                         const std::string& prefix,
+                         const std::string& uri)
+        {
+            check_("end_element: {" + uri + "}" + prefix + ":" + name);
+        }
+
+        void characters(const char* chars, int length)
+        {
+            check_("characters: " + std::string(chars, length));
+        }
+
+        void cdata_block(const char* chars, int length)
+        {
+            check_("cdata_block: " + std::string(chars, length));
+        }
+
+        void comment(const char* chars)
+        {
+            check_("comment: " + std::string(chars));
+        }
+
+    private:
+
+        void check_(const std::string& got)
+        {
+            BOOST_REQUIRE(index_ < MAX_INDEX_);
+            BOOST_CHECK_EQUAL(got, EXPECTED_[index_++]);
+        }
+
+    private:
+
+        unsigned int index_;
+
+    };
+
+
+}  // anonymous namespace
+
+
 BOOST_AUTO_TEST_CASE(test_sax_parsing_2)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
-        "<root xmlns='http://www.example.com/xtree' xmlns:x='http://www.example.com/xtree/x'>"
-        "  <x:sub xmlns:x='http://www.example.com/xtree/x2'>"
-        "    <x:subsub a='A' x:b='XB'>hello,world</x:subsub>"
-        "  </x:sub>"
+        "<root xmlns='http://example.com/xtree'>"
+          "<x:sub1 xmlns:x='http://example.com/xtree/x1'>"
+            "<x:sub2 xmlns:x='http://example.com/xtree/x2'>"
+              "<x:sub3 a='A' x:b='B'>hello,world</x:sub3>"
+            "</x:sub2>"
+          "</x:sub1>"
         "</root>"
     ;
     try
     {
         xtree::sax_parser parser;
-        dummy_content_hander handler;
+        dummy_content_handler handler;
         parser.set_content_handler(&handler);
         parser.parse_string(TEST_XML);
     }

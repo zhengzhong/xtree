@@ -6,7 +6,7 @@
 #define XTREE_SAX_ATTRIBUTE_LIST_HPP_20090122__
 
 #include "xtree/config.hpp"
-#include "xtree/sax_xmlns_context.hpp"
+#include "xtree/libxml2_fwd.hpp"
 
 #include <string>
 #include <vector>
@@ -20,21 +20,11 @@ namespace xtree {
 
     public:
 
-        explicit sax_attribute();
-
-        explicit sax_attribute(const std::string& name,
-                               const std::string& uri,
-                               const std::string& prefix,
-                               const std::string& value);
+        explicit sax_attribute(int index, const xmlChar** attrs);
 
         const std::string& name() const
         {
             return name_;
-        }
-
-        const std::string& uri() const
-        {
-            return uri_;
         }
 
         const std::string& prefix() const
@@ -42,9 +32,9 @@ namespace xtree {
             return prefix_;
         }
 
-        std::string qname() const
+        const std::string& uri() const
         {
-            return (prefix_.empty() ? name_ : prefix_ + ":" + name_);
+            return uri_;
         }
 
         const std::string& value() const
@@ -55,9 +45,10 @@ namespace xtree {
     private:
 
         std::string name_;
-        std::string uri_;
         std::string prefix_;
+        std::string uri_;
         std::string value_;
+
     };
 
 

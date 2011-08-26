@@ -2,6 +2,10 @@
 // Created by ZHENG Zhong on 2011-06-07.
 //
 
+#if defined(_MSC_VER) && !defined(_DEBUG)
+#  pragma warning(disable: 4702)  // in release: warning of unreachable code, from VC71 STL.
+#endif
+
 #if defined(__GNUC__) && __GNUC__ >= 4
 #  pragma GCC diagnostic ignored "-Wparentheses"
 #endif

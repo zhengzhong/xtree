@@ -12,6 +12,7 @@
 #include "xtree/basic_xmlns_ptr.hpp"
 #include "xtree/xmlns.hpp"
 #include "xtree/check_rules.hpp"
+#include "xtree/unused_arg.hpp"
 #include "xtree/libxml2_utility.hpp"
 
 #include <libxml/tree.h>
@@ -98,6 +99,7 @@ namespace xtree {
         {
             attribute* new_attribute = create_attr_(qname, value);
             assert(new_attribute != 0);
+            detail::unused_arg(new_attribute);  // disable warning 4189 in release mode.
         }
         else
         {

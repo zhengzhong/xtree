@@ -5,6 +5,10 @@
 #ifndef XTREE_XTREE_TEST_UTILS_20110316__
 #define XTREE_XTREE_TEST_UTILS_20110316__
 
+#if defined(_MSC_VER) && !defined(_DEBUG)
+#  pragma warning(disable: 4702)  // in release: warning of unreachable code, from VC71 STL.
+#endif
+
 #if defined(__GNUC__) && __GNUC__ >= 4
 #  pragma GCC diagnostic ignored "-Wdeprecated-declarations"  // std::auto_ptr is deprecated.
 #endif

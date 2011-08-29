@@ -85,3 +85,25 @@ namespace detail {
 }  // namespace xtree::detail
 }  // namespace xtree
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+namespace xtree {
+
+
+    void set_libxml2_cleanup_parser(bool flag)
+    {
+        detail::libxml2_globals::set_cleanup_parser(flag);
+    }
+
+
+    bool get_libxml2_cleanup_parser()
+    {
+        return detail::libxml2_globals::get_cleanup_parser();
+    }
+
+
+}  // namespace xtree
+
+

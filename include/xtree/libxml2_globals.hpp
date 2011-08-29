@@ -72,7 +72,24 @@ namespace detail {
 #  pragma warning(pop)  // noncopyable warnings
 #endif
 
+
 //! \endcond
+
+
+namespace xtree {
+
+
+    //! Sets the cleanup parser flag to indicate whether to call xmlCleanupParser() at exit.
+    //! \param flag  the new cleanup parser flag.
+    XTREE_DECL void set_libxml2_cleanup_parser(bool flag);
+
+
+    //! Returns the cleanup parser flag.
+    //! \return the cleanup parser flag.
+    XTREE_DECL bool get_libxml2_cleanup_parser();
+
+
+}  // namespace xtree
 
 
 #endif  // XTREE_LIBXML2_GLOBALS_HPP_20091126__

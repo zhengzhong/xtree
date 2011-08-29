@@ -42,3 +42,24 @@ BOOST_AUTO_TEST_CASE(test_set_attributes)
     }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_set_attribute_error)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root xmlns:x='http://example.com/x'/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        xtree::element_ptr root = doc->root();
+        BOOST_CHECK_THROW(root->set_attr("y:a", "A"), xtree::bad_dom_operation);
+        BOOST_CHECK_EQUAL(root->attrs().size(), 0U);
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+

@@ -61,17 +61,17 @@ namespace xtree {
         }
 
         //! Receives notification of the end of an element.
-        //! \param name   the local name of this element.
-        //! \param uri    the namespace URI of this element.
-        //! \param qname  the qualified (prefixed) name of this element.
+        //! \param name    the local name of this element.
+        //! \param prefix  the namespace prefix of this element.
+        //! \param uri     the namespace URI of this element.
         virtual void end_element(const std::string& name,
-                                 const std::string& uri,
-                                 const std::string& qname)
+                                 const std::string& prefix,
+                                 const std::string& uri)
         {
             // Do nothing.
             detail::unused_arg(name);
+            detail::unused_arg(prefix);
             detail::unused_arg(uri);
-            detail::unused_arg(qname);
         }
 
         virtual void characters(const char* chars, int length)

@@ -17,6 +17,8 @@
 #include "xtree/check_rules.hpp"
 #include "xtree/libxml2_utility.hpp"
 
+#include <libxml/tree.h>
+
 #include <cassert>
 #include <cstring>
 #include <string>

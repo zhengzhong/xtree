@@ -246,12 +246,7 @@ namespace xtree {
 
     void node_set::check_acceptable(const xpath_result& result)
     {
-        const xmlXPathObject* px = result.raw();
-        if (px == 0)
-        {
-            throw xpath_error("fail to convert empty xpath_result to node_set");
-        }
-        if (px->type != XPATH_NODESET)
+        if (result.type() != node_set_result)
         {
             throw xpath_error(result.xpath() + " does not evaluate to a node_set");
         }

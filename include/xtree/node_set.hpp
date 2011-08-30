@@ -274,14 +274,6 @@ namespace xtree {
 
         virtual void check_acceptable(const xpath_result& result);
 
-    private:
-
-        //! Non-implemented copy constructor.
-        node_set(const node_set&);
-
-        //! Non-implemented copy assignment.
-        node_set& operator=(const node_set&);
-
     };
 
 

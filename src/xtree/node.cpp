@@ -57,7 +57,24 @@ namespace xtree {
 
     node_t node::type() const
     {
-        return detail::to_node_t(raw()->type);
+        switch (raw()->type)
+        {
+        case XML_ATTRIBUTE_NODE:
+            return attribute_node;
+        case XML_ELEMENT_NODE:
+            return element_node;
+        case XML_TEXT_NODE:
+            return text_node;
+        case XML_CDATA_SECTION_NODE:
+            return cdata_node;
+        case XML_COMMENT_NODE:
+            return comment_node;
+        case XML_PI_NODE:
+            return instruction_node;
+        default:
+            assert(! "Unknown libxml2 node type");
+            return unknown_node;
+        }
     }
 
 

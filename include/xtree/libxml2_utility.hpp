@@ -6,10 +6,8 @@
 #define XTREE_LIBXML2_UTILITY_HPP_20080716__
 
 #include "xtree/config.hpp"
-#include "xtree/types.hpp"
+#include "xtree/libxml2_fwd.hpp"
 
-#include <libxml/tree.h>
-#include <cassert>
 #include <string>
 #include <utility>
 
@@ -18,39 +16,6 @@
 
 namespace xtree {
 namespace detail {
-
-
-    //! Converts the XML node type enumeration.
-    //! \param source_type  the libxml2-defined node type.
-    //! \return the xml node type defined as node_t.
-    inline node_t to_node_t(xmlElementType source_type)
-    {
-        node_t target_type = unknown_node;
-        switch (source_type) {
-        case XML_ATTRIBUTE_NODE:
-            target_type = attribute_node;
-            break;
-        case XML_ELEMENT_NODE:
-            target_type = element_node;
-            break;
-        case XML_TEXT_NODE:
-            target_type = text_node;
-            break;
-        case XML_CDATA_SECTION_NODE:
-            target_type = cdata_node;
-            break;
-        case XML_COMMENT_NODE:
-            target_type = comment_node;
-            break;
-        case XML_PI_NODE:
-            target_type = instruction_node;
-            break;
-        default:
-            assert(! "Unknown libxml2 node type");
-            break;
-        }
-        return target_type;
-    }
 
 
     //! Converts libxml2's xmlChar* to const char*.

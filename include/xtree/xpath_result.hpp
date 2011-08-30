@@ -6,6 +6,7 @@
 #define XTREE_XPATH_HPP_20110322__
 
 #include "xtree/config.hpp"
+#include "xtree/types.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
 #include <string>
@@ -32,13 +33,14 @@ namespace xtree {
         //! Destructor.
         virtual ~xpath_result();
 
-        //! Frees the underlying xmlXPathObject.
-        void free();
-
         //! Transfers the ownership of the underlying xmlXPathObject to the other xpath_result.
         //! \param other  the other xpath_result to take over the ownership of the xmlXPathObject.
         //! \throws xpath_error  if the transfer fails.
         void transfer(xpath_result& other);
+
+        //! Returns the XPath result type.
+        //! \return the XPath result type.
+        xpath_result_t type() const;
 
         //! Returns the XPath expression that generates this result.
         const std::string& xpath() const
@@ -53,6 +55,12 @@ namespace xtree {
         }
 
     private:
+
+        //! Non-implemented copy constructor.
+        xpath_result(const xpath_result&);
+
+        //! Non-implemented copy assignment.
+        xpath_result& operator=(const xpath_result&);
 
         virtual void check_acceptable(const xpath_result& result);
 

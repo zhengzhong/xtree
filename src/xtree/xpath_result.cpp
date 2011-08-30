@@ -34,13 +34,6 @@ namespace xtree {
 
     xpath_result::~xpath_result()
     {
-        free();
-    }
-
-
-    void xpath_result::free()
-    {
-        xpath_.clear();
         if (raw_ != 0)
         {
             xmlXPathFreeObject(raw_);
@@ -54,9 +47,31 @@ namespace xtree {
         if (this != &other)
         {
             other.check_acceptable(*this);
-            other.free();
             std::swap(other.xpath_, xpath_);
             std::swap(other.raw_, raw_);
+        }
+    }
+
+
+    xpath_result_t xpath_result::type() const
+    {
+        const xmlXPathObject* px = raw();
+        if (px == 0)
+        {
+            return undefined_result;
+        }
+        switch (px->type)
+        {
+        case XPATH_NODESET:
+            return node_set_result;
+        case XPATH_BOOLEAN:
+            return boolean_result;
+        case XPATH_NUMBER:
+            return number_result;
+        case XPATH_STRING:
+            return string_result;
+        default:
+            return undefined_result;
         }
     }
 

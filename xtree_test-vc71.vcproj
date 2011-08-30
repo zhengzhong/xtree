@@ -249,6 +249,9 @@
 				RelativePath=".\test\test_node_cast.cpp">
 			</File>
 			<File
+				RelativePath=".\test\test_node_set_iterators.cpp">
+			</File>
+			<File
 				RelativePath=".\test\test_sax_parsing.cpp">
 			</File>
 			<File

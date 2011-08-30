@@ -11,99 +11,153 @@
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
+#include <iterator>
+
 
 namespace xtree {
 
 
+    class XTREE_DECL element;
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // const_node_set_iterator
+    // basic_node_set_iterator
     //
 
 
-    class XTREE_DECL const_node_set_iterator
+    template<class T, class Mover>
+    class basic_node_set_iterator: public std::iterator<std::bidirectional_iterator_tag, T>
+    {
+
+        template<class T_, class Mover_>
+        friend class basic_node_set_iterator;
+
+        typedef basic_node_set_iterator<T, Mover>  this_type;
+        typedef std::iterator<std::bidirectional_iterator_tag, T>  base_type;
+        typedef Mover  mover_type;
+
+    public:
+
+        typedef typename base_type::value_type  value_type;
+        typedef typename base_type::pointer     pointer;
+        typedef typename base_type::reference   reference;
+
+    public:
+
+        //! Default constructor.
+        explicit basic_node_set_iterator(): mover_(0, 0)
+        {
+            // Do nothing.
+        }
+
+        explicit basic_node_set_iterator(xmlNodeSet* nodes, int index): mover_(nodes, index)
+        {
+            // Do nothing.
+        }
+
+        //! Generic copy constructor.
+        template<class T_, class Mover_>
+        basic_node_set_iterator(const basic_node_set_iterator<T_, Mover_>& rhs): mover_(rhs.mover_)
+        {
+            // Do nothing.
+        }
+
+        //! Generic copy assignment.
+        template<class T_, class Mover_>
+        this_type& operator=(const basic_node_set_iterator<T_, Mover_>& rhs)
+        {
+            mover_ = rhs.mover_;
+            return *this;
+        }
+
+        //! Generic comparison operator.
+        template<class T_, class Mover_>
+        bool operator==(const basic_node_set_iterator<T_, Mover_>& rhs) const
+        {
+            return ( mover_ == rhs.mover_ );
+        }
+
+        //! Generic comparison operator.
+        template<class T_, class Mover_>
+        bool operator!=(const basic_node_set_iterator<T_, Mover_>& rhs) const
+        {
+            return !operator==(rhs);
+        }
+
+        reference operator*() const
+        {
+            return (*mover_.current());
+        }
+
+        pointer operator->() const
+        {
+            return mover_.current();
+        }
+
+        this_type& operator++()
+        {
+            mover_.increment();
+            return *this;
+        }
+
+        this_type operator++(int)
+        {
+            this_type tmp(*this);
+            mover_.increment();
+            return tmp;
+        }
+
+        this_type& operator--()
+        {
+            mover_.decrement();
+            return *this;
+        }
+
+        this_type operator--(int)
+        {
+            this_type tmp(*this);
+            mover_.decrement();
+            return tmp;
+        }
+
+        basic_node_ptr<T> ptr() const
+        {
+            return basic_node_ptr<T>(mover_.current());
+        }
+
+    private:
+
+        mover_type mover_;
+
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // node_set_mover
+    //
+
+
+    class XTREE_DECL node_set_mover
     {
 
     public:
 
-        typedef const node   value_type;
-        typedef const node&  reference;
-        typedef const node*  pointer;
-
-    public:
-
-        explicit const_node_set_iterator(): nodes_(0), index_(0)
-        {
-            // Do nothing.
-        }
-
-        explicit const_node_set_iterator(xmlNodeSet* nodes, int index)
-        : nodes_(nodes), index_(index)
-        {
-            // Do nothing.
-        }
+        explicit node_set_mover(xmlNodeSet* nodes, int index);
 
         // Use auto-generated copy constructor.
         // Use auto-generated copy assignment.
         // Use auto-generated destructor.
 
-        bool operator==(const const_node_set_iterator& rhs) const
+        bool operator==(const node_set_mover& rhs) const
         {
-            return ( nodes_ == rhs.nodes_ && index_ == rhs.index_ );
+            return (nodes_ == rhs.nodes_ && index_ == rhs.index_);
         }
-
-        bool operator!=(const const_node_set_iterator& rhs) const
-        {
-            return !operator==(rhs);
-        }
-
-        const node& operator*() const
-        {
-            return (*current());
-        }
-
-        const node* operator->() const
-        {
-            return current();
-        }
-
-        const_node_set_iterator& operator++()
-        {
-            increment();
-            return *this;
-        }
-
-        const_node_set_iterator operator++(int)
-        {
-            const_node_set_iterator tmp(*this);
-            increment();
-            return tmp;
-        }
-
-        const_node_set_iterator& operator--()
-        {
-            decrement();
-            return *this;
-        }
-
-        const_node_set_iterator operator--(int)
-        {
-            const_node_set_iterator tmp(*this);
-            decrement();
-            return tmp;
-        }
-
-        basic_node_ptr<const node> ptr() const
-        {
-            return basic_node_ptr<const node>(current());
-        }
-
-    protected:
 
         void increment();
 
         void decrement();
 
-        const node* current() const;
+        node* current() const;
 
     private:
 
@@ -114,77 +168,36 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // node_set_iterator
+    // node_set_element_mover
     //
 
 
-    class XTREE_DECL node_set_iterator: public const_node_set_iterator
+    class XTREE_DECL node_set_element_mover
     {
 
-        typedef const_node_set_iterator  base_type;
-
     public:
 
-        typedef node   value_type;
-        typedef node&  reference;
-        typedef node*  pointer;
-
-    public:
-
-        explicit node_set_iterator()
-        {
-            // Do nothing.
-        }
-
-        explicit node_set_iterator(xmlNodeSet* nodes, int index): base_type(nodes, index)
-        {
-            // Do nothing.
-        }
+        explicit node_set_element_mover(xmlNodeSet* nodes, int index);
 
         // Use auto-generated copy constructor.
         // Use auto-generated copy assignment.
         // Use auto-generated destructor.
 
-        node& operator*() const
+        bool operator==(const node_set_element_mover& rhs) const
         {
-            return const_cast<node&>(base_type::operator*());
+            return (nodes_ == rhs.nodes_ && index_ == rhs.index_);
         }
 
-        node* operator->() const
-        {
-            return const_cast<node*>(base_type::operator->());
-        }
+        void increment();
 
-        node_set_iterator& operator++()
-        {
-            increment();
-            return *this;
-        }
+        void decrement();
 
-        node_set_iterator operator++(int)
-        {
-            node_set_iterator tmp(*this);
-            increment();
-            return tmp;
-        }
+        element* current() const;
 
-        node_set_iterator& operator--()
-        {
-            decrement();
-            return *this;
-        }
+    private:
 
-        node_set_iterator operator--(int)
-        {
-            node_set_iterator tmp(*this);
-            decrement();
-            return tmp;
-        }
-
-        basic_node_ptr<node> ptr() const
-        {
-            return const_node_cast<node>(base_type::ptr());
-        }
+        xmlNodeSet* nodes_;  //!< Raw pointer to the xmlNodeSet object.
+        int         index_;  //!< The current node index of this iterator.
 
     };
 
@@ -200,8 +213,21 @@ namespace xtree {
 
     public:
 
-        typedef node_set_iterator        iterator;
-        typedef const_node_set_iterator  const_iterator;
+        typedef basic_node_set_iterator<
+            node, node_set_mover
+        >  iterator;
+
+        typedef basic_node_set_iterator<
+            const node, node_set_mover
+        >  const_iterator;
+
+        typedef basic_node_set_iterator<
+            element, node_set_element_mover
+        >  element_iterator;
+
+        typedef basic_node_set_iterator<
+            const element, node_set_element_mover
+        >  const_element_iterator;
 
     public:
 
@@ -229,6 +255,20 @@ namespace xtree {
 
         //! Const version of end().
         const_iterator end() const;
+
+        //! Returns an element iterator to the first element of this node set.
+        //! \return an element iterator to the first element of this node set.
+        element_iterator begin_element();
+
+        //! Returns an element iterator just past the last element of this node set.
+        //! \return an element iterator just past the last element of this node set.
+        element_iterator end_element();
+
+        //! Const version of begin_element().
+        const_element_iterator begin_element() const;
+
+        //! Const version of end_element().
+        const_element_iterator end_element() const;
 
     private:
 

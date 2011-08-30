@@ -19,15 +19,22 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // const_node_set_iterator
+    // node_set_mover
     //
 
 
-    void const_node_set_iterator::increment()
+    node_set_mover::node_set_mover(xmlNodeSet* nodes, int index)
+    : nodes_(nodes), index_(index)
+    {
+        // Do nothing.
+    }
+
+
+    void node_set_mover::increment()
     {
         if (nodes_ == 0)
         {
-            throw xpath_error("increment() called on iterator of empty node_set");
+            throw xpath_error("increment() called on empty node set");
         }
         if (index_ >= nodes_->nodeNr)
         {
@@ -37,11 +44,11 @@ namespace xtree {
     }
 
 
-    void const_node_set_iterator::decrement()
+    void node_set_mover::decrement()
     {
         if (nodes_ == 0)
         {
-            throw xpath_error("decrement() called on iterator of empty node_set");
+            throw xpath_error("decrement() called on empty node set");
         }
         if (index_ == 0)
         {
@@ -51,18 +58,110 @@ namespace xtree {
     }
 
 
-    const node* const_node_set_iterator::current() const
+    node* node_set_mover::current() const
     {
         if (nodes_ == 0)
         {
-            throw xpath_error("current() called on iterator of empty node_set");
+            throw xpath_error("current() called on empty node set");
         }
         if (index_ < 0 || index_ >= nodes_->nodeNr)
         {
-            throw xpath_error("current() called on invalid iterator");
+            throw xpath_error("current() called on invalid position");
         }
-        return static_cast<const node*>( nodes_->nodeTab[index_]->_private );
+        return static_cast<node*>( nodes_->nodeTab[index_]->_private );
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // node_set_element_mover
+    //
+
+
+    node_set_element_mover::node_set_element_mover(xmlNodeSet* nodes, int index)
+    : nodes_(nodes), index_(index)
+    {
+        while (index_ < nodes_->nodeNr && nodes_->nodeTab[index_]->type != XML_ELEMENT_NODE)
+        {
+            ++index_;
+        }
+    }
+
+
+    void node_set_element_mover::increment()
+    {
+        if (nodes_ == 0)
+        {
+            throw xpath_error("increment() called on empty node set");
+        }
+        if (index_ >= nodes_->nodeNr)
+        {
+            throw xpath_error("increment() called at end position");
+        }
+        do 
+        {
+            ++index_;
+        }
+        while (index_ < nodes_->nodeNr && nodes_->nodeTab[index_]->type != XML_ELEMENT_NODE);
+    }
+
+
+    void node_set_element_mover::decrement()
+    {
+        if (nodes_ == 0)
+        {
+            throw xpath_error("decrement() called on empty node set");
+        }
+        int new_index = index_;
+        do
+        {
+            --new_index;
+        }
+        while (new_index >= 0 && nodes_->nodeTab[new_index]->type != XML_ELEMENT_NODE);
+        if (new_index < 0)
+        {
+            throw xpath_error("decrement() called at begin position");
+        }
+        index_ = new_index;
+    }
+
+
+    element* node_set_element_mover::current() const
+    {
+        if (nodes_ == 0)
+        {
+            throw xpath_error("current() called on empty node set");
+        }
+        if (index_ < 0 || index_ >= nodes_->nodeNr)
+        {
+            throw xpath_error("current() called on invalid position");
+        }
+        return static_cast<element*>( nodes_->nodeTab[index_]->_private );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // node_set :: helper functions
+    //
+
+
+    namespace {
+
+        template<class Iterator>
+        inline Iterator make_iterator_(const xmlXPathObject* raw, bool is_begin)
+        {
+            const xmlNodeSet* px = raw->nodesetval;
+            if (px == 0)
+            {
+                return Iterator();
+            }
+            else
+            {
+                int index = (is_begin ? 0 : px->nodeNr);
+                return Iterator(const_cast<xmlNodeSet*>(px), index);
+            }
+        }
+
+    }  // anonymous namespace
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,57 +198,49 @@ namespace xtree {
 
     node_set::iterator node_set::begin()
     {
-        const xmlNodeSet* px = raw()->nodesetval;
-        if (px == 0)
-        {
-            return iterator();
-        }
-        else
-        {
-            return iterator(const_cast<xmlNodeSet*>(px), 0);
-        }
+        return make_iterator_<iterator>(raw(), true);
     }
 
 
     node_set::iterator node_set::end()
     {
-        const xmlNodeSet* px = raw()->nodesetval;
-        if (px == 0)
-        {
-            return iterator();
-        }
-        else
-        {
-            return iterator(const_cast<xmlNodeSet*>(px), px->nodeNr);
-        }
+        return make_iterator_<iterator>(raw(), false);
     }
 
 
     node_set::const_iterator node_set::begin() const
     {
-        const xmlNodeSet* px = raw()->nodesetval;
-        if (px == 0)
-        {
-            return const_iterator();
-        }
-        else
-        {
-            return const_iterator(const_cast<xmlNodeSet*>(px), 0);
-        }
+        return make_iterator_<const_iterator>(raw(), true);
     }
 
 
     node_set::const_iterator node_set::end() const
     {
-        const xmlNodeSet* px = raw()->nodesetval;
-        if (px == 0)
-        {
-            return const_iterator();
-        }
-        else
-        {
-            return const_iterator(const_cast<xmlNodeSet*>(px), px->nodeNr);
-        }
+        return make_iterator_<const_iterator>(raw(), false);
+    }
+
+
+    node_set::element_iterator node_set::begin_element()
+    {
+        return make_iterator_<element_iterator>(raw(), true);
+    }
+
+
+    node_set::element_iterator node_set::end_element()
+    {
+        return make_iterator_<element_iterator>(raw(), false);
+    }
+
+
+    node_set::const_element_iterator node_set::begin_element() const
+    {
+        return make_iterator_<const_element_iterator>(raw(), true);
+    }
+
+
+    node_set::const_element_iterator node_set::end_element() const
+    {
+        return make_iterator_<const_element_iterator>(raw(), false);
     }
 
 

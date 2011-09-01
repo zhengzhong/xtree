@@ -168,13 +168,6 @@ namespace xtree {
         //! \throw bad_dom_operation  if any error occurs.
         void set_xmlns(const std::string& prefix, const std::string& uri);
 
-        //! Checks that all the namespaces declared within the given tree are properly declared.
-        //! As much as possible the function tries to reuse the existing namespaces found in the
-        //! new environment. If not possible the new namespaces are redeclared on the element.
-        //! \return the number of XML namespace declarations created.
-        //! \throws internal_dom_error  if an error occurs.
-        size_type reconciliate_xmlns();
-
         ////////////////////////////////////////////////////////////////////////////////////////////
         // attributes
         //

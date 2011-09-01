@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(test_element_insert_adopt_range)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_element_insert_and_reconciliate_xmlns)
+BOOST_AUTO_TEST_CASE(test_element_insert_with_xmlns)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML_1 =
@@ -301,9 +301,6 @@ BOOST_AUTO_TEST_CASE(test_element_insert_and_reconciliate_xmlns)
                 BOOST_CHECK(++pos == root->end());
             }
             BOOST_CHECK_EQUAL(root2->empty(), true);
-            // Call reconciliate_xmlns() to make xmlns valid after insertion (required!!).
-            // Note: after reconciliate_xmlns(), namespace prefix is not guaranteed.
-            root->reconciliate_xmlns();
         }
         // At this point, all temporary documents should have been destroyed.
         BOOST_CHECK_EQUAL(root->size(), 7U);

@@ -22,14 +22,14 @@
 #include <utility>
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_clone)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
-        "<root xmlns='http://www.example.com/xtree' attr='some value'>"
+        "<root xmlns='http://example.com/xtree' attr='some value'>"
         "  <item index='zero'>0</item>"
         "  <item index='one'>1</item>"
         "  <item index='two'>2</item>"
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(test_document_clone)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc1(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML);
         std::auto_ptr<xtree::document> doc2(doc1->clone());
         xtree::element_ptr root1 = doc1->root();
         xtree::element_ptr root2 = doc2->root();
@@ -84,14 +84,14 @@ BOOST_AUTO_TEST_CASE(test_document_clone)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
-        "<root xmlns='http://www.example.com/xtree' attr='some value'>"
+        "<root xmlns='http://example.com/xtree' attr='some value'>"
         "  <item>content</item>"
         "  <item>content</item>"
         "  <item>content</item>"
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
     {
         std::auto_ptr<xtree::document> doc(new xtree::document());
         {
-            std::auto_ptr<xtree::document> doc2(xtree::parse_string(TEST_XML));
+            std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
             xtree::element_ptr root2 = doc2->root();
             xtree::element_ptr root = doc->reset_root_clone(*root2);
             // Check cloned document and the original one are the same.
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
         BOOST_REQUIRE(root != 0);
         BOOST_CHECK_EQUAL(root->name(), "updated-root");
         BOOST_CHECK_EQUAL(root->prefix(), std::string());
-        BOOST_CHECK_EQUAL(root->uri(), "http://www.example.com/xtree");
+        BOOST_CHECK_EQUAL(root->uri(), "http://example.com/xtree");
         BOOST_CHECK_EQUAL(root->attr("attr"), "updated value");
         BOOST_CHECK_EQUAL(root->size(), 3U);
         for (xtree::child_iterator i = root->begin(); i != root->end(); ++i)
@@ -144,14 +144,14 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
-        "<root xmlns='http://www.example.com/xtree' attr='some value'>"
+        "<root xmlns='http://example.com/xtree' attr='some value'>"
         "  <item>content</item>"
         "  <item>content</item>"
         "  <item>content</item>"
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
     {
         std::auto_ptr<xtree::document> doc(new xtree::document());
         {
-            std::auto_ptr<xtree::document> doc2(xtree::parse_string(TEST_XML));
+            std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
             xtree::element_ptr root2 = doc2->root();
             xtree::element_ptr root = doc->reset_root_adopt(*root2);
             BOOST_CHECK(doc2->root() == 0);
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
         BOOST_REQUIRE(root != 0);
         BOOST_CHECK_EQUAL(root->name(), "root");
         BOOST_CHECK_EQUAL(root->prefix(), std::string());
-        BOOST_CHECK_EQUAL(root->uri(), "http://www.example.com/xtree");
+        BOOST_CHECK_EQUAL(root->uri(), "http://example.com/xtree");
         BOOST_CHECK_EQUAL(root->attr("attr"), "some value");
         BOOST_CHECK_EQUAL(root->size(), 3U);
         for (xtree::child_iterator i = root->begin(); i != root->end(); ++i)
@@ -188,7 +188,87 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_document_reset_root_clone_with_xmlns)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root xmlns='http://example.com/xtree'><sub a='A'>text</sub></root>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc(new xtree::document());
+        {
+            std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
+            xtree::element_ptr sub = doc2->root()->find_elem_by_name("sub");
+            xtree::element_ptr root = doc->reset_root_clone(*sub);
+            // Check cloned document root and the original element are the same.
+            BOOST_CHECK_EQUAL(root->name(), sub->name());
+            BOOST_CHECK_EQUAL(root->uri(), sub->uri());
+            BOOST_CHECK_EQUAL(root->content(), sub->content());
+            BOOST_CHECK_EQUAL(root->attr("a"), sub->attr("a"));
+            BOOST_CHECK_EQUAL(root->size(), sub->size());
+            // Check modifying one document will not affect the other one.
+            sub->clear();
+            BOOST_CHECK_EQUAL(sub->size(), 0U);
+            BOOST_CHECK_EQUAL(root->size(), 1U);
+            root->set_name("updated");
+            BOOST_CHECK_EQUAL(sub->name(), "sub");
+            BOOST_CHECK_EQUAL(root->name(), "updated");
+            sub->set_attr("a", "B");
+            root->set_attr("a", "C");
+            BOOST_CHECK_EQUAL(sub->attr("a"), "B");
+            BOOST_CHECK_EQUAL(root->attr("a"), "C");
+        }
+        // At this point, doc2 should have been destroyed.
+        xtree::element_ptr root = doc->root();
+        BOOST_REQUIRE(root != 0);
+        BOOST_CHECK_EQUAL(root->name(), "updated");
+        BOOST_CHECK_EQUAL(root->uri(), "http://example.com/xtree");
+        BOOST_CHECK_EQUAL(root->content(), "text");
+        BOOST_CHECK_EQUAL(root->attr("a"), "C");
+        BOOST_CHECK_EQUAL(root->size(), 1U);
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt_with_xmlns)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root xmlns='http://example.com/xtree'><sub a='A'>text</sub></root>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc(new xtree::document());
+        {
+            std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
+            xtree::element_ptr sub = doc2->root()->find_elem_by_name("sub");
+            xtree::element_ptr root = doc->reset_root_adopt(*sub);
+            BOOST_CHECK_EQUAL(doc2->root()->empty(), true);
+        }
+        // At this point, doc2 should have been destroyed.
+        xtree::element_ptr root = doc->root();
+        BOOST_REQUIRE(root != 0);
+        BOOST_CHECK_EQUAL(root->name(), "sub");
+        BOOST_CHECK_EQUAL(root->uri(), "http://example.com/xtree");
+        BOOST_CHECK_EQUAL(root->content(), "text");
+        BOOST_CHECK_EQUAL(root->attr("a"), "A");
+        BOOST_CHECK_EQUAL(root->size(), 1U);
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_push)
@@ -197,7 +277,7 @@ BOOST_AUTO_TEST_CASE(test_document_push)
     const char* TEST_XML = "<root/>";
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         doc->push_front_comment("front comment");
         doc->push_front_instruction("target", "front");
         doc->push_back_comment("back comment");
@@ -231,7 +311,7 @@ BOOST_AUTO_TEST_CASE(test_document_push)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_push_failure)

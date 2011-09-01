@@ -216,7 +216,7 @@ namespace xtree {
         // Check the cloned node.
         if (px == 0)
         {
-            throw internal_dom_error("Fail to clone node: xmlDocCopyNode() returns null.");
+            throw internal_dom_error("Fail to clone node: xmlDocCopyNode() returned null.");
         }
         else if (px->type != raw()->type)
         {

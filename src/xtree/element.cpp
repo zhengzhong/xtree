@@ -159,17 +159,6 @@ namespace xtree {
     }
 
 
-    size_type element::reconciliate_xmlns()
-    {
-        int count = xmlReconciliateNs(raw()->doc, raw());
-        if (count < 0)
-        {
-            throw internal_dom_error("fail to reconciliate xmlns: xmlReconciliateNs returned -1");
-        }
-        return static_cast<size_type>(count);
-    }
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // XPath
     //
@@ -231,7 +220,7 @@ namespace xtree {
         if (px == 0)
         {
             std::string what = "fail to declare namespace " + prefix + "=" + uri
-                             + ": xmlNewNs() returns null";
+                             + ": xmlNewNs() returned null";
             throw internal_dom_error(what);
         }
         // Return the libxml2 xmlNs.

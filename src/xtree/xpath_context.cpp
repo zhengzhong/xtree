@@ -47,7 +47,7 @@ namespace xtree {
         raw_ = xmlXPathNewContext(px_doc);
         if (raw_ == 0)
         {
-            std::string what = "fail to create xpath_context: xmlXPathNewContext() returns null";
+            std::string what = "fail to create xpath_context: xmlXPathNewContext() returned null";
             throw internal_dom_error(what);
         }
         raw_->node = px_node;
@@ -78,7 +78,7 @@ namespace xtree {
             if (zero != 0)
             {
                 std::string what = "fail to register namespace " + i->first + "=" + i->second
-                                 + ": xmlXPathRegisterNs returns non-zero";
+                                 + ": xmlXPathRegisterNs returned non-zero";
                 throw xpath_error(what);
             }
         }

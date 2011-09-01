@@ -45,13 +45,14 @@ namespace xtree {
     {
         if (raw_ == 0)
         {
-            throw internal_dom_error("fail to create libxml2 document: xmlNewDoc() returns null");
+            throw internal_dom_error("fail to create libxml2 document: xmlNewDoc() returned null");
         }
         raw_->_private = this;
     }
 
 
-    document::document(xmlDoc* px): raw_(px), children_(px), orphans_() {
+    document::document(xmlDoc* px): raw_(px), children_(px), orphans_()
+    {
         assert(raw_ != 0 && raw_->type == XML_DOCUMENT_NODE);
         raw_->_private = this;
     }
@@ -154,12 +155,10 @@ namespace xtree {
 
     void document::save_to_file(const std::string& file_name, const std::string& encoding) const
     {
-        int size = xmlSaveFormatFileEnc(
-            file_name.c_str(),
-            const_cast<xmlDoc*>(raw()),
-            (encoding.empty() ? 0 : encoding.c_str()),
-            0
-        );
+        int size = xmlSaveFormatFileEnc( file_name.c_str(),
+                                         const_cast<xmlDoc*>(raw()),
+                                         ( encoding.empty() ? 0 : encoding.c_str() ),
+                                         0 );
         (size > 0);
     }
 
@@ -169,7 +168,7 @@ namespace xtree {
         xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(raw()), 1);
         if (px == 0)
         {
-            throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returns null");
+            throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returned null");
         }
         return new document(px);
     }
@@ -187,7 +186,7 @@ namespace xtree {
         xmlNode* px = xmlNewDocNode( raw(), 0, detail::to_xml_chars(name.c_str()), 0 );
         if (px == 0)
         {
-            std::string what = "fail to create libxml2 element: xmlNewDocNode() returns null";
+            std::string what = "fail to create libxml2 element: xmlNewDocNode() returned null";
             throw internal_dom_error(what);
         }
         // Reset the root element.
@@ -207,7 +206,7 @@ namespace xtree {
         xmlNode* px = xmlNewDocNode( raw(), 0, detail::to_xml_chars(name.c_str()), 0 );
         if (px == 0)
         {
-            std::string what = "fail to create libxml2 element: xmlNewDocNode() returns null";
+            std::string what = "fail to create libxml2 element: xmlNewDocNode() returned null";
             throw internal_dom_error(what);
         }
         // Declare XML namespace on the element, and put the element under it.
@@ -286,7 +285,7 @@ namespace xtree {
                                      0 );
         if (px == 0)
         {
-            std::string what = "fail to create new element: xmlNewDocNode() returns null";
+            std::string what = "fail to create new element: xmlNewDocNode() returned null";
             throw internal_dom_error(what);
         }
         // Push the new libxml2 element to the orphan list and return.
@@ -303,7 +302,7 @@ namespace xtree {
                                      detail::to_xml_chars(value.c_str()) );
         if (px == 0)
         {
-            std::string what = "fail to create text node: xmlNewDocText() returns null";
+            std::string what = "fail to create text node: xmlNewDocText() returned null";
             throw internal_dom_error(what);
         }
         // Push the new libxml2 text node to the orphan list and return.
@@ -320,7 +319,7 @@ namespace xtree {
                                         static_cast<int>(value.size()) );
         if (px == 0)
         {
-            std::string what = "fail to create CDATA node: xmlNewCDataBlock() returns null";
+            std::string what = "fail to create CDATA node: xmlNewCDataBlock() returned null";
             throw internal_dom_error(what);
         }
         text* orphan = static_cast<text*>(px->_private);
@@ -334,7 +333,7 @@ namespace xtree {
                                         detail::to_xml_chars(value.c_str()) );
         if (px == 0)
         {
-            std::string what = "fail to create comment node: xmlNewDocComment() returns null";
+            std::string what = "fail to create comment node: xmlNewDocComment() returned null";
             throw internal_dom_error(what);
         }
         comment* orphan = static_cast<comment*>(px->_private);
@@ -364,13 +363,22 @@ namespace xtree {
 
     basic_node_ptr<element> document::reset_root_(xmlNode* px)
     {
-        assert(px != 0);
+        assert(px != 0 && px->type == XML_ELEMENT_NODE);
+        // Reset root element, and free the old one.
         xmlNode* px_old = xmlDocSetRootElement(raw(), px);
         if (px_old != 0)
         {
             xmlUnlinkNode(px_old);
             xmlFreeNode(px_old);
+            px_old = 0;
         }
+        // Reconciliate XML namespaces on the new root element.
+        int count = xmlReconciliateNs(px->doc, px);
+        if (count < 0)
+        {
+            throw internal_dom_error("fail to reconciliate xmlns on the new root element");
+        }
+        // Return the new root element.
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
 

@@ -568,8 +568,17 @@ namespace xtree {
         assert(px != 0 && "xmlAddChild() or xmlAddPrevSibling() should not return null.");
         if (px == 0)
         {
-            std::string errmsg = "Invalid return value of xmlAddChild() or xmlAddPrevSibling().";
-            throw internal_dom_error(errmsg.c_str());
+            std::string what = "Invalid return value of xmlAddChild() or xmlAddPrevSibling().";
+            throw internal_dom_error(what);
+        }
+        // Reconciliate XML namespaces as necessary.
+        if (px->type == XML_ELEMENT_NODE)
+        {
+            int count = xmlReconciliateNs(px->doc, px);
+            if (count < 0)
+            {
+                throw internal_dom_error("fail to reconciliate xmlns on the inserted element");
+            }
         }
         // Return the inserted libxml2 node.
         return px;

@@ -71,48 +71,9 @@ namespace xtree {
     }
 
 
-    //void xmlns::set_uri(const std::string& uri);
-
-
     std::string xmlns::prefix() const
     {
         return (raw()->prefix != 0 ? detail::to_chars(raw()->prefix) : std::string() );
-    }
-
-
-    //void xmlns::set_prefix(const std::string& prefix);
-
-
-    std::string xmlns::str() const
-    {
-        std::string tmp;
-        str(tmp);
-        return tmp;
-    }
-
-
-    void xmlns::str(std::string& str) const
-    {
-        // TODO: will this work?
-        xmlBuffer* buffer = xmlBufferCreate();
-        xmlNodeDump(buffer, raw()->context, const_cast<xmlNode*>(raw_as_node()), 0, 0);
-        str = detail::to_chars(buffer->content);
-        xmlBufferFree(buffer);
-    }        
-
-
-    document& xmlns::doc()
-    {
-        return const_cast<document&>( (static_cast<const xmlns&>(*this)).doc() );
-    }
-
-
-    const document& xmlns::doc() const
-    {
-        // TODO: will this work?
-        assert(raw()->context != 0 && raw()->context->_private != 0);
-        const document* doc = static_cast<const document*>(raw()->context->_private);
-        return (*doc);
     }
 
 

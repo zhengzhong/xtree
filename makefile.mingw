@@ -21,8 +21,8 @@ CFLAGS = -Wall -Wextra -I$(INC_DIR) -I./include -std=c++0x
 
 XTREE_MAIN_DIR = ./src/xtree
 XTREE_TEST_DIR = ./test
-XTREE_TEMP_DIR = ./temp
-XTREE_DIST_DIR = ./dist
+XTREE_TEMP_DIR = ./temp.mingw
+XTREE_DIST_DIR = ./dist.mingw
 
 
 XTREE_MAIN_SRCS = \
@@ -51,6 +51,7 @@ XTREE_MAIN_SRCS = \
     validity.cpp \
     xml_base.cpp \
     xmlns.cpp \
+    xpath.cpp \
     xpath_context.cpp \
     xpath_result.cpp
 
@@ -73,6 +74,7 @@ XTREE_TEST_SRCS = \
     test_element_select.cpp \
     test_get_attributes.cpp \
     test_node_cast.cpp \
+    test_node_set_iterators.cpp \
     test_sax_parsing.cpp \
     test_set_attributes.cpp \
     test_xmlns.cpp \

@@ -22,6 +22,7 @@
 
 #include "xtree/attribute_map.hpp"
 
+#include "xtree/xpath.hpp"
 #include "xtree/xpath_context.hpp"
 #include "xtree/xpath_result.hpp"
 #include "xtree/node_set.hpp"

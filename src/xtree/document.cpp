@@ -14,6 +14,7 @@
 #include "xtree/comment.hpp"
 #include "xtree/child_node_list.hpp"
 
+#include "xtree/xpath.hpp"
 #include "xtree/xpath_context.hpp"
 #include "xtree/xpath_result.hpp"
 #include "xtree/node_set.hpp"
@@ -264,33 +265,10 @@ namespace xtree {
     //
 
 
-    void document::select_nodes(const std::string& xpath, node_set& nodes)
-    {
-        select_nodes(xpath, std::map<std::string, std::string>(), nodes);
-    }
-
-
-    void document::select_nodes(const std::string& xpath,
-                                const std::pair<std::string, std::string>& ns_mapping,
-                                node_set& nodes)
-    {
-        std::map<std::string, std::string> ns_mappings;
-        ns_mappings.insert(ns_mapping);
-        select_nodes(xpath, ns_mappings, nodes);
-    }
-
-
-    void document::select_nodes(const std::string& xpath,
-                                const std::map<std::string, std::string>& ns_mappings,
-                                node_set& nodes)
+    void document::select_nodes(const xpath& expr, node_set& nodes)
     {
         xpath_context context(raw(), 0);
-        typedef std::map<std::string, std::string>::const_iterator const_iterator;
-        for (const_iterator i = ns_mappings.begin(); i != ns_mappings.end(); ++i)
-        {
-            context.register_ns(i->first, i->second);
-        }
-        context.eval(xpath, nodes);
+        context.eval(expr, nodes);
     }
 
 

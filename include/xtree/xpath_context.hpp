@@ -14,6 +14,7 @@
 namespace xtree {
 
 
+    class XTREE_DECL xpath;
     class XTREE_DECL xpath_result;
 
 
@@ -30,15 +31,10 @@ namespace xtree {
         //! Destructor.
         ~xpath_context();
 
-        //! Registers a namespace prefix and URI that will be used to evaluate XPath expressions.
-        //! \param prefix  the namespace prefix to register.
-        //! \param uri     the namespace URI to register.
-        void register_ns(const std::string& prefix, const std::string& uri);
-
         //! Evaluates an XPath expression.
-        //! \param xpath   the XPath expression to evaluate.
+        //! \param expr    the XPath expression to evaluate.
         //! \param result  output argument to hold XPath results.
-        void eval(const std::string& xpath, xpath_result& result);
+        void eval(const xpath& expr, xpath_result& result);
 
     private:
 

@@ -3,9 +3,8 @@
 #
 
 .hg/
-tmp/
-temp/
-dist/
+temp.*/
+dist.*/
 
 *~
 *~.*

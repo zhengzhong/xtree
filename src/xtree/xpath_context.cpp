@@ -7,6 +7,7 @@
 #endif
 
 #include "xtree/xpath_context.hpp"
+#include "xtree/xpath.hpp"
 #include "xtree/xpath_result.hpp"
 #include "xtree/exceptions.hpp"
 #include "xtree/libxml2_utility.hpp"
@@ -64,30 +65,32 @@ namespace xtree {
     }
 
 
-    void xpath_context::register_ns(const std::string& prefix, const std::string& uri)
+    void xpath_context::eval(const xpath& expr, xpath_result& result)
     {
-        int zero = xmlXPathRegisterNs( raw_,
-                                       detail::to_xml_chars(prefix.c_str()),
-                                       detail::to_xml_chars(uri.c_str()) );
-        if (zero != 0)
+        // Register XML namespaces.
+        typedef xpath::xmlns_registry::const_iterator const_iterator;
+        const xpath::xmlns_registry& registry = expr.get_xmlns_registry();
+        for (const_iterator i = registry.begin(); i != registry.end(); ++i)
         {
-            std::string what = "fail to register namespace " + prefix + "=" + uri + ": "
-                             + "xmlXPathRegisterNs returns non-zero";
-            throw xpath_error(what);
+            int zero = xmlXPathRegisterNs( raw_,
+                                           detail::to_xml_chars(i->first.c_str()),
+                                           detail::to_xml_chars(i->second.c_str()) );
+            if (zero != 0)
+            {
+                std::string what = "fail to register namespace " + i->first + "=" + i->second
+                                 + ": xmlXPathRegisterNs returns non-zero";
+                throw xpath_error(what);
+            }
         }
-    }
-
-
-    void xpath_context::eval(const std::string& xpath, xpath_result& result)
-    {
-        xmlXPathObject* px = xmlXPathEvalExpression(detail::to_xml_chars(xpath.c_str()), raw_);
+        // Evaluate the XPath expression.
+        xmlXPathObject* px = xmlXPathCompiledEval(const_cast<xmlXPathCompExpr*>(expr.raw()), raw_); 
         if (px == 0)
         {
-            std::string what = "fail to evaluate XPath '" + xpath + "': "
+            std::string what = "fail to evaluate XPath '" + expr.str() + "': "
                              + detail::build_error_message(raw_->lastError);
             throw xpath_error(what);
         }
-        xpath_result tmp_result(xpath, px);
+        xpath_result tmp_result(expr.str(), px);
         tmp_result.transfer(result);
     }
 

@@ -25,17 +25,19 @@ struct _xmlNs;
 struct _xmlDoc;
 struct _xmlSchema;
 struct _xmlXPathContext;
+struct _xmlXPathCompExpr;
 struct _xmlXPathObject;
 struct _xmlNodeSet;
 
-typedef struct _xmlError         xmlError;
-typedef struct _xmlNode          xmlNode;
-typedef struct _xmlNs            xmlNs;
-typedef struct _xmlDoc           xmlDoc;
-typedef struct _xmlSchema        xmlSchema;
-typedef struct _xmlXPathContext  xmlXPathContext;
-typedef struct _xmlXPathObject   xmlXPathObject;
-typedef struct _xmlNodeSet       xmlNodeSet;
+typedef struct _xmlError          xmlError;
+typedef struct _xmlNode           xmlNode;
+typedef struct _xmlNs             xmlNs;
+typedef struct _xmlDoc            xmlDoc;
+typedef struct _xmlSchema         xmlSchema;
+typedef struct _xmlXPathContext   xmlXPathContext;
+typedef struct _xmlXPathCompExpr  xmlXPathCompExpr;
+typedef struct _xmlXPathObject    xmlXPathObject;
+typedef struct _xmlNodeSet        xmlNodeSet;
 
 
 typedef void (*xmlRegisterNodeFunc)   (xmlNode*);

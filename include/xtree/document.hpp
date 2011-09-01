@@ -35,7 +35,9 @@ namespace xtree {
     class XTREE_DECL comment;
     class XTREE_DECL instruction;
 
+    class XTREE_DECL xpath;
     class XTREE_DECL node_set;
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // document
@@ -555,25 +557,9 @@ namespace xtree {
         //
 
         //! Selects a node set by an XPath expression.
-        //! \param xpath   the XPath expression that evaluates to a node set.
-        //! \param result  output argument to hold the result node set.
-        void select_nodes(const std::string& xpath, node_set& result);
-
-        //! Selects a node set by an XPath expression.
-        //! \param xpath       the XPath expression that evaluates to a node set.
-        //! \param ns_mapping  namespace mapping, a pair of prefix and URI.
-        //! \param result      output argument to hold the result node set.
-        void select_nodes(const std::string& xpath,
-                          const std::pair<std::string, std::string>& ns_mapping,
-                          node_set& result);
-
-        //! Selects a node set by an XPath expression.
-        //! \param xpath        the XPath expression that evaluates to a node set.
-        //! \param ns_mappings  namespace mappings containing prefix and URI pairs.
-        //! \param result       output argument to hold the result node set.
-        void select_nodes(const std::string& xpath,
-                          const std::map<std::string, std::string>& ns_mappings,
-                          node_set& result);
+        //! \param expr   the XPath expression that evaluates to a node set.
+        //! \param nodes  output argument to hold the result node set.
+        void select_nodes(const xpath& expr, node_set& nodes);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // node creation

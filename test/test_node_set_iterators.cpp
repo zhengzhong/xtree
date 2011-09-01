@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(test_node_set_iterators)
         std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         xtree::node_set nodes;
-        doc->root()->select_nodes("*|text()", nodes);
+        doc->root()->select_nodes(xtree::xpath("*|text()"), nodes);
         BOOST_CHECK_EQUAL(nodes.empty(), false);
         BOOST_CHECK_EQUAL(nodes.size(), 8U);
         do_test_node_set_iterators<
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(test_node_set_empty_element_iterator)
         std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         xtree::node_set nodes;
-        doc->root()->select_nodes("*|text()", nodes);
+        doc->root()->select_nodes(xtree::xpath("*|text()"), nodes);
         BOOST_CHECK_EQUAL(nodes.empty(), false);
         BOOST_CHECK_EQUAL(nodes.size(), 1U);
         xtree::node_set::iterator node = nodes.begin();
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(test_node_set_empty_iterators)
         std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         xtree::node_set nodes;
-        doc->root()->select_nodes("*|text()", nodes);
+        doc->root()->select_nodes(xtree::xpath("*|text()"), nodes);
         BOOST_CHECK_EQUAL(nodes.empty(), true);
         BOOST_CHECK_EQUAL(nodes.size(), 0U);
         BOOST_CHECK(nodes.begin() == nodes.end());

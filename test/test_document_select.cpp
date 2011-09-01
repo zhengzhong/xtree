@@ -22,7 +22,7 @@
 #include <utility>
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_select_subelements_no_ns)
@@ -35,15 +35,15 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_no_ns)
         "  <item>2</item>"
         "</root>"
     ;
-    const std::string XPATHS[] = {
-        "/root/item",
-        "//item",
-        "/root/*",
+    const xtree::xpath XPATHS[] = {
+        xtree::xpath("/root/item"),
+        xtree::xpath("//item"),
+        xtree::xpath("/root/*"),
     };
-    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const std::string);
+    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const xtree::xpath);
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::node_set nodes;
         for (unsigned int i = 0; i < MAX_SIZE; ++i)
         {
@@ -57,8 +57,8 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_no_ns)
                 xtree::element_ptr e = xtree::dynamic_node_cast<xtree::element>(i.ptr());
                 BOOST_REQUIRE(e != 0);
                 BOOST_CHECK_EQUAL(e->name(), "item");
-                BOOST_CHECK_EQUAL(e->uri(), std::string());
                 BOOST_CHECK_EQUAL(e->prefix(), std::string());
+                BOOST_CHECK_EQUAL(e->uri(), std::string());
                 BOOST_CHECK_EQUAL(e->content(), boost::lexical_cast<std::string>(index));
             }
         }
@@ -70,33 +70,34 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_no_ns)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_select_subelements_default_ns)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
-        "<root xmlns='http://www.zhengzhong.net'>"
+        "<root xmlns='http://example.com/xtree'>"
         "  <item>0</item>"
         "  <item>1</item>"
         "  <item>2</item>"
         "</root>"
     ;
-    const std::pair<std::string, std::string> NS_MAPPING("n", "http://www.zhengzhong.net");
-    const std::string XPATHS[] = {
-        "/n:root/n:item",
-        "//n:item",
-        "/n:root/*",
+    const std::string PREFIX = "n";
+    const std::string URI = "http://example.com/xtree";
+    const xtree::xpath XPATHS[] = {
+        xtree::xpath("/n:root/n:item", PREFIX, URI),
+        xtree::xpath("//n:item", PREFIX, URI),
+        xtree::xpath("/n:root/*", PREFIX, URI),
     };
-    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const std::string);
+    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const xtree::xpath);
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::node_set nodes;
         for (unsigned int i = 0; i < MAX_SIZE; ++i)
         {
-            doc->select_nodes(XPATHS[i], NS_MAPPING, nodes);
+            doc->select_nodes(XPATHS[i], nodes);
             BOOST_CHECK_EQUAL(nodes.empty(), false);
             BOOST_CHECK_EQUAL(nodes.size(), 3U);
             int index = 0;
@@ -106,8 +107,8 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_default_ns)
                 xtree::element_ptr e = xtree::dynamic_node_cast<xtree::element>(i.ptr());
                 BOOST_REQUIRE(e != 0);
                 BOOST_CHECK_EQUAL(e->name(), "item");
-                BOOST_CHECK_EQUAL(e->uri(), NS_MAPPING.second);
                 BOOST_CHECK_EQUAL(e->prefix(), std::string());
+                BOOST_CHECK_EQUAL(e->uri(), URI);
                 BOOST_CHECK_EQUAL(e->content(), boost::lexical_cast<std::string>(index));
             }
         }
@@ -119,33 +120,34 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_default_ns)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_select_subelements_mixed_ns)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
-        "<root xmlns:z='http://www.zhengzhong.net'>"
+        "<root xmlns:z='http://example.com/xtree'>"
         "  <z:item>0</z:item>"
         "  <z:item>1</z:item>"
         "  <z:item>2</z:item>"
         "</root>"
     ;
-    const std::pair<std::string, std::string> NS_MAPPING("n", "http://www.zhengzhong.net");
-    const std::string XPATHS[] = {
-        "/root/n:item",
-        "//n:item",
-        "/root/*",
+    const std::string PREFIX = "n";
+    const std::string URI = "http://example.com/xtree";
+    const xtree::xpath XPATHS[] = {
+        xtree::xpath("/root/n:item", PREFIX, URI),
+        xtree::xpath("//n:item", PREFIX, URI),
+        xtree::xpath("/root/*", PREFIX, URI),
     };
-    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const std::string);
+    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const xtree::xpath);
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::node_set nodes;
         for (unsigned int i = 0; i < MAX_SIZE; ++i)
         {
-            doc->select_nodes(XPATHS[i], NS_MAPPING, nodes);
+            doc->select_nodes(XPATHS[i], nodes);
             BOOST_CHECK_EQUAL(nodes.empty(), false);
             BOOST_CHECK_EQUAL(nodes.size(), 3U);
             int index = 0;
@@ -155,8 +157,8 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_mixed_ns)
                 xtree::element_ptr e = xtree::dynamic_node_cast<xtree::element>(i.ptr());
                 BOOST_REQUIRE(e != 0);
                 BOOST_CHECK_EQUAL(e->name(), "item");
-                BOOST_CHECK_EQUAL(e->uri(), NS_MAPPING.second);
                 BOOST_CHECK_EQUAL(e->prefix(), "z");
+                BOOST_CHECK_EQUAL(e->uri(), URI);
                 BOOST_CHECK_EQUAL(e->content(), boost::lexical_cast<std::string>(index));
             }
         }
@@ -168,35 +170,36 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_mixed_ns)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 BOOST_AUTO_TEST_CASE(test_document_select_empty)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
-        "<root xmlns:z='http://www.zhengzhong.net'>"
+        "<root xmlns:z='http://example.com/xtree'>"
         "  <z:item>0</z:item>"
         "  <z:item>1</z:item>"
         "  <z:item>2</z:item>"
         "</root>"
     ;
-    const std::pair<std::string, std::string> NS_MAPPING("n", "http://www.zhengzhong.net");
-    const std::string XPATHS[] = {
-        "/root/item",
-        "/n:root/item",
-        "/n:root/*",
-        "//item",
-        "/root/whatever",
+    const std::string PREFIX = "n";
+    const std::string URI = "http://example.com/xtree";
+    const xtree::xpath XPATHS[] = {
+        xtree::xpath("/root/item", PREFIX, URI),
+        xtree::xpath("/n:root/item", PREFIX, URI),
+        xtree::xpath("/n:root/*", PREFIX, URI),
+        xtree::xpath("//item", PREFIX, URI),
+        xtree::xpath("/root/whatever", PREFIX, URI),
     };
-    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const std::string);
+    const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const xtree::xpath);
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::node_set nodes;
         for (unsigned int i = 0; i < MAX_SIZE; ++i)
         {
-            doc->select_nodes(XPATHS[i], NS_MAPPING, nodes);
+            doc->select_nodes(XPATHS[i], nodes);
             BOOST_CHECK_EQUAL(nodes.empty(), true);
             BOOST_CHECK_EQUAL(nodes.size(), 0U);
             BOOST_CHECK(nodes.begin() == nodes.end());
@@ -207,6 +210,4 @@ BOOST_AUTO_TEST_CASE(test_document_select_empty)
         BOOST_ERROR(ex.what());
     }
 }
-
-
 

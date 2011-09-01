@@ -18,114 +18,60 @@ BIN_DIR = /c/zheng/MinGW/bin
 CC = g++
 CFLAGS = -Wall -Wextra -I$(INC_DIR) -I./include -std=c++0x
 
+TEMP_DIR = ./temp.mingw
+DIST_DIR = ./dist.mingw
 
-XTREE_MAIN_DIR = ./src/xtree
-XTREE_TEST_DIR = ./test
-XTREE_TEMP_DIR = ./temp.mingw
-XTREE_DIST_DIR = ./dist.mingw
+MAIN_DIR  = ./src/xtree
+MAIN_SRCS = $(wildcard $(MAIN_DIR)/*.cpp)
+MAIN_OBJS = $(patsubst $(MAIN_DIR)/%.cpp,$(TEMP_DIR)/main/%.obj,$(MAIN_SRCS))
 
-
-XTREE_MAIN_SRCS = \
-    attribute.cpp \
-    attribute_map.cpp \
-    check_rules.cpp \
-    child_node.cpp \
-    child_node_list.cpp \
-    comment.cpp \
-    config_diag.cpp \
-    document.cpp \
-    dom_parser.cpp \
-    element.cpp \
-    instruction.cpp \
-    libxml2_callbacks.cpp \
-    libxml2_globals.cpp \
-    libxml2_utility.cpp \
-    node.cpp \
-    node_set.cpp \
-    sax_attribute_list.cpp \
-    sax_error_info.cpp \
-    sax_handler.cpp \
-    sax_parser.cpp \
-    schema.cpp \
-    text.cpp \
-    validity.cpp \
-    xml_base.cpp \
-    xmlns.cpp \
-    xpath.cpp \
-    xpath_context.cpp \
-    xpath_result.cpp
-
-XTREE_MAIN_OBJS = $(XTREE_MAIN_SRCS:.cpp=.obj)
-
-XTREE_TEST_SRCS = \
-    boost_unit_test_framework.cpp \
-    test_bad_value.cpp \
-    test_cleanup_parser.cpp \
-    test_document.cpp \
-    test_document_select.cpp \
-    test_dom_parser.cpp \
-    test_dummy.cpp \
-    test_element.cpp \
-    test_element_child_iterator.cpp \
-    test_element_find.cpp \
-    test_element_insert.cpp \
-    test_element_iterator.cpp \
-    test_element_push.cpp \
-    test_element_select.cpp \
-    test_get_attributes.cpp \
-    test_node_cast.cpp \
-    test_node_set_iterators.cpp \
-    test_sax_parsing.cpp \
-    test_set_attributes.cpp \
-    test_xmlns.cpp \
-    xtree_auto_link.cpp \
-    xtree_test_main.cpp \
-    xtree_test_utils.cpp
-
-XTREE_TEST_OBJS = $(XTREE_TEST_SRCS:.cpp=.testobj)
+TEST_DIR  = ./test
+TEST_SRCS = $(wildcard $(TEST_DIR)/*.cpp)
+TEST_OBJS = $(patsubst $(TEST_DIR)/%.cpp,$(TEMP_DIR)/test/%.obj,$(TEST_SRCS))
 
 
 ################################################################################
 
 
 clean:
-	if [ -d $(XTREE_TEMP_DIR) ]; then rm -Rf $(XTREE_TEMP_DIR) ; fi
-	if [ -d $(XTREE_DIST_DIR) ]; then rm -Rf $(XTREE_DIST_DIR) ; fi
+	if [ -d $(TEMP_DIR) ]; then rm -Rf $(TEMP_DIR) ; fi
+	if [ -d $(DIST_DIR) ]; then rm -Rf $(DIST_DIR) ; fi
 
 
 # Run the `clean` target first, since we do not manage header dependencies.
 prepare: clean
-	mkdir -p $(XTREE_TEMP_DIR)
-	mkdir -p $(XTREE_DIST_DIR)
+	mkdir -p $(TEMP_DIR)/main
+	mkdir -p $(TEMP_DIR)/test
+	mkdir -p $(DIST_DIR)
 
 
-$(XTREE_TEMP_DIR)/%.obj: $(XTREE_MAIN_DIR)/%.cpp prepare
+$(TEMP_DIR)/main/%.obj: $(MAIN_DIR)/%.cpp prepare
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
-sharedlib: $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_MAIN_OBJS))
-	$(CC) $(CFLAGS) -shared -o $(XTREE_DIST_DIR)/libxtree.dll \
-          -Wl,-out-implib,$(XTREE_DIST_DIR)/libxtree.dll.a \
-          $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_MAIN_OBJS)) \
+sharedlib: $(MAIN_OBJS)
+	$(CC) $(CFLAGS) -shared -o $(DIST_DIR)/libxtree.dll \
+          -Wl,-out-implib,$(DIST_DIR)/libxtree.dll.a \
+          $(MAIN_OBJS) \
           -L$(LIB_DIR) -lxml2
 	@echo [$@] ----------------------------------------
-	@echo [$@]   xtree shared lib built!
+	@echo [$@] xtree shared lib built!
 	@echo [$@] ----------------------------------------
 
 
-$(XTREE_TEMP_DIR)/%.testobj: $(XTREE_TEST_DIR)/%.cpp prepare
+$(TEMP_DIR)/test/%.obj: $(TEST_DIR)/%.cpp prepare
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
-tests: $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_TEST_OBJS)) sharedlib
-	$(CC) $(CFLAGS) -o $(XTREE_DIST_DIR)/xtree_test.exe \
-          $(addprefix $(XTREE_TEMP_DIR)/,$(XTREE_TEST_OBJS)) \
-          -L$(XTREE_DIST_DIR) -lxtree
-	cp $(addprefix $(BIN_DIR)/,libxml2.dll iconv.dll zlib1.dll) $(XTREE_DIST_DIR)
+tests: $(TEST_OBJS) sharedlib
+	$(CC) $(CFLAGS) -o $(DIST_DIR)/xtree_test.exe \
+          $(TEST_OBJS) \
+          -L$(DIST_DIR) -lxtree
+	cp $(addprefix $(BIN_DIR)/,libxml2.dll iconv.dll zlib1.dll) $(DIST_DIR)
 	@echo [$@] ----------------------------------------
-	@echo [$@]   xtree testsuites built!
+	@echo [$@] xtree testsuites built!
 	@echo [$@] ----------------------------------------
-	$(XTREE_DIST_DIR)/xtree_test.exe
+	$(DIST_DIR)/xtree_test.exe
 
 
 all: sharedlib tests

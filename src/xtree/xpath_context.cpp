@@ -21,6 +21,7 @@
 
 
 namespace xtree {
+namespace detail {
 
 
     namespace {
@@ -95,5 +96,6 @@ namespace xtree {
     }
 
 
+}  // namespace detail
 }  // namespace xtree
 

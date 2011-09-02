@@ -74,6 +74,9 @@ namespace xtree {
             detail::unused_arg(uri);
         }
 
+        //! Receives notification of text.
+        //! \param chars   the text content.
+        //! \param length  the length of the content.
         virtual void characters(const char* chars, int length)
         {
             // Do nothing.
@@ -81,6 +84,9 @@ namespace xtree {
             detail::unused_arg(length);
         }
 
+        //! Receives notification of a CData block.
+        //! \param chars   the CData block content.
+        //! \param length  the length of the content.
         virtual void cdata_block(const char* chars, int length)
         {
             // Do nothing.
@@ -88,6 +94,9 @@ namespace xtree {
             detail::unused_arg(length);
         }
 
+        //! Receives notification of ignorable whitespace.
+        //! \param chars   the ignorable whitespace content.
+        //! \param length  the length of the content.
         virtual void ignorable_whitespace(const char* chars, int length)
         {
             // Do nothing.
@@ -95,6 +104,8 @@ namespace xtree {
             detail::unused_arg(length);
         }
 
+        //! Receives notification of a comment.
+        //! \param chars   the comment content.
         virtual void comment(const char* chars)
         {
             // Do nothing.
@@ -104,6 +115,9 @@ namespace xtree {
     };
 
 
+    //! This class defines the interface for handling SAX errors. It defines callback functions
+    //! that will be invoked by the XML SAX parser. User should derive from this class to provide
+    //! customized handling functions.
     class XTREE_DECL sax_error_handler
     {
 

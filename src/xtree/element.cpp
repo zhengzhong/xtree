@@ -166,7 +166,7 @@ namespace xtree {
 
     void element::select_nodes(const xpath& expr, node_set& nodes)
     {
-        xpath_context context(raw()->doc, raw());
+        detail::xpath_context context(raw()->doc, raw());
         context.eval(expr, nodes);
     }
 

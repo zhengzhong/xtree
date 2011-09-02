@@ -21,9 +21,11 @@
 #include "xtree/instruction.hpp"
 
 #include "xtree/attribute_map.hpp"
+#include "xtree/child_node_list.hpp"
+
+#include "xtree/xmlns.hpp"
 
 #include "xtree/xpath.hpp"
-#include "xtree/xpath_context.hpp"
 #include "xtree/xpath_result.hpp"
 #include "xtree/node_set.hpp"
 
@@ -31,7 +33,6 @@
 #include "xtree/schema.hpp"
 
 #include "xtree/element_iterator.hpp"
-#include "xtree/utility.hpp"
 
 
 #endif  // XTREE_XTREE_DOM_HPP_20110316__

@@ -11,13 +11,25 @@
 #include <string>
 
 
-namespace xtree {
+//! \cond DEV
 
+
+namespace xtree {
 
     class XTREE_DECL xpath;
     class XTREE_DECL xpath_result;
 
+}  // namespace xtree
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+namespace xtree {
+namespace detail {
+
+
+    //! This class wraps a libxml2 xmlXPathContext object. It should not be used by client code.
     class XTREE_DECL xpath_context
     {
 
@@ -51,7 +63,10 @@ namespace xtree {
     };
 
 
+}  // namespace xtree::detail
 }  // namespace xtree
+
+//! \endcond
 
 
 #endif  // XTREE_LIBXML2_XPATH_CONTEXT_HPP_20110322__

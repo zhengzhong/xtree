@@ -15,6 +15,7 @@
 namespace xtree {
 
 
+    //! This class represents an XML attribute during the SAX parsing.
     class XTREE_DECL sax_attribute
     {
 

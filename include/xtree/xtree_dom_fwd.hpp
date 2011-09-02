@@ -33,11 +33,11 @@ namespace xtree {
     class XTREE_DECL instruction;
 
     class XTREE_DECL attribute_map;
+    class XTREE_DECL child_node_list;
 
     class XTREE_DECL xmlns;
 
     class XTREE_DECL xpath;
-    class XTREE_DECL xpath_context;
     class XTREE_DECL xpath_result;
     class XTREE_DECL node_set;
 
@@ -66,14 +66,8 @@ namespace xtree {
     typedef basic_node_ptr<const comment>      const_comment_ptr;
     typedef basic_node_ptr<const instruction>  const_instruction_ptr;
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // xmlns pointer typedefs
-    //
-
-
-    typedef basic_xmlns_ptr<xmlns>        xmlns_ptr;
-    typedef basic_xmlns_ptr<const xmlns>  const_xmlns_ptr;
+    typedef basic_xmlns_ptr<xmlns>             xmlns_ptr;
+    typedef basic_xmlns_ptr<const xmlns>       const_xmlns_ptr;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

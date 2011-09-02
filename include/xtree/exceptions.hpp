@@ -164,7 +164,7 @@ namespace xtree {
     };
 
 
-    //! This class represents an error related to XML XPath.
+    //! This class represents an error related to XPath.
     class xpath_error: public dom_error
     {
 

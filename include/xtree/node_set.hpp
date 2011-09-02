@@ -25,6 +25,7 @@ namespace xtree {
     //
 
 
+    //! This class template represents an iterator for node_set.
     template<class T, class Mover>
     class basic_node_set_iterator: public std::iterator<std::bidirectional_iterator_tag, T>
     {
@@ -137,6 +138,8 @@ namespace xtree {
     //
 
 
+    //! This class is used with basic_node_set_iterator to iterate over all the nodes in a given
+    //! node_set.
     class XTREE_DECL node_set_mover
     {
 
@@ -172,6 +175,8 @@ namespace xtree {
     //
 
 
+    //! This class is used with basic_node_set_iterator to iterate over all the elements (by
+    //! ignoring all the non-elements) in a given node_set.
     class XTREE_DECL node_set_element_mover
     {
 

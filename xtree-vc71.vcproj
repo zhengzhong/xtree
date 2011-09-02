@@ -381,9 +381,6 @@
 				RelativePath=".\include\xtree\user_config.hpp">
 			</File>
 			<File
-				RelativePath=".\include\xtree\utility.hpp">
-			</File>
-			<File
 				RelativePath=".\include\xtree\validity.hpp">
 			</File>
 			<File

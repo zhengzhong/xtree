@@ -17,6 +17,8 @@
 namespace xtree {
 
 
+    //! \cond DEV
+
     namespace detail {
 
         //! Initializes a libxml2 SAX2 handler with all the callback functions registered.
@@ -25,6 +27,8 @@ namespace xtree {
         void initialize_libxml2_sax2_handler(xmlSAXHandler& handler);
 
     }  // namespace xtree::detail
+
+    //! \endcond
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

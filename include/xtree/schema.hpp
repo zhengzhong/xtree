@@ -19,6 +19,7 @@ namespace xtree {
     class XTREE_DECL document;  // forward declaration.
 
 
+    //! This class represents an XML schema.
     class XTREE_DECL schema: private xml_base
     {
 

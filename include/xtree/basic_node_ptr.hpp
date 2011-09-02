@@ -23,21 +23,6 @@ namespace xtree {
     public:
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // cast tags
-        //
-
-        //! Tag struct identifying a static node cast.
-        struct static_cast_tag { };
-
-        //! Tag struct identifying a const node cast.
-        struct const_cast_tag { };
-
-        //! Tag struct identifying a dynamic node cast.
-        struct dynamic_cast_tag { };
-
-    public:
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
         // constructors
         //
 
@@ -62,9 +47,19 @@ namespace xtree {
             // Do nothing.
         }
 
+        // Use auto-generated copy constructor.
+        // Use auto-generated copy assignment.
+        // Use auto-generated destructor.
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // constructors with cast tags
+        // cast constructors: should not be used by client code
         //
+
+        //! \cond DEV
+
+        struct static_cast_tag { };   //!< Tag struct identifying a static node cast.
+        struct const_cast_tag { };    //!< Tag struct identifying a const node cast.
+        struct dynamic_cast_tag { };  //!< Tag struct identifying a dynamic node cast.
 
         template<class U>
         explicit basic_node_ptr(const basic_node_ptr<U>& rhs, static_cast_tag)
@@ -90,9 +85,7 @@ namespace xtree {
             }
         }
 
-        // Use auto-generated copy constructor.
-        // Use auto-generated copy assignment.
-        // Use auto-generated destructor.
+        //! \endcond
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // pointer operators
@@ -162,7 +155,7 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // *_node_cast
+    // (static|const|dynamic)_node_cast
     //
 
 

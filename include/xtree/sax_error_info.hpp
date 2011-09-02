@@ -14,6 +14,7 @@
 namespace xtree {
 
 
+    //! This class wraps a SAX error.
     class XTREE_DECL sax_error_info
     {
 

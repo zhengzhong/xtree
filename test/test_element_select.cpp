@@ -191,6 +191,33 @@ BOOST_AUTO_TEST_CASE(test_element_select_subelements_mixed_ns)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+BOOST_AUTO_TEST_CASE(test_element_select_attributes)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root a='a' b='b' c='c'/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
+        xtree::element_ptr root = doc->root();
+        xtree::node_set nodes;
+        root->select_nodes(xtree::xpath("@*"), nodes);
+        BOOST_CHECK_EQUAL(nodes.size(), 3U);
+        for (xtree::node_set::iterator i = nodes.begin(); i != nodes.end(); ++i)
+        {
+            BOOST_CHECK_EQUAL(i->type(), xtree::attribute_node);
+            BOOST_CHECK_EQUAL(i->name(), i->content());
+        }
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 BOOST_AUTO_TEST_CASE(test_element_select_empty)
 {
     XTREE_LOG_TEST_NAME;
@@ -234,5 +261,4 @@ BOOST_AUTO_TEST_CASE(test_element_select_empty)
         BOOST_ERROR(ex.what());
     }
 }
-
 

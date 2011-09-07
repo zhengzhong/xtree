@@ -142,7 +142,7 @@ namespace xtree {
                                  &on_validity_error,
                                  &on_validity_warning,
                                  static_cast<void*>(&result) );
-        int return_code = xmlSchemaValidateDoc(valid_ctxt.get(), doc.raw());
+        int return_code = xmlSchemaValidateDoc(valid_ctxt.get(), doc.raw_doc());
         // Check the return code.
         if (return_code >= 0)
         {
@@ -150,7 +150,7 @@ namespace xtree {
         }
         else
         {
-            throw internal_dom_error("xmlSchemaValidateDoc returned -1 (internal or API error)");
+            throw internal_dom_error("fail to validate: xmlSchemaValidateDoc returned -1");
         }
     }
 

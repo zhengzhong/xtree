@@ -95,22 +95,6 @@ namespace xtree {
             return (ptr_ != rhs.ptr_);
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // delete function
-        //
-
-        //! Deletes the underlying xmlns pointer and sets the pointer to null. Calling this
-        //! function is different from using the delete keyword on a pointer. This function
-        //! delegates the deletion to libxml2, which should unlink the node from the DOM tree and
-        //! free the node.
-        void delete_()
-        {
-            if (ptr_ != 0) {
-                T::delete_(ptr_);
-                ptr_ = 0;
-            }
-        }
-
     private:
 
         T* ptr_;

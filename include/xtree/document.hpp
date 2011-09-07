@@ -15,9 +15,7 @@
 #include "xtree/libxml2_fwd.hpp"
 
 #include <cassert>
-#include <map>
 #include <string>
-#include <vector>
 
 
 namespace xtree {
@@ -561,31 +559,19 @@ namespace xtree {
         //! \param nodes  output argument to hold the result node set.
         void select_nodes(const xpath& expr, node_set& nodes);
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // node creation
-        //
-
-        basic_node_ptr<element> make_element(const std::string& name) const;
-
-        basic_node_ptr<text> make_text(const std::string& value) const;
-
-        basic_node_ptr<text> make_cdata(const std::string& value) const;
-
-        basic_node_ptr<comment> make_comment(const std::string& value) const;
-
     public:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // underlying libxml2 document access
         //
 
-        xmlDoc* raw()
+        xmlDoc* raw_doc()
         {
             assert(raw_ != 0);
             return raw_;
         }
 
-        const xmlDoc* raw() const
+        const xmlDoc* raw_doc() const
         {
             assert(raw_ != 0);
             return raw_;
@@ -613,22 +599,10 @@ namespace xtree {
         //! \return pointer to the new root element of this document.
         basic_node_ptr<element> reset_root_(xmlNode* px);
 
-        //! Checks if the specified node is an orphan of this document.
-        //! \param orphan  the node to check.
-        //! \return true if the specified node is an orphan of this document, false otherwise.
-        bool is_my_orphan_(const node* orphan) const;
-
-        void add_orphan_(node* orphan) const;
-
-        void remove_orphan_(node* orphan) const;
-
-        void reset_doc_(xmlDoc* px);
-
     private:
 
-        xmlDoc* raw_;                         //!< Underlying libxml2 document.
-        child_node_list children_;            //!< The child node list under this document.
-        mutable std::vector<node*> orphans_;  //!< Orphans that belong to this document.
+        xmlDoc* raw_;               //!< Underlying libxml2 document.
+        child_node_list children_;  //!< The child node list under this document.
 
     };
 

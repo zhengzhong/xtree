@@ -39,7 +39,6 @@ BOOST_AUTO_TEST_CASE(test_element_push_elements)
         BOOST_CHECK_EQUAL(e1->prefix(), std::string());
         BOOST_CHECK_EQUAL(e1->uri(), std::string());
         BOOST_CHECK_EQUAL(e1->content(), std::string());
-        BOOST_CHECK_EQUAL(root->size(), 1U);
         // Push element with predefined prefix.
         xtree::element_ptr e2 = root->push_back_element("x:e2");
         BOOST_CHECK_EQUAL(e2->name(), "e2");
@@ -67,6 +66,46 @@ BOOST_AUTO_TEST_CASE(test_element_push_elements)
         BOOST_CHECK_EQUAL(e5->content(), std::string());
         // Check subelement count.
         BOOST_CHECK_EQUAL(root->size(), 5U);
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_element_push_elements_with_unprefixed_xmlns)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root xmlns='http://example.com/xtree'/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
+        xtree::element_ptr root = doc->root();
+        BOOST_REQUIRE(root != 0);
+        // Push element with unprefixed namespace.
+        xtree::element_ptr e1 = root->push_back_element("e1");
+        BOOST_CHECK_EQUAL(e1->name(), "e1");
+        BOOST_CHECK_EQUAL(e1->prefix(), std::string());
+        BOOST_CHECK_EQUAL(e1->uri(), "http://example.com/xtree");
+        BOOST_CHECK_EQUAL(e1->content(), std::string());
+        // Push element with new unprefixed namespace.
+        xtree::element_ptr e2 = root->push_back_element("e2", "http://example.com/x");
+        BOOST_CHECK_EQUAL(e2->name(), "e2");
+        BOOST_CHECK_EQUAL(e2->prefix(), std::string());
+        BOOST_CHECK_EQUAL(e2->uri(), "http://example.com/x");
+        BOOST_CHECK_EQUAL(e2->content(), std::string());
+        // Push element without namespace.
+        xtree::element_ptr e3 = root->push_back_element("e3", std::string());
+        BOOST_CHECK_EQUAL(e3->name(), "e3");
+        BOOST_CHECK_EQUAL(e3->prefix(), std::string());
+        BOOST_CHECK_EQUAL(e3->uri(), std::string());
+        BOOST_CHECK_EQUAL(e3->content(), std::string());
+        // Check subelement count.
+        BOOST_CHECK_EQUAL(root->size(), 3U);
     }
     catch (const xtree::dom_error& ex)
     {

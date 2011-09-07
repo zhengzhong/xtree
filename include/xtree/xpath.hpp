@@ -32,6 +32,11 @@ namespace xtree {
         //! \param uri     the XML namespace URI to register.
         xpath(const std::string& str, const std::string& prefix, const std::string& uri);
 
+        //! Constructs an XPath from an expression.
+        //! \param str       the XPath expression.
+        //! \param registry  the XML namespace registry.
+        xpath(const std::string& str, const xmlns_registry& registry);
+
         //! Copy constructor.
         xpath(const xpath& rhs);
 
@@ -48,6 +53,17 @@ namespace xtree {
         void register_xmlns(const std::string& prefix, const std::string& uri)
         {
             registry_[prefix] = uri;
+        }
+
+        //! Registers XML namespaces. If one namespace prefix already exists, the mapping URI
+        //! will be overwritten.
+        //! \param registry  the XML namespace registry.
+        void register_xmlns(const xmlns_registry& registry)
+        {
+            for (xmlns_registry::const_iterator i = registry.begin(); i != registry.end(); ++i)
+            {
+                registry_[i->first] = i->second;
+            }
         }
 
         //! Returns the XML namespace registry.

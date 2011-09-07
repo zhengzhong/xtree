@@ -9,6 +9,8 @@
 #include "xtree/attribute.hpp"
 #include "xtree/exceptions.hpp"
 #include "xtree/check_rules.hpp"
+#include "xtree/basic_xmlns_ptr.hpp"
+#include "xtree/xmlns.hpp"
 #include "xtree/libxml2_utility.hpp"
 
 #include <libxml/tree.h>
@@ -97,6 +99,35 @@ namespace xtree {
     void attribute::set_value(const std::string& value)
     {
         set_content(value);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // namespace access
+    //
+
+
+    basic_xmlns_ptr<xmlns> attribute::get_xmlns()
+    {
+        return basic_xmlns_ptr<xmlns>(xmlns::get_or_create(raw()->ns));
+    }
+
+
+    basic_xmlns_ptr<const xmlns> attribute::get_xmlns() const
+    {
+        return basic_xmlns_ptr<const xmlns>(xmlns::get_or_create(raw()->ns));
+    }
+
+
+    void attribute::set_xmlns(basic_xmlns_ptr<const xmlns> ns)
+    {
+        xmlSetNs(raw(), (ns != 0 ? const_cast<xmlNs*>(ns->raw()) : 0));
+        // Reconciliate xmlns on the element holding this attribute.
+        int count = xmlReconciliateNs(raw()->parent->doc, raw()->parent);
+        if (count < 0)
+        {
+            throw internal_dom_error("fail to reconciliate xmlns on parent element");
+        }
     }
 
 

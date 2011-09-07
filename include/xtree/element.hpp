@@ -9,13 +9,11 @@
 #include "xtree/types.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/basic_node_iterator.hpp"
-
+#include "xtree/basic_xmlns_ptr.hpp"
 #include "xtree/child_node.hpp"
 #include "xtree/child_node_list.hpp"
 #include "xtree/attribute.hpp"
 #include "xtree/attribute_map.hpp"
-#include "xtree/xmlns.hpp"
-#include "xtree/basic_xmlns_ptr.hpp"
 
 #include "xtree/libxml2_fwd.hpp"
 
@@ -31,6 +29,7 @@
 namespace xtree {
 
 
+    class XTREE_DECL xmlns;
     class XTREE_DECL xpath;
     class XTREE_DECL node_set;
 
@@ -39,7 +38,6 @@ namespace xtree {
     class XTREE_DECL element: public child_node
     {
 
-        //! \todo TODO: declare_namespace_().
         friend class attribute_map;
 
     public:
@@ -109,14 +107,39 @@ namespace xtree {
 
         //! Declares a namespace on this element. This function refuses to declare the namespace
         //! if the prefix is already declared on the element.
+        //!
+        //! Notes:
+        //!
+        //! 1) Declaring a new namespace on the element might affect this element and its
+        //!    descendants. This function will reconciliate namespaces after a successful
+        //!    declaration, keeping the URIs of this element and its descendants unchanged.
+        //!    This operation might change their prefixes.
+        //! 2) Declaring an unprefixed namespace might cause inconsistence: if this element or any
+        //!    of its descendants is not associated with a namespace, after such declaration,
+        //!    it will be impossible to distinguish whether it is under the unprefixed namespace
+        //!    or not.
+        //!
         //! \param prefix  the namespace prefix.
         //! \param uri     the namespace URI.
-        //! \return the XML namespace declared.
-        //! \throw bad_dom_operation  if any error occurs.
-        basic_xmlns_ptr<xmlns> declare_xmlns(const std::string& prefix, const std::string& uri)
+        //! \return a pair where its first is either the new xmlns or the existing xmlns with the
+        //!         same prefix, and its second is a bool indicating if a new xmlns is declared.
+        std::pair<basic_xmlns_ptr<xmlns>, bool> declare_xmlns(const std::string& prefix,
+                                                              const std::string& uri)
         {
-            return basic_xmlns_ptr<xmlns>(declare_xmlns_(prefix, uri));
+            std::pair<xmlns*, bool> declared = declare_xmlns_(prefix, uri);
+            return std::make_pair(basic_xmlns_ptr<xmlns>(declared.first), declared.second);
         }
+
+        //! Returns the namespace associate to this element.
+        //! \return the namespace associate to this element.
+        basic_xmlns_ptr<xmlns> get_xmlns();
+
+        //! Const version of get_xmlns().
+        basic_xmlns_ptr<const xmlns> get_xmlns() const;
+
+        //! Associates a namespace to this element.
+        //! \param ns  the namespace to associate.
+        void set_xmlns(basic_xmlns_ptr<const xmlns> ns);
 
         //! Returns the first XML namespace declaration on this element.
         //! \return the first XML namespace declaration on this element, or null if not found.
@@ -160,13 +183,6 @@ namespace xtree {
         {
             return basic_xmlns_ptr<const xmlns>(find_xmlns_by_uri_(uri));
         }
-
-        //! Sets the namespace of this element. This function will firstly declare the namespace,
-        //! then put the element under the namespace.
-        //! \param prefix  the namespace prefix.
-        //! \param uri     the namespace URI.
-        //! \throw bad_dom_operation  if any error occurs.
-        void set_xmlns(const std::string& prefix, const std::string& uri);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // attributes
@@ -292,6 +308,12 @@ namespace xtree {
             return children_.push_back_element(qname, uri);
         }
 
+        basic_node_ptr<element> push_back_element(const std::string& name,
+                                                  basic_xmlns_ptr<const xmlns> ns)
+        {
+            return children_.push_back_element(name, ns);
+        }
+
         basic_node_ptr<text> push_back_text(const std::string& value)
         {
             return children_.push_back_text(value);
@@ -335,6 +357,12 @@ namespace xtree {
         basic_node_ptr<element> push_front_element(const std::string& qname, const std::string& uri)
         {
             return children_.push_front_element(qname, uri);
+        }
+
+        basic_node_ptr<element> push_front_element(const std::string& name,
+                                                   basic_xmlns_ptr<const xmlns> ns)
+        {
+            return children_.push_front_element(name, ns);
         }
 
         basic_node_ptr<text> push_front_text(const std::string& value)
@@ -396,6 +424,13 @@ namespace xtree {
                                                const std::string& uri)
         {
             return children_.insert_element(pos, qname, uri);
+        }
+
+        basic_node_ptr<element> insert_element(child_iterator pos,
+                                               const std::string& name,
+                                               basic_xmlns_ptr<const xmlns> ns)
+        {
+            return children_.insert_element(pos, name, ns);
         }
 
         basic_node_ptr<text> insert_text(child_iterator pos, const std::string& value)
@@ -589,9 +624,9 @@ namespace xtree {
         //! if the prefix is already declared on the element.
         //! \param prefix  the namespace prefix.
         //! \param uri     the namespace URI.
-        //! \return a libxml2 namespace for the URI.
-        //! \throw bad_dom_operation  if any error occurs.
-        xmlns* declare_xmlns_(const std::string& prefix, const std::string& uri);
+        //! \return a pair where its first is either a new xmlns or an existing xmlns with the same
+        //!         prefix, and its second is a bool indicating if a new xmlns is declared.
+        std::pair<xmlns*, bool> declare_xmlns_(const std::string& prefix, const std::string& uri);
 
         //! Returns the first XML namespace declaration on this element.
         //! \return the first XML namespace declaration on this element, or null if not found.

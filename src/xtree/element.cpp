@@ -9,7 +9,7 @@
 #include "xtree/element.hpp"
 #include "xtree/exceptions.hpp"
 #include "xtree/document.hpp"
-
+#include "xtree/xmlns.hpp"
 #include "xtree/xpath.hpp"
 #include "xtree/xpath_context.hpp"
 #include "xtree/xpath_result.hpp"
@@ -152,10 +152,26 @@ namespace xtree {
     //
 
 
-    void element::set_xmlns(const std::string& prefix, const std::string& uri)
+    basic_xmlns_ptr<xmlns> element::get_xmlns()
     {
-        xmlns* px = declare_xmlns_(prefix, uri);
-        xmlSetNs(raw(), px->raw());
+        return basic_xmlns_ptr<xmlns>(xmlns::get_or_create(raw()->ns));
+    }
+
+
+    basic_xmlns_ptr<const xmlns> element::get_xmlns() const
+    {
+        return basic_xmlns_ptr<const xmlns>(xmlns::get_or_create(raw()->ns));
+    }
+
+
+    void element::set_xmlns(basic_xmlns_ptr<const xmlns> ns)
+    {
+        xmlSetNs(raw(), (ns != 0 ? const_cast<xmlNs*>(ns->raw()) : 0));
+        int count = xmlReconciliateNs(raw()->doc, raw());
+        if (count < 0)
+        {
+            throw internal_dom_error("fail to reconciliate xmlns on this element");
+        }
     }
 
 
@@ -205,26 +221,40 @@ namespace xtree {
     }
 
 
-    xmlns* element::declare_xmlns_(const std::string& prefix, const std::string& uri)
+    std::pair<xmlns*, bool> element::declare_xmlns_(const std::string& prefix,
+                                                    const std::string& uri)
     {
         // TODO: check the namespace URI is valid.
-        if (uri.empty())
+        // Search for existing xmlns with the same prefix.
+        for (xmlNs* i = raw()->nsDef; i != 0; i = i->next)
         {
-            std::string what = "invalid namespace URI: " + uri;
-            throw bad_dom_operation(what);
+            std::string check_prefix = ( i->prefix == 0
+                                       ? std::string()
+                                       : detail::to_chars(i->prefix) );
+            if (check_prefix == prefix)
+            {
+                return std::make_pair(xmlns::get_or_create(i), false);
+            }
         }
         // Create (declare) a new libxml2 xmlNs on the element.
         xmlNs* px = xmlNewNs( raw(),
                               detail::to_xml_chars(uri.c_str()),
-                              detail::to_xml_chars(prefix.c_str()) );
+                              prefix.empty() ? 0 : detail::to_xml_chars(prefix.c_str()) );
         if (px == 0)
         {
-            std::string what = "fail to declare namespace " + prefix + "=" + uri
+            std::string what = "fail to declare xmlns " + prefix + "=" + uri
                              + ": xmlNewNs() returned null";
             throw internal_dom_error(what);
         }
+        // Reconciliate xmlns because this might conflict with the subtree.
+        int count = xmlReconciliateNs(raw()->doc, raw());
+        if (count < 0)
+        {
+            // Seems that libxml2 does not have a function to undeclare the namespace...
+            throw internal_dom_error("fail to reconciliate xmlns on this element");
+        }
         // Return the libxml2 xmlNs.
-        return xmlns::get_or_create(px);
+        return std::make_pair(xmlns::get_or_create(px), true);
     }
 
 
@@ -247,7 +277,7 @@ namespace xtree {
     {
         xmlNs* px = xmlSearchNsByHref( raw()->doc,
                                        const_cast<xmlNode*>(raw()),
-                                       uri.empty() ? 0 : detail::to_xml_chars(uri.c_str()) );
+                                       detail::to_xml_chars(uri.c_str()) );
         return xmlns::get_or_create(px);
     }
 

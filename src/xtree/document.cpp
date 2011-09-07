@@ -211,7 +211,7 @@ namespace xtree {
         }
         // Declare XML namespace on the element, and put the element under it.
         xmlNs* ns = xmlNewNs( px,
-                              uri.empty() ? 0 : detail::to_xml_chars(uri.c_str()),
+                              detail::to_xml_chars(uri.c_str()),
                               prefix.empty() ? 0 : detail::to_xml_chars(prefix.c_str()) );
         if (ns == 0)
         {

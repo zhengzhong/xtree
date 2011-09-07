@@ -40,6 +40,18 @@ namespace xtree {
     }
 
 
+    xpath::xpath(const std::string& str, const xmlns_registry& registry)
+    : str_(str), raw_(0), registry_(registry)
+    {
+        raw_ = xmlXPathCompile(detail::to_xml_chars(str.c_str()));
+        if (raw_ == 0)
+        {
+            std::string what = "fail to compile XPath expression: " + str;
+            throw xpath_error(what);
+        }
+    }
+
+
     xpath::xpath(const xpath& rhs): str_(rhs.str_), raw_(0), registry_(rhs.registry_)
     {
         raw_ = xmlXPathCompile(detail::to_xml_chars(rhs.str_.c_str()));

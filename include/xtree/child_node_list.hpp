@@ -10,6 +10,7 @@
 #include "xtree/child_node.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/basic_node_iterator.hpp"
+#include "xtree/basic_xmlns_ptr.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
 #include <cassert>
@@ -23,6 +24,7 @@ namespace xtree {
     class XTREE_DECL text;
     class XTREE_DECL comment;
     class XTREE_DECL instruction;
+    class XTREE_DECL xmlns;
 
 
     //! This class represents a child node list under an element or a document. It may be viewed as
@@ -167,6 +169,14 @@ namespace xtree {
         basic_node_ptr<element> push_back_element(const std::string& qname,
                                                   const std::string& uri);
 
+        //! Pushes an element node to the end of this list.
+        //! \post size() is one more.
+        //! \param name  the local name of the element.
+        //! \param ns    the namespace of the element.
+        //! \return pointer to the inserted element.
+        basic_node_ptr<element> push_back_element(const std::string& name,
+                                                  basic_xmlns_ptr<const xmlns> ns);
+
         //! Pushes a text node to the end of this list.
         //! \post size() is one more.
         //! \param value  the value of the text.
@@ -222,6 +232,14 @@ namespace xtree {
         //! \return pointer to the inserted element.
         basic_node_ptr<element> push_front_element(const std::string& qname,
                                                    const std::string& uri);
+
+        //! Pushes an element node to the beginning of this list.
+        //! \post size() is one more.
+        //! \param name  the local name of the element.
+        //! \param ns    the namespace of the element.
+        //! \return pointer to the inserted element.
+        basic_node_ptr<element> push_front_element(const std::string& name,
+                                                   basic_xmlns_ptr<const xmlns> ns);
 
         //! Pushes a text node to the beginning of this list.
         //! \post size() is one more.
@@ -293,12 +311,23 @@ namespace xtree {
         //! \post size() is one more.
         //! \param pos    the position before which the element is to be inserted.
         //! \param qname  the QName of the element.
-        //! \param uri    the name of the element.
+        //! \param uri    the namespace URI of the element.
         //! \return pointer to the inserted element.
         //! \throws bad_dom_operation  if $pos does not belong to this list.
         basic_node_ptr<element> insert_element(iterator pos,
                                                const std::string& qname,
                                                const std::string& uri);
+
+        //! Inserts an element node to the node list before the specified position.
+        //! \post size() is one more.
+        //! \param pos   the position before which the element is to be inserted.
+        //! \param name  the local name of the element.
+        //! \param ns    the namespace of the element.
+        //! \return pointer to the inserted element.
+        //! \throws bad_dom_operation  if $pos does not belong to this list.
+        basic_node_ptr<element> insert_element(iterator pos,
+                                               const std::string& name,
+                                               basic_xmlns_ptr<const xmlns> ns);
 
         //! Inserts a text node to the node list before the specified position.
         //! \post size() is one more.
@@ -432,6 +461,9 @@ namespace xtree {
 
         //! Creates a libxml2 element node under namespace.
         xmlNode* create_element_(const std::string& qname, const std::string& uri);
+
+        //! Creates a libxml2 element node under namespace.
+        xmlNode* create_element_(const std::string& name, basic_xmlns_ptr<const xmlns> ns);
 
         //! Creates a libxml2 text node.
         xmlNode* create_text_(const std::string& value);

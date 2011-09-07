@@ -7,7 +7,7 @@
 
 #include "xtree/config.hpp"
 #include "xtree/basic_node_ptr.hpp"
-
+#include "xtree/basic_xmlns_ptr.hpp"
 #include "xtree/node.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
@@ -18,6 +18,7 @@ namespace xtree {
 
 
     class XTREE_DECL attribute_map;
+    class XTREE_DECL xmlns;
 
 
     //! This class represents an XML attribute.
@@ -77,6 +78,20 @@ namespace xtree {
         //! \param value  the value to set.
         void set_value(const std::string& value);
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // namespace access
+        //
+
+        //! Returns the namespace associate to this attribute.
+        //! \return the namespace associate to this attribute.
+        basic_xmlns_ptr<xmlns> get_xmlns();
+
+        //! Const version of get_xmlns().
+        basic_xmlns_ptr<const xmlns> get_xmlns() const;
+
+        //! Associates a namespace to this attribute.
+        //! \param ns  the namespace to associate.
+        void set_xmlns(basic_xmlns_ptr<const xmlns> ns);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sibling access, required by basic_node_iterator

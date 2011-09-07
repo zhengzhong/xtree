@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(test_bad_names_for_attribute_and_element)
     const unsigned int MAX_SIZE = sizeof(BAD_NAMES) / sizeof(const std::string);
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
+        std::auto_ptr<xtree::document> doc = xtree::create_document();
         for (unsigned int i = 0; i < MAX_SIZE; ++i)
         {
             BOOST_CHECK_THROW(doc->push_back_element(BAD_NAMES[i]), xtree::bad_dom_operation);

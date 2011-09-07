@@ -115,7 +115,12 @@ namespace xtree {
 
         //! Returns a string representation (an XML fragment) of this node.
         //! \return a string representation (an XML fragment) of this node.
-        std::string str() const;
+        std::string str() const
+        {
+            std::string tmp;
+            str(tmp);
+            return tmp;
+        }
 
         //! Retrieves a string representation (an XML fragment) of this node.
         //! \param str  a string to hold the result.

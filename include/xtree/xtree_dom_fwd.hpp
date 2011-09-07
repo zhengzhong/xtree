@@ -23,8 +23,8 @@ namespace xtree {
 
     class XTREE_DECL dom_parser;
 
-    class XTREE_DECL document;
     class XTREE_DECL node;
+    class XTREE_DECL document;
     class XTREE_DECL attribute;
     class XTREE_DECL child_node;
     class XTREE_DECL element;
@@ -51,6 +51,7 @@ namespace xtree {
 
 
     typedef basic_node_ptr<node>               node_ptr;
+    typedef basic_node_ptr<document>           document_ptr;
     typedef basic_node_ptr<attribute>          attribute_ptr;
     typedef basic_node_ptr<child_node>         child_node_ptr;
     typedef basic_node_ptr<element>            element_ptr;
@@ -59,6 +60,7 @@ namespace xtree {
     typedef basic_node_ptr<instruction>        instruction_ptr;
 
     typedef basic_node_ptr<const node>         const_node_ptr;
+    typedef basic_node_ptr<const document>     const_document_ptr;
     typedef basic_node_ptr<const attribute>    const_attribute_ptr;
     typedef basic_node_ptr<const child_node>   const_child_node_ptr;
     typedef basic_node_ptr<const element>      const_element_ptr;

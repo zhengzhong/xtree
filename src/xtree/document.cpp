@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <memory>
 #include <string>
 
 
@@ -37,29 +38,17 @@ namespace xtree {
     //
 
 
-    document::document()
-    : raw_( xmlNewDoc(detail::to_xml_chars("1.0")) ), children_(raw_)
+    document::document(xmlDoc* px): node(reinterpret_cast<xmlNode*>(px)), children_(px)
     {
-        if (raw_ == 0)
-        {
-            throw internal_dom_error("fail to create libxml2 document: xmlNewDoc() returned null");
-        }
-        raw_->_private = this;
-    }
-
-
-    document::document(xmlDoc* px): raw_(px), children_(px)
-    {
-        assert(raw_ != 0 && raw_->type == XML_DOCUMENT_NODE);
-        raw_->_private = this;
+        px->_private = this;
     }
 
 
     document::~document()
     {
-        raw_->_private = 0;
-        xmlFreeDoc(raw_);
-        raw_ = 0;
+        xmlDoc* px = raw_doc();
+        px->_private = 0;
+        xmlFreeDoc(px);
     }
 
 
@@ -109,35 +98,6 @@ namespace xtree {
     //
 
 
-    std::string document::str() const
-    {
-        std::string tmp;
-        str(tmp);
-        return tmp;
-    }
-
-
-    void document::str(std::string& str) const
-    {
-        // Dump the document to a memory buffer: it is up to the caller to free the buffer.
-        xmlChar* buffer = 0;
-        int size = 0;
-        xmlDocDumpMemory( const_cast<xmlDoc*>(raw_doc()), &buffer, &size );
-        // Save the buffer's contents to string.
-        if (size > 0 && buffer != 0)
-        {
-            str = detail::to_chars(buffer);
-        }
-        else
-        {
-            str = std::string();
-        }
-        // Free the buffer.
-        xmlFree(buffer);
-        buffer = 0;
-    }
-
-
     void document::save_to_file(const std::string& file_name, const std::string& encoding) const
     {
         int size = xmlSaveFormatFileEnc( file_name.c_str(),
@@ -148,9 +108,14 @@ namespace xtree {
     }
 
 
-    document* document::clone() const
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // clone
+    //
+
+
+    document* document::clone(bool recursive) const
     {
-        xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(raw_doc()), 1);
+        xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(raw_doc()), recursive ? 1 : 0);
         if (px == 0)
         {
             throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returned null");
@@ -284,6 +249,37 @@ namespace xtree {
         }
         // Return the new root element.
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    std::auto_ptr<document> create_document()
+    {
+        xmlDoc* px = xmlNewDoc(detail::to_xml_chars("1.0"));
+        if (px == 0)
+        {
+            throw internal_dom_error("fail to create libxml2 document: xmlNewDoc returned null");
+        }
+        return std::auto_ptr<document>(new document(px));
+    }
+
+
+    std::auto_ptr<document> create_document(const std::string& name)
+    {
+        std::auto_ptr<document> doc = create_document();
+        doc->reset_root(name);
+        return doc;
+    }
+
+
+    std::auto_ptr<document> create_document(const std::string& qname,
+                                            const std::string& uri)
+    {
+        std::auto_ptr<document> doc = create_document();
+        doc->reset_root(qname, uri);
+        return doc;
     }
 
 

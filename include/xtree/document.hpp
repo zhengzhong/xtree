@@ -6,15 +6,16 @@
 #define XTREE_DOCUMENT_HPP_20080717__
 
 #include "xtree/config.hpp"
+#include "xtree/node.hpp"
 #include "xtree/exceptions.hpp"
 #include "xtree/types.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/child_node.hpp"
 #include "xtree/child_node_list.hpp"
-#include "xtree/xml_base.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
 #include <cassert>
+#include <memory>
 #include <string>
 
 
@@ -26,7 +27,6 @@ namespace xtree {
     //
 
 
-    class XTREE_DECL node;
     class XTREE_DECL element;
     class XTREE_DECL attribute;
     class XTREE_DECL text;
@@ -43,7 +43,7 @@ namespace xtree {
 
 
     //! This class represents an XML document.
-    class XTREE_DECL document: private xml_base
+    class XTREE_DECL document: public node
     {
 
     public:
@@ -52,9 +52,6 @@ namespace xtree {
         typedef child_node_list::const_iterator  const_child_iterator;
 
     public:
-
-        //! Default constructor. Constructs an empty XML document.
-        explicit document();
 
         //! Constructs a document from a libxml2 document. This function should NOT be called by
         //! client code.
@@ -74,6 +71,20 @@ namespace xtree {
         //! Returns the XML version number of this document.
         //! \return the XML version number of this document.
         std::string version() const;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // conversion to document pointer
+        //
+
+        basic_node_ptr<document> as_ptr()
+        {
+            return basic_node_ptr<document>(this);
+        }
+
+        basic_node_ptr<const document> as_ptr() const
+        {
+            return basic_node_ptr<const document>(this);
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // root element
@@ -532,23 +543,17 @@ namespace xtree {
         // serialization
         //
 
-        //! Returns a string representation of the whole XML document.
-        //! \return a string representation of the whole XML document.
-        std::string str() const;
-
-        //! Retrieves a string representation of the whole XML document.
-        //! \param str  a string to hold the result.
-        void str(std::string& str) const;
-
         //! Saves the whole XML document to a file.
         //! \param file_name  the file name.
         //! \param encoding   the encoding to use.
         void save_to_file(const std::string& file_name,
                           const std::string& encoding = std::string()) const;
 
-        //! Clones the document.
-        //! \return the cloned document.
-        document* clone() const;
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // clone
+        //
+
+        document* clone(bool recursive) const;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // XPath
@@ -567,14 +572,12 @@ namespace xtree {
 
         xmlDoc* raw_doc()
         {
-            assert(raw_ != 0);
-            return raw_;
+            return reinterpret_cast<xmlDoc*>(raw());
         }
 
         const xmlDoc* raw_doc() const
         {
-            assert(raw_ != 0);
-            return raw_;
+            return reinterpret_cast<const xmlDoc*>(raw());
         }
 
     private:
@@ -582,12 +585,6 @@ namespace xtree {
         ////////////////////////////////////////////////////////////////////////////////////////////
         // private
         //
-
-        //! Non-implemented copy constructor.
-        document(const document&);
-
-        //! Non-implemented copy assignment.
-        document& operator=(const document&);
 
         //! Returns the root element of this document, or null if this document is empty.
         //! \return the root element of this document, or null if this document is empty.
@@ -601,10 +598,31 @@ namespace xtree {
 
     private:
 
-        xmlDoc* raw_;               //!< Underlying libxml2 document.
         child_node_list children_;  //!< The child node list under this document.
 
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    //! Creates a new and empty XML document.
+    //! \return the new XML document.
+    XTREE_DECL std::auto_ptr<document> create_document();
+
+
+    //! Creates a new XML document with a root element.
+    //! \param name  the local name of the root element.
+    //! \return the new XML document.
+    XTREE_DECL std::auto_ptr<document> create_document(const std::string& name);
+
+
+    //! Creates a new XML document with a root element.
+    //! \param qname  the QName of the root element.
+    //! \param uri    the namespace URI of the root element.
+    //! \return the new XML document.
+    XTREE_DECL std::auto_ptr<document> create_document(const std::string& qname,
+                                                       const std::string& uri);
 
 
 }  // namespace xtree

@@ -25,6 +25,33 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+BOOST_AUTO_TEST_CASE(test_document_as_node)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
+        xtree::node_ptr ptr = doc->as_ptr();
+        BOOST_CHECK_EQUAL(ptr->type(), xtree::document_node);
+        BOOST_CHECK_EQUAL(ptr->name(), "#document");
+        BOOST_CHECK_EQUAL(ptr->content(), std::string());
+        BOOST_CHECK_EQUAL(ptr->path(), "/");
+        BOOST_CHECK(&(ptr->doc()) == doc.get());
+        BOOST_CHECK(ptr->parent() == 0);
+        BOOST_CHECK_THROW(ptr->set_content("whatever"), xtree::bad_dom_operation);
+        BOOST_CHECK_THROW(ptr.delete_(), xtree::bad_dom_operation);
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 BOOST_AUTO_TEST_CASE(test_document_clone)
 {
     XTREE_LOG_TEST_NAME;
@@ -38,7 +65,7 @@ BOOST_AUTO_TEST_CASE(test_document_clone)
     try
     {
         std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML);
-        std::auto_ptr<xtree::document> doc2(doc1->clone());
+        std::auto_ptr<xtree::document> doc2(doc1->clone(true));
         xtree::element_ptr root1 = doc1->root();
         xtree::element_ptr root2 = doc2->root();
         // Check cloned document and the original one are the same.
@@ -99,7 +126,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_clone)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
+        std::auto_ptr<xtree::document> doc = xtree::create_document();
         {
             std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
             xtree::element_ptr root2 = doc2->root();
@@ -159,7 +186,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
+        std::auto_ptr<xtree::document> doc = xtree::create_document();
         {
             std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
             xtree::element_ptr root2 = doc2->root();
@@ -197,7 +224,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_clone_with_xmlns)
     const char* TEST_XML = "<root xmlns='http://example.com/xtree'><sub a='A'>text</sub></root>";
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
+        std::auto_ptr<xtree::document> doc = xtree::create_document();
         {
             std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
             xtree::element_ptr sub = doc2->root()->find_elem_by_name("sub");
@@ -245,7 +272,7 @@ BOOST_AUTO_TEST_CASE(test_document_reset_root_adopt_with_xmlns)
     const char* TEST_XML = "<root xmlns='http://example.com/xtree'><sub a='A'>text</sub></root>";
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
+        std::auto_ptr<xtree::document> doc = xtree::create_document();
         {
             std::auto_ptr<xtree::document> doc2 = xtree::parse_string(TEST_XML);
             xtree::element_ptr sub = doc2->root()->find_elem_by_name("sub");
@@ -319,7 +346,7 @@ BOOST_AUTO_TEST_CASE(test_document_push_failure)
     XTREE_LOG_TEST_NAME;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
+        std::auto_ptr<xtree::document> doc = xtree::create_document();
         BOOST_CHECK_EQUAL(doc->empty(), true);
         BOOST_CHECK_EQUAL(doc->size(), 0U);
         // We should be able to push the very first element.

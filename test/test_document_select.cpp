@@ -199,6 +199,34 @@ BOOST_AUTO_TEST_CASE(test_document_select_attributes)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+BOOST_AUTO_TEST_CASE(test_document_select_document)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
+        xtree::node_set nodes;
+        doc->select_nodes(xtree::xpath("/"), nodes);
+        BOOST_CHECK_EQUAL(nodes.size(), 1U);
+        for (xtree::node_set::iterator i = nodes.begin(); i != nodes.end(); ++i)
+        {
+            BOOST_CHECK_EQUAL(i->type(), xtree::document_node);
+            BOOST_CHECK_EQUAL(i->name(), "#document");
+            BOOST_CHECK_EQUAL(i->content(), std::string());
+            BOOST_CHECK_EQUAL(i->path(), "/");
+        }
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 BOOST_AUTO_TEST_CASE(test_document_select_empty)
 {
     XTREE_LOG_TEST_NAME;

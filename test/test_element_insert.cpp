@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_clone)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
-        xtree::element_ptr root = doc->reset_root("root");
+        std::auto_ptr<xtree::document> doc = xtree::create_document("root");
+        xtree::element_ptr root = doc->root();
         {
             // Test insert_clone() to begin position.
             std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML_1);
@@ -108,8 +108,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_clone_range)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
-        xtree::element_ptr root = doc->reset_root("root");
+        std::auto_ptr<xtree::document> doc = xtree::create_document("root");
+        xtree::element_ptr root = doc->root();
         {
             // Test insert_clone() to begin position.
             std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML_1);
@@ -164,8 +164,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_adopt)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
-        xtree::element_ptr root = doc->reset_root("root");
+        std::auto_ptr<xtree::document> doc = xtree::create_document("root");
+        xtree::element_ptr root = doc->root();
         {
             // Test insert_adopt() to begin position.
             std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML_1);
@@ -226,8 +226,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_adopt_range)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
-        xtree::element_ptr root = doc->reset_root("root");
+        std::auto_ptr<xtree::document> doc = xtree::create_document("root");
+        xtree::element_ptr root = doc->root();
         {
             // Test insert_adopt() to begin position.
             std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML_1);
@@ -280,8 +280,8 @@ BOOST_AUTO_TEST_CASE(test_element_insert_with_xmlns)
         ;
     try
     {
-        std::auto_ptr<xtree::document> doc(new xtree::document());
-        xtree::element_ptr root = doc->reset_root("root");
+        std::auto_ptr<xtree::document> doc = xtree::create_document("root");
+        xtree::element_ptr root = doc->root();
         {
             // Use insert_clone() for the first document.
             std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML_1);

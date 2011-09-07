@@ -23,12 +23,20 @@ namespace xtree {
     {
         if (ptr != 0)
         {
-            // Unlink and free the underlying libxml2 node. The wrapper object will be deleted by
-            // the libxml2 callback function.
             xmlNode* px = ptr->raw();
             assert(px != 0);
-            xmlUnlinkNode(px);
-            xmlFreeNode(px);
+            if (px->type == XML_DOCUMENT_NODE)
+            {
+                // Deletion of a document node is not allowed.
+                throw bad_dom_operation("document should not be deleted by node::delete_()");
+            }
+            else
+            {
+                // Unlink and free the underlying libxml2 node. The wrapper object will be deleted
+                // by the libxml2 callback function.
+                xmlUnlinkNode(px);
+                xmlFreeNode(px);
+            }
         }
     }
 
@@ -59,6 +67,8 @@ namespace xtree {
     {
         switch (raw()->type)
         {
+        case XML_DOCUMENT_NODE:
+            return document_node;
         case XML_ATTRIBUTE_NODE:
             return attribute_node;
         case XML_ELEMENT_NODE:
@@ -80,6 +90,11 @@ namespace xtree {
 
     std::string node::content() const
     {
+        // Check whether this is a document node.
+        if (raw()->type == XML_DOCUMENT_NODE)
+        {
+            return std::string();
+        }
         // Quoted from libxml2's documentation:
         //   Read the value of a node, this can be either the text carried directly by this node if
         //   it's a TEXT node or the aggregate string of the values carried by this node child's
@@ -99,6 +114,11 @@ namespace xtree {
 
     void node::set_content(const std::string& content)
     {
+        // Check whether this is a document node.
+        if (raw()->type == XML_DOCUMENT_NODE)
+        {
+            throw bad_dom_operation("fail to set content: document does not have content");
+        }
         // Quoted from libxml2 documentation:
         //   (xmlNodeSetContent) Replace the content of a node. NOTE: @content is supposed to be a
         //   piece of XML CDATA, so it allows entity references, but XML special chars need to be
@@ -120,11 +140,11 @@ namespace xtree {
     {
         switch (raw()->type)
         {
+        case XML_DOCUMENT_NODE:
+            return "#document";
         case XML_ELEMENT_NODE:
         case XML_ATTRIBUTE_NODE:
         case XML_PI_NODE:
-            return detail::to_chars(raw()->name);
-        case XML_NAMESPACE_DECL:
             return detail::to_chars(raw()->name);
         case XML_TEXT_NODE:
         case XML_CDATA_SECTION_NODE:
@@ -152,21 +172,13 @@ namespace xtree {
     }
 
 
-    std::string node::str() const
-    {
-        std::string tmp;
-        str(tmp);
-        return tmp;
-    }
-
-
     void node::str(std::string& str) const
     {
         xmlBuffer* buffer = xmlBufferCreate();
         xmlNodeDump(buffer, raw()->doc, const_cast<xmlNode*>(raw()), 0, 0);
         str = detail::to_chars(buffer->content);
         xmlBufferFree(buffer);
-    }        
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

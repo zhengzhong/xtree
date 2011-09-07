@@ -21,6 +21,7 @@ namespace xtree {
     enum node_t
     {
         unknown_node = 0,
+        document_node,
         attribute_node,
         element_node,
         text_node,

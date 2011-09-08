@@ -13,9 +13,9 @@
 namespace {
 
 
-    void check_attribute_map(xtree::attribute_map& attrs,
-                             const std::string expected_attrs[][3],
-                             unsigned int size)
+    void check_attribute_map_(xtree::attribute_map& attrs,
+                              const std::string expected_attrs[][3],
+                              unsigned int size)
     {
         unsigned int index = 0;
         for (xtree::attribute_map::iterator i = attrs.begin(); i != attrs.end(); ++i, ++index)
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(test_get_attributes_no_ns)
         BOOST_CHECK_EQUAL(root->attr("c"), "four");
         BOOST_CHECK_EQUAL(root->attr("x"), std::string());
         // Interation over attribute map.
-        check_attribute_map(root->attrs(), EXPECTED_ATTRS, 3);
+        check_attribute_map_(root->attrs(), EXPECTED_ATTRS, 3);
     }
     catch (const xtree::dom_error& ex)
     {
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(test_get_attributes_default_ns)
         BOOST_CHECK_EQUAL(root->attr("c"), "four");
         BOOST_CHECK_EQUAL(root->attr("x"), std::string());
         // Interation over attribute map.
-        check_attribute_map(root->attrs(), EXPECTED_ATTRS, 3);
+        check_attribute_map_(root->attrs(), EXPECTED_ATTRS, 3);
     }
     catch (const xtree::dom_error& ex)
     {
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(test_get_attributes_mixed_ns)
         BOOST_CHECK_EQUAL(root->attr("c", URI_Y), "five");
         BOOST_CHECK_EQUAL(root->attr("x"), std::string());
         // Interation over attribute map.
-        check_attribute_map(root->attrs(), EXPECTED_ATTRS, 4);
+        check_attribute_map_(root->attrs(), EXPECTED_ATTRS, 4);
     }
     catch (const xtree::dom_error& ex)
     {
@@ -142,4 +142,58 @@ BOOST_AUTO_TEST_CASE(test_get_attributes_mixed_ns)
     }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_set_attributes)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root xmlns:x='http://example.com/x' a='A' bc='B &amp; C' d='D'/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        xtree::element_ptr root = doc->root();
+        root->set_attr("a", "AA");
+        root->set_attr("x:a", "X:A");
+        root->declare_xmlns("y", "http://example.com/y");
+        root->set_attr("b", "B");
+        root->set_attr("y:b", "Y:B");
+        xtree::element_ptr root2 = doc->root();
+        BOOST_CHECK_EQUAL(root2->attr("a"), "AA");
+        BOOST_CHECK_EQUAL(root2->attr("x:a"), "X:A");
+        BOOST_CHECK_EQUAL(root2->attr("a", "http://example.com/x"), "X:A");
+        BOOST_CHECK_EQUAL(root2->attr("bc"), "B & C");
+        BOOST_CHECK_EQUAL(root2->attr("d"), "D");
+        BOOST_CHECK_EQUAL(root2->attr("b"), "B");
+        BOOST_CHECK_EQUAL(root2->attr("y:b"), "Y:B");
+        BOOST_CHECK_EQUAL(root2->attr("b", "http://example.com/y"), "Y:B");
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+BOOST_AUTO_TEST_CASE(test_set_attribute_error)
+{
+    XTREE_LOG_TEST_NAME;
+    const char* TEST_XML = "<root xmlns:x='http://example.com/xtree'/>";
+    try
+    {
+        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        xtree::element_ptr root = doc->root();
+        BOOST_CHECK_EQUAL(root->attrs().size(), 0U);
+        BOOST_CHECK_THROW(root->set_attr("y:a", "Y"), xtree::bad_dom_operation);
+        BOOST_CHECK_EQUAL(root->attrs().size(), 0U);
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
 

@@ -60,7 +60,7 @@ sharedlib: $(MAIN_OBJS)
 
 
 $(TEMP_DIR)/test/%.obj: $(TEST_DIR)/%.cpp prepare
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -DXTREE_TEST_DETAIL=1 -c -o $@ $<
 
 
 tests: $(TEST_OBJS) sharedlib

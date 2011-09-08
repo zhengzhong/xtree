@@ -38,7 +38,8 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="$(TargetPath)"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -81,7 +82,8 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="$(TargetPath)"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -128,7 +130,8 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="$(TargetPath)"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -171,7 +174,8 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="$(TargetPath)"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -202,6 +206,9 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
 				RelativePath=".\test\boost_unit_test_framework.cpp">
+			</File>
+			<File
+				RelativePath=".\test\test_attribute.cpp">
 			</File>
 			<File
 				RelativePath=".\test\test_bad_value.cpp">
@@ -243,9 +250,6 @@
 				RelativePath=".\test\test_element_select.cpp">
 			</File>
 			<File
-				RelativePath=".\test\test_get_attributes.cpp">
-			</File>
-			<File
 				RelativePath=".\test\test_node_cast.cpp">
 			</File>
 			<File
@@ -253,9 +257,6 @@
 			</File>
 			<File
 				RelativePath=".\test\test_sax_parsing.cpp">
-			</File>
-			<File
-				RelativePath=".\test\test_set_attributes.cpp">
 			</File>
 			<File
 				RelativePath=".\test\test_xmlns.cpp">

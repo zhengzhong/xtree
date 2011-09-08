@@ -149,7 +149,10 @@ namespace xtree {
 
         //! Removes all the child_node objects from this list.
         //! \post empty() == true
-        void clear();
+        void clear()
+        {
+            erase(begin(), end());
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // modifiers/push_back
@@ -479,8 +482,7 @@ namespace xtree {
 
     private:
 
-        xmlDoc*  raw_doc_;   //!< The libxml2 document who owns the child node list.
-        xmlNode* raw_elem_;  //!< The libxml2 element who owns the child node list.
+        xmlNode* raw_;  //!< The libxml2 element (or document) holding the child node list.
 
     };
 

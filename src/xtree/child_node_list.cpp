@@ -31,22 +31,21 @@ namespace xtree {
     //
 
 
-    child_node_list::child_node_list(xmlDoc* px): raw_doc_(px), raw_elem_(0)
+    child_node_list::child_node_list(xmlDoc* px): raw_(reinterpret_cast<xmlNode*>(px))
     {
-        assert(raw_doc_ != 0 && raw_doc_->type == XML_DOCUMENT_NODE);
+        assert(raw_ != 0 && raw_->type == XML_DOCUMENT_NODE);
     }
 
 
-    child_node_list::child_node_list(xmlNode* px): raw_doc_(0), raw_elem_(px)
+    child_node_list::child_node_list(xmlNode* px): raw_(px)
     {
-        assert(raw_elem_ != 0 && raw_elem_->type == XML_ELEMENT_NODE);
+        assert(raw_ != 0 && raw_->type == XML_ELEMENT_NODE);
     }
 
 
     child_node_list::~child_node_list()
     {
-        raw_doc_ = 0;
-        raw_elem_ = 0;
+        raw_ = 0;
     }
 
 
@@ -146,17 +145,6 @@ namespace xtree {
             }
             return *last;
         }
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/clear
-    //
-
-
-    void child_node_list::clear()
-    {
-        erase(begin(), end());
     }
 
 
@@ -497,37 +485,29 @@ namespace xtree {
 
     const document& child_node_list::doc_() const
     {
-        xmlDoc* doc = ( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_ );
-        assert(doc != 0 && "owner document of child node list should not be null");
-        return *(static_cast<const document*>(doc->_private));
+        assert(raw_->doc != 0 && "owner document of child node list should not be null");
+        return *(static_cast<const document*>(raw_->doc->_private));
     }
 
 
     const element* child_node_list::owner_element_() const
     {
-        return ( raw_elem_ != 0 ? static_cast<const element*>(raw_elem_->_private) : 0 );
+        if (raw_->type == XML_ELEMENT_NODE)
+        {
+            return static_cast<const element*>(raw_->_private);
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 
     const child_node* child_node_list::first_() const
     {
-        xmlNode* first = 0;
-        if (raw_doc_ != 0 && raw_elem_ == 0)
+        if (raw_->children != 0)
         {
-            first = raw_doc_->children;
-        }
-        else if (raw_elem_ != 0 && raw_doc_ == 0)
-        {
-            first = raw_elem_->children;
-        }
-        else
-        {
-            assert(! "child_node_list should have an owner document or element.");
-            throw internal_dom_error("fail to find owner of this child_node_list");
-        }
-        if (first != 0)
-        {
-            return static_cast<const child_node*>(first->_private);
+            return static_cast<const child_node*>(raw_->children->_private);
         }
         else
         {
@@ -538,21 +518,9 @@ namespace xtree {
 
     void child_node_list::check_ownership_(iterator pos)
     {
-        if (pos != end())
+        if (pos != end() && pos->raw()->parent != raw_)
         {
-            bool ok = false;
-            xmlNode* px = pos->raw();
-            if (px->parent != 0 && raw_elem_ == px->parent)
-            {
-                ok = true;
-            }
-            else if (px->parent != 0 && raw_doc_ == px->doc)
-            {
-                ok = true;
-            }
-            if (!ok) {
-                throw bad_dom_operation("the iterator does not belong to this child_node_list");
-            }
+            throw bad_dom_operation("the iterator does not belong to this child_node_list");
         }
     }
 
@@ -567,37 +535,15 @@ namespace xtree {
         xmlNode* px = 0;
         if (pos == end())
         {
-            // Insert the libxml2 node at the end of this child node list.
-            if (raw_doc_ != 0 && raw_elem_ == 0)
-            {
-                //
-                // In order to call xmlAddChild(), we have to cast xmlDoc* to xmlNode* and pass it
-                // as the first parameter. Such cast is considered to be safe because xmlDoc and
-                // xmlNode share a common part and xmlAddChild() operates only on that common part.
-                //
-                px = xmlAddChild(reinterpret_cast<xmlNode*>(raw_doc_), child);
-            }
-            else if (raw_elem_ != 0 && raw_doc_ == 0)
-            {
-                px = xmlAddChild(raw_elem_, child);
-            }
-            else
-            {
-                // Error: free the unlinked child node before throwing.
-                xmlFreeNode(child);
-                assert(! "child_node_list should have an owner document or element");
-                throw internal_dom_error("fail to find owner of this child_node_list");
-            }
+            px = xmlAddChild(raw_, child);
         }
         else
         {
-            // Insert the libxml2 node before the specified iterator.
             px = xmlAddPrevSibling(pos->raw(), child);
         }
-        assert(px != 0 && "xmlAddChild() or xmlAddPrevSibling() should not return null.");
         if (px == 0)
         {
-            std::string what = "Invalid return value of xmlAddChild() or xmlAddPrevSibling().";
+            std::string what = "fail to insert: xmlAddChild()/xmlAddPrevSibling() returned null";
             throw internal_dom_error(what);
         }
         // Reconciliate XML namespaces as necessary.
@@ -625,12 +571,12 @@ namespace xtree {
         std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
         const std::string& prefix = name_pair.first;
         const std::string& name = name_pair.second;
-        // Find xmlns by prefix.
+        // Find xmlns by prefix (if this child node list belongs to an element).
         xmlNs* ns = 0;
-        if (raw_elem_ != 0)
+        if (raw_->type == XML_ELEMENT_NODE)
         {
-            ns = xmlSearchNs( raw_elem_->doc,
-                              raw_elem_,
+            ns = xmlSearchNs( raw_->doc,
+                              raw_,
                               prefix.empty() ? 0 : detail::to_xml_chars(prefix.c_str()) );
         }
         if (!prefix.empty() && ns == 0)
@@ -640,7 +586,7 @@ namespace xtree {
             throw bad_dom_operation(what);
         }
         // Create element under the xmlns.
-        xmlNode* px = xmlNewDocNode( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
+        xmlNode* px = xmlNewDocNode( raw_->doc,
                                      ns,
                                      detail::to_xml_chars(name.c_str()),
                                      0 );
@@ -661,7 +607,7 @@ namespace xtree {
         const std::string& prefix = name_pair.first;
         const std::string& name = name_pair.second;
         // Create element without namespace.
-        xmlNode* px = xmlNewDocNode( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
+        xmlNode* px = xmlNewDocNode( raw_->doc,
                                      0,
                                      detail::to_xml_chars(name.c_str()),
                                      0 );
@@ -689,7 +635,7 @@ namespace xtree {
     xmlNode* child_node_list::create_element_(const std::string& name,
                                               basic_xmlns_ptr<const xmlns> ns)
     {
-        xmlNode* px = xmlNewDocNode( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
+        xmlNode* px = xmlNewDocNode( raw_->doc,
                                      ( ns != 0 ? const_cast<xmlNs*>(ns->raw()) : 0 ),
                                      detail::to_xml_chars(name.c_str()),
                                      0 );
@@ -704,8 +650,7 @@ namespace xtree {
 
     xmlNode* child_node_list::create_text_(const std::string& value)
     {
-        xmlNode* px = xmlNewDocText( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
-                                     detail::to_xml_chars(value.c_str()) );
+        xmlNode* px = xmlNewDocText(raw_->doc, detail::to_xml_chars(value.c_str()));
         if (px == 0)
         {
             std::string what = "fail to create libxml2 text node for " + value;
@@ -720,7 +665,7 @@ namespace xtree {
 
     xmlNode* child_node_list::create_cdata_(const std::string& value)
     {
-        xmlNode* px = xmlNewCDataBlock( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
+        xmlNode* px = xmlNewCDataBlock( raw_->doc,
                                         detail::to_xml_chars(value.c_str()),
                                         static_cast<int>(value.size()) );
         if (px == 0)
@@ -737,8 +682,7 @@ namespace xtree {
 
     xmlNode* child_node_list::create_comment_(const std::string& value)
     {
-        xmlNode* px = xmlNewDocComment( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
-                                        detail::to_xml_chars(value.c_str()) );
+        xmlNode* px = xmlNewDocComment(raw_->doc, detail::to_xml_chars(value.c_str()));
         if (px == 0)
         {
             std::string what = "fail to create libxml2 comment node for " + value;
@@ -754,7 +698,7 @@ namespace xtree {
     xmlNode* child_node_list::create_instruction_(const std::string& target,
                                                   const std::string& value)
     {
-        xmlNode* px = xmlNewDocPI( raw_elem_ != 0 ? raw_elem_->doc : raw_doc_,
+        xmlNode* px = xmlNewDocPI( raw_->doc,
                                    detail::to_xml_chars(target.c_str()),
                                    detail::to_xml_chars(value.c_str()) );
         if (px == 0)

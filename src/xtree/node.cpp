@@ -19,6 +19,11 @@
 namespace xtree {
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //! \name Static Functions
+    //! \{
+
+
     void node::delete_(node* ptr)
     {
         if (ptr != 0)
@@ -41,9 +46,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // constructor/destructor
-    //
+    //! \name Constructor and Destructor
+    //! \{
 
 
     node::node(xmlNode* px): raw_(px)
@@ -58,9 +66,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // node information access
-    //
+    //! \name Property Access
+    //! \{
 
 
     node_t node::type() const
@@ -181,9 +192,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // owner/parent access
-    //
+    //! \name Owner Access
+    //! \{
 
 
     document& node::doc()
@@ -212,9 +226,12 @@ namespace xtree {
     }
 
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // protected
-    //
+    //! \}
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //! \name Underlying Libxml2 Object Access
+    //! \{
 
 
     xmlNode* node::clone_raw(bool recursive) const
@@ -249,9 +266,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // private static
-    //
+    //! \name Private Functions
+    //! \{
 
 
     const node* node::cast_(const xmlNode* px)
@@ -269,11 +289,6 @@ namespace xtree {
             return 0;
         }
     }
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // private
-    //
 
 
     const element* node::parent_() const
@@ -313,6 +328,9 @@ namespace xtree {
             return 0;
         }
     }
+
+
+    //! \}
 
 
 }  // namespace xtree

@@ -40,7 +40,11 @@ namespace xtree {
     class XTREE_DECL sax_parser: private xml_base
     {
 
+        //! \cond DEV
+
         friend void detail::initialize_libxml2_sax2_handler(xmlSAXHandler&);
+
+        //! \endcond
 
     public:
 
@@ -75,8 +79,8 @@ namespace xtree {
     private:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // private static libxml2 callback functions
-        //
+        //! \param Libxml2 Callback Functions
+        //! \{
 
         //! Receives notification of the beginning of an XML document.
         static void start_document(void* context);
@@ -113,6 +117,8 @@ namespace xtree {
 
         static void structured_error(void* context, xmlError* err);
 
+        //! \}
+
         //! Casts the context pointer to the SAX parser.
         //! \param context  pointer to the context pointer.
         //! \return the SAX parser.
@@ -120,17 +126,19 @@ namespace xtree {
 
     private:
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //! \name Non-Copyable
+        //! \{
+
         //! Non-implemented copy constructor.
         sax_parser(const sax_parser&);
 
         //! Non-implemented copy assignment.
         sax_parser& operator=(const sax_parser&);
 
-    private:
+        //! \}
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // private members
-        //
+    private:
 
         std::set<std::string> features_;         //!< SAX2 features.
         sax_content_handler*  content_handler_;  //!< Pointer to content handler.

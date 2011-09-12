@@ -27,36 +27,50 @@ namespace xtree {
 
     public:
 
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // static
-        //
+        //! \cond DEV
 
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //! \name Static Cast Functions
+        //! \{
+
+        //! Casts a libxml2 node to an attribute.
         static attribute* cast(xmlNode* px)
         {
             return const_cast<attribute*>(cast_(px));
         }
 
+        //! Casts a libxml2 node to an attribute.
         static const attribute* cast(const xmlNode* px)
         {
             return cast_(px);
         }
 
+        //! \}
+
+        //! \endcond
+
     public:
 
+        //! \cond DEV
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // constructor/destructor
-        //
+        //! \name Constructor and Destructor
+        //! \{
 
         //! Constructs an attribute from a libxml2 node. This function should NOT be called by
         //! client code.
         explicit attribute(xmlNode* px);
 
-        //! Destructor. This function should NOT be called by client code.
+        //! Destructor.
         ~attribute();
 
+        //! \}
+
+        //! \endcond
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // property access
-        //
+        //! \name Property Access
+        //! \{
 
         //! Returns the namespace URI of this attribute, or an empty string if it hasn't one.
         std::string uri() const;
@@ -78,9 +92,11 @@ namespace xtree {
         //! \param value  the value to set.
         void set_value(const std::string& value);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // namespace access
-        //
+        //! \name Namespace Access
+        //! \{
 
         //! Returns the namespace associate to this attribute.
         //! \return the namespace associate to this attribute.
@@ -93,9 +109,11 @@ namespace xtree {
         //! \param ns  the namespace to associate.
         void set_xmlns(basic_xmlns_ptr<const xmlns> ns);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // sibling access, required by basic_node_iterator
-        //
+        //! \name Sibling Access
+        //! \{
 
         //! Returns the previous sibling.
         //! \return the previous sibling.
@@ -111,19 +129,11 @@ namespace xtree {
         //! Const version of next_sibling().
         basic_node_ptr<const attribute> next_sibling() const;
 
-    private:
+        //! \}
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // private static
-        //
+    private:
 
         static const attribute* cast_(const xmlNode* px);
-
-    private:
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // private
-        //
 
         attribute* clone(bool recursive) const;
 

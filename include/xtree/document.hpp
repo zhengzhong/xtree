@@ -22,11 +22,6 @@
 namespace xtree {
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // forward declarations
-    //
-
-
     class XTREE_DECL element;
     class XTREE_DECL attribute;
     class XTREE_DECL text;
@@ -35,11 +30,6 @@ namespace xtree {
 
     class XTREE_DECL xpath;
     class XTREE_DECL node_set;
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // document
-    //
 
 
     //! This class represents an XML document.
@@ -53,6 +43,12 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //! \name Constructor and Destructor
+        //! \{
+
         //! Constructs a document from a libxml2 document. This function should NOT be called by
         //! client code.
         explicit document(xmlDoc* px);
@@ -60,9 +56,13 @@ namespace xtree {
         //! Destroys the DOM tree and releases all resources.
         ~document();
 
+        //! \}
+
+        //! \endcond
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // document information access
-        //
+        //! \name Property Access
+        //! \{
 
         //! Returns the encoding of this document.
         //! \return the encoding of this document.
@@ -72,9 +72,11 @@ namespace xtree {
         //! \return the XML version number of this document.
         std::string version() const;
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // conversion to document pointer
-        //
+        //! \name Conversion to Pointer
+        //! \{
 
         basic_node_ptr<document> as_ptr()
         {
@@ -86,9 +88,11 @@ namespace xtree {
             return basic_node_ptr<const document>(this);
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // root element
-        //
+        //! \name Root Element Access
+        //! \{
 
         //! Returns the root element of this document.
         //! \return the root element of this document.
@@ -129,9 +133,11 @@ namespace xtree {
         //! \return pointer to the new root element of this document.
         basic_node_ptr<element> reset_root_adopt(element& elem);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: capacity
-        //
+        //! \name Children Access: Capacity
+        //! \{
 
         //! Checks if this document is empty. An empty document does not contain any child node.
         //! Note that a document without a root element is NOT necessarily empty. It may also
@@ -148,9 +154,11 @@ namespace xtree {
             return children_.size();
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: iterators
-        //
+        //! \name Children Access: Iterators
+        //! \{
 
         child_iterator begin()
         {
@@ -172,9 +180,11 @@ namespace xtree {
             return children_.end();
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: front and back
-        //
+        //! \name Children Access: Front and Back
+        //! \{
 
         child_node& front()
         {
@@ -196,18 +206,11 @@ namespace xtree {
             return children_.back();
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/clear
-        //
-
-        //! Clears the document. This function destroys the underlying DOM tree, including all the
-        //! orphan nodes, and releases all the resources, thus invalidates all the nodes.
-        //! \post empty() == true
-        void clear();
+        //! \}
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/push_back
-        //
+        //! \name Children Access: Modifiers: push_back
+        //! \{
 
         //! Pushes a new element to the end of the document's child node list.
         //! \param name  the local name of the element to push.
@@ -304,9 +307,11 @@ namespace xtree {
             }
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/push_front
-        //
+        //! \name Children Access: Modifiers: push_front
+        //! \{
 
         //! Pushes a new element to the front of the document's child node list.
         //! \param name  the local name of the element to push.
@@ -403,9 +408,11 @@ namespace xtree {
             }
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/pop
-        //
+        //! \name Children Access: Modifiers: pop
+        //! \{
 
         void pop_back()
         {
@@ -417,9 +424,11 @@ namespace xtree {
             children_.pop_front();
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/insert
-        //
+        //! \name Children Access: Modifiers: insert
+        //! \{
 
         //! Inserts a new element to the position of the document's child node list.
         //! \param pos   the position before which the element is to be inserted.
@@ -525,9 +534,11 @@ namespace xtree {
             }
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/erase
-        //
+        //! \name Children Access: Modifiers: erase and clear
+        //! \{
 
         child_iterator erase(child_iterator pos)
         {
@@ -539,9 +550,19 @@ namespace xtree {
             return children_.erase(first, last);
         }
 
+        //! Clears the document. This function destroys the underlying DOM tree and releases all
+        //! the resources, thus invalidates all the nodes.
+        //! \post empty() == true
+        void clear()
+        {
+            children_.clear();
+        }
+
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // serialization
-        //
+        //! \name Serialization
+        //! \{
 
         //! Saves the whole XML document to a file.
         //! \param file_name  the file name.
@@ -549,26 +570,26 @@ namespace xtree {
         void save_to_file(const std::string& file_name,
                           const std::string& encoding = std::string()) const;
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // clone
-        //
-
-        document* clone(bool recursive) const;
+        //! \}
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // XPath
-        //
+        //! \name XPath
+        //! \{
 
         //! Selects a node set by an XPath expression.
         //! \param expr   the XPath expression that evaluates to a node set.
         //! \param nodes  output argument to hold the result node set.
         void select_nodes(const xpath& expr, node_set& nodes);
 
+        //! \}
+
     public:
 
+        //! \cond DEV
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // underlying libxml2 document access
-        //
+        //! \name Underlying Libxml2 Object Access
+        //! \{
 
         xmlDoc* raw_doc()
         {
@@ -580,11 +601,17 @@ namespace xtree {
             return reinterpret_cast<const xmlDoc*>(raw());
         }
 
+        //! \}
+
+        //! \endcond
+
     private:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // private
-        //
+        //! \name Private Functions
+        //! \{
+
+        document* clone(bool recursive) const;
 
         //! Returns the root element of this document, or null if this document is empty.
         //! \return the root element of this document, or null if this document is empty.
@@ -596,6 +623,8 @@ namespace xtree {
         //! \return pointer to the new root element of this document.
         basic_node_ptr<element> reset_root_(xmlNode* px);
 
+        //! \}
+
     private:
 
         child_node_list children_;  //!< The child node list under this document.
@@ -604,6 +633,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    //! \name Document Creation Functions
+    //! \{
 
 
     //! Creates a new and empty XML document.
@@ -623,6 +654,9 @@ namespace xtree {
     //! \return the new XML document.
     XTREE_DECL std::auto_ptr<document> create_document(const std::string& qname,
                                                        const std::string& uri);
+
+
+    //! \}
 
 
 }  // namespace xtree

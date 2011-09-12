@@ -31,10 +31,6 @@ namespace xtree {
 
     public:
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // typedefs
-        //
-
         typedef basic_node_ptr<attribute>            auto_type;
 
         typedef attribute&                           reference;
@@ -45,20 +41,26 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // constructor/destructor
-        //
+        //! \name Constructor and Destructor
+        //! \{
 
         //! Constructs an attribute_map from a libxml2 element node. This function should NOT be
         //! called by client code. It is only used by element.
         explicit attribute_map(xmlNode* px);
 
-        //! Destructor. This function should NOT be called by client code.
+        //! Destructor.
         ~attribute_map();
 
+        //! \}
+
+        //! \endcond
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // capacity
-        //
+        //! \name Capacity
+        //! \{
 
         //! Checks if this container is empty.
         //! \return true if this container is empty, false otherwise.
@@ -68,9 +70,11 @@ namespace xtree {
         //! \return the number of items in this map.
         size_type size() const;
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // iterators
-        //
+        //! \name Iterators
+        //! \{
 
         iterator begin();
 
@@ -80,9 +84,11 @@ namespace xtree {
 
         const_iterator end() const;
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // attribute access
-        //
+        //! \name Attribute Access
+        //! \{
 
         //! Returns the value of an attribute by QName.
         //! \param qname  the attribute QName.
@@ -109,9 +115,11 @@ namespace xtree {
         //! \param value  the attribute value.
         void set(const std::string& qname, const std::string& value);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // find
-        //
+        //! \name Find
+        //! \{
 
         iterator find(const std::string& qname)
         {
@@ -133,9 +141,11 @@ namespace xtree {
             return const_iterator( find_attr_(name, uri) );
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers
-        //
+        //! \name Modifiers
+        //! \{
 
         //! Inserts an attribute to the map. Like std::map::insert, this function will insert the
         //! attribute to the map only if no attribute with the same local name and namespace URI
@@ -187,13 +197,18 @@ namespace xtree {
         size_type erase(const std::string& name, const std::string& uri);
 
         //! Removes all the attribute objects in this map.
-        void clear();
+        void clear()
+        {
+            erase(begin(), end());
+        }
+
+        //! \}
 
     private:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // noncopyable
-        //
+        //! \name Non-Copyable
+        //! \{
 
         //! Non-implemented copy constructor.
         attribute_map(const attribute_map&);
@@ -201,9 +216,13 @@ namespace xtree {
         //! Non-implemented copy assignment.
         attribute_map& operator=(const attribute_map&);
 
+        //! \}
+
+    private:
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // private functions
-        //
+        //! \name Private Functions
+        //! \{
 
         xmlNode* raw()
         {
@@ -233,6 +252,8 @@ namespace xtree {
         const attribute* find_attr_(const std::string& name, const std::string& uri) const;
 
         attribute* create_attr_(const std::string& qname, const std::string& value);
+
+        //! \}
 
     private:
 

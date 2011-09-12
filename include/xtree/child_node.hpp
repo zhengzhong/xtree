@@ -19,9 +19,11 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // static
-        //
+        //! \name Static Cast Functions
+        //! \{
 
         static child_node* cast(xmlNode* px)
         {
@@ -32,6 +34,10 @@ namespace xtree {
         {
             return cast_(px);
         }
+
+        //! \}
+
+        //! \endcond
 
     public:
 
@@ -58,10 +64,6 @@ namespace xtree {
         explicit child_node(xmlNode* px);
 
     private:
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // static
-        //
 
         static const child_node* cast_(const xmlNode* px);
 

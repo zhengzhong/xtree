@@ -23,8 +23,8 @@ namespace xtree {
     public:
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // constructors
-        //
+        //! \name Constructors
+        //! \{
 
         //! Constructs a pointer wrapper to null.
         explicit basic_node_ptr(): ptr_(0)
@@ -47,15 +47,17 @@ namespace xtree {
             // Do nothing.
         }
 
+        //! \}
+
         // Use auto-generated copy constructor.
         // Use auto-generated copy assignment.
         // Use auto-generated destructor.
 
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // cast constructors: should not be used by client code
-        //
-
         //! \cond DEV
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //! \name Cast Constructors (should not be used by client code)
+        //! \{
 
         struct static_cast_tag { };   //!< Tag struct identifying a static node cast.
         struct const_cast_tag { };    //!< Tag struct identifying a const node cast.
@@ -85,11 +87,13 @@ namespace xtree {
             }
         }
 
+        //! \}
+
         //! \endcond
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // pointer operators
-        //
+        //! \name Pointer Operators
+        //! \{
 
         T& operator*() const
         {
@@ -131,9 +135,11 @@ namespace xtree {
             return (ptr_ != rhs.ptr_);
         }
 
+        //! \}
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // delete function
-        //
+        //! \name Deletion
+        //! \{
 
         //! Deletes the underlying node pointer and sets the pointer to null. Calling this function
         //! is different from using the delete keyword on a pointer. This function delegates the
@@ -147,6 +153,8 @@ namespace xtree {
             }
         }
 
+        //! \}
+
     private:
 
         T* ptr_;
@@ -155,8 +163,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // (static|const|dynamic)_node_cast
-    //
+    //! \name Node Cast Functions
+    //! \{
 
 
     //! Performs a static cast from pointer-to-U to pointer-to-T. Static cast is typically used to
@@ -215,6 +223,9 @@ namespace xtree {
     {
         return basic_node_ptr<T>( ptr, typename basic_node_ptr<T>::dynamic_cast_tag() );
     }
+
+
+    //! \}
 
 
 } // namespace xtree

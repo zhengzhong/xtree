@@ -23,7 +23,7 @@ namespace xtree {
     public:
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // constructors
+        //! \name Constructors
         //
 
         //! Constructs a pointer wrapper to null.
@@ -47,13 +47,15 @@ namespace xtree {
             // Do nothing.
         }
 
+        //! \}
+
         // Use auto-generated copy constructor.
         // Use auto-generated copy assignment.
         // Use auto-generated destructor.
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // pointer operators
-        //
+        //! \name Pointer Operators
+        //! \{
 
         T& operator*() const
         {
@@ -94,6 +96,8 @@ namespace xtree {
         {
             return (ptr_ != rhs.ptr_);
         }
+
+        //! \}
 
     private:
 

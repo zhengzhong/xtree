@@ -34,8 +34,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // constructor/destructor
-    //
+    //! \name Constructor and Destructor
+    //! \{
 
 
     document::document(xmlDoc* px): node(reinterpret_cast<xmlNode*>(px)), children_(px)
@@ -52,9 +52,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // property access
-    //
+    //! \name Property Access
+    //! \{
 
 
     std::string document::encoding() const
@@ -76,9 +79,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // root element access
-    //
+    //! \name Root Element Access
+    //! \{
 
 
     basic_node_ptr<element> document::root()
@@ -91,42 +97,6 @@ namespace xtree {
     {
         return basic_node_ptr<const element>( root_() );
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // serialization
-    //
-
-
-    void document::save_to_file(const std::string& file_name, const std::string& encoding) const
-    {
-        int size = xmlSaveFormatFileEnc( file_name.c_str(),
-                                         const_cast<xmlDoc*>(raw_doc()),
-                                         ( encoding.empty() ? 0 : encoding.c_str() ),
-                                         0 );
-        (size > 0);
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // clone
-    //
-
-
-    document* document::clone(bool recursive) const
-    {
-        xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(raw_doc()), recursive ? 1 : 0);
-        if (px == 0)
-        {
-            throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returned null");
-        }
-        return new document(px);
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // root element
-    //
 
 
     basic_node_ptr<element> document::reset_root(const std::string& name)
@@ -188,20 +158,30 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // children
-    //
+    //! \name Serialization
+    //! \{
 
 
-    void document::clear()
+    void document::save_to_file(const std::string& file_name, const std::string& encoding) const
     {
-        children_.clear();
+        int size = xmlSaveFormatFileEnc( file_name.c_str(),
+                                         const_cast<xmlDoc*>(raw_doc()),
+                                         ( encoding.empty() ? 0 : encoding.c_str() ),
+                                         0 );
+        (size > 0);
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // XPath
-    //
+    //! \name XPath
+    //! \{
 
 
     void document::select_nodes(const xpath& expr, node_set& nodes)
@@ -211,9 +191,23 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // private
-    //
+    //! \name Private Functions
+    //! \{
+
+
+    document* document::clone(bool recursive) const
+    {
+        xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(raw_doc()), recursive ? 1 : 0);
+        if (px == 0)
+        {
+            throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returned null");
+        }
+        return new document(px);
+    }
 
 
     const element* document::root_() const
@@ -252,7 +246,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    //! \name Document Creation Functions
+    //! \{
 
 
     std::auto_ptr<document> create_document()
@@ -281,6 +280,9 @@ namespace xtree {
         doc->reset_root(qname, uri);
         return doc;
     }
+
+
+    //! \}
 
 
 } // namespace xtree

@@ -27,11 +27,17 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         static xmlns* get_or_create(xmlNs* px);
 
         static void delete_private(xmlNs* px);
 
+        //! \endcond
+
     public:
+
+        //! \cond DEV
 
         //! Constructs an object to wrap the underlying libxml2 namespace object. This function
         //! should NOT be called by client code.
@@ -42,6 +48,8 @@ namespace xtree {
         //! destruction. On the contrary, the underlying libxml2 namespace should firstly be freed,
         //! and the wrapper object is then destructed by the callback function.
         ~xmlns();
+
+        //! \endcond
 
         //! Returns the namespace URI.
         //! \return the namespace URI.
@@ -88,6 +96,8 @@ namespace xtree {
 
         //! Non-implemented copy assignment.
         xmlns& operator=(const xmlns&);
+
+    private:
 
         //! Returns the next XML namespace declaration.
         //! \return the next XML namespace declaration, or null if not found.

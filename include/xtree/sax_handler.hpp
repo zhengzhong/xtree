@@ -115,6 +115,9 @@ namespace xtree {
     };
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     //! This class defines the interface for handling SAX errors. It defines callback functions
     //! that will be invoked by the XML SAX parser. User should derive from this class to provide
     //! customized handling functions.

@@ -27,8 +27,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // constructor/destructor
-    //
+    //! \name Constructor and Destructor
+    //! \{
 
 
     child_node_list::child_node_list(xmlDoc* px): raw_(reinterpret_cast<xmlNode*>(px))
@@ -49,9 +49,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // capacity
-    //
+    //! \name Capacity
+    //! \{
 
 
     bool child_node_list::empty() const
@@ -71,9 +74,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // iterators
-    //
+    //! \name Iterators
+    //! \{
 
 
     child_node_list::iterator child_node_list::begin()
@@ -100,9 +106,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // child nodes
-    //
+    //! \name Front and Back Access
+    //! \{
 
 
     child_node& child_node_list::front()
@@ -148,9 +157,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/push_back
-    //
+    //! \name Modifiers: push_back
+    //! \{
 
 
     basic_node_ptr<element> child_node_list::push_back_element(const std::string& qname)
@@ -223,9 +235,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/push_front
-    //
+    //! \name Modifiers: push_front
+    //! \{
 
 
     basic_node_ptr<element> child_node_list::push_front_element(const std::string& qname)
@@ -298,9 +313,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/pop_*
-    //
+    //! \name Modifiers: pop
+    //! \{
 
 
     void child_node_list::pop_back()
@@ -333,9 +351,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/insert
-    //
+    //! \name Modifiers: insert
+    //! \{
 
 
     basic_node_ptr<element> child_node_list::insert_element(iterator pos,
@@ -436,9 +457,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/erase
-    //
+    //! \name Modifiers: erase and clear
+    //! \{
 
 
     child_node_list::iterator child_node_list::erase(iterator pos)
@@ -478,9 +502,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // private
-    //
+    //! \name Private Functions
+    //! \{
 
 
     const document& child_node_list::doc_() const
@@ -558,11 +585,6 @@ namespace xtree {
         // Return the inserted libxml2 node.
         return px;
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // private/create_*
-    //
 
 
     xmlNode* child_node_list::create_element_(const std::string& qname)
@@ -711,6 +733,9 @@ namespace xtree {
             return px;
         }
     }
+
+
+    //! \}
 
 
 }  // namespace xtree

@@ -14,9 +14,11 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // SAX2 standard features <http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html>
-    //
+    //! \name SAX2 Standard Features
+    //! \{
 
+
+    // Refer to: http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html
 
     //! Whether this parser processes external general entities; always true if validating.
     static const std::string sax_external_general_entities = "external-general-entities";
@@ -31,6 +33,9 @@ namespace xtree {
     //! Whether XML qualified names (with prefixes) and attributes (including xmlns* attributes)
     //! will be available.
     static const std::string sax_namespace_prefixes = "namespace-prefixes";
+
+
+    //! \}
 
 
 }  // namespace xtree

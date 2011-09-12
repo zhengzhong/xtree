@@ -23,6 +23,11 @@
 namespace xtree {
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //! \name Constructor and Destructor
+    //! \{
+
+
     attribute_map::attribute_map(xmlNode* px): raw_(px)
     {
         assert(raw()->type == XML_ELEMENT_NODE);
@@ -35,9 +40,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // capacity
-    //
+    //! \name Capacity
+    //! \{
 
 
     bool attribute_map::empty() const
@@ -57,9 +65,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // iterators
-    //
+    //! \name Iterators
+    //! \{
 
 
     attribute_map::iterator attribute_map::begin()
@@ -86,9 +97,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // attribute access
-    //
+    //! \name Attribute Access
+    //! \{
 
 
     void attribute_map::set(const std::string& qname, const std::string& value)
@@ -108,9 +122,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/insert
-    //
+    //! \name Modifiers
+    //! \{
 
 
     std::pair<basic_node_ptr<attribute>, bool> attribute_map::insert(const std::string& qname,
@@ -131,11 +148,6 @@ namespace xtree {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/update
-    //
-
-
     basic_node_ptr<attribute> attribute_map::update(const std::string& qname,
                                                     const std::string& value)
     {
@@ -147,11 +159,6 @@ namespace xtree {
         }
         return inserted.first;
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/erase
-    //
 
 
     attribute_map::iterator attribute_map::erase(iterator pos)
@@ -214,20 +221,12 @@ namespace xtree {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // modifiers/clear
-    //
-
-
-    void attribute_map::clear()
-    {
-        erase(begin(), end());
-    }
+    //! \}
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // private
-    //
+    //! \name Private Functions
+    //! \{
 
 
     element& attribute_map::owner()
@@ -324,6 +323,9 @@ namespace xtree {
         // Return the new attribute.
         return static_cast<attribute*>(px->_private);
     }
+
+
+    //! \}
 
 
 } // namespace xtree

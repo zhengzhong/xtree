@@ -50,9 +50,11 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // static
-        //
+        //! \name Static Cast Functions
+        //! \{
 
         static element* cast(xmlNode* px)
         {
@@ -64,11 +66,17 @@ namespace xtree {
             return cast_(px);
         }
 
+        //! \}
+
+        //! \endcond
+
     public:
 
+        //! \cond DEV
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // constructor/destructor
-        //
+        //! \name Constructor and Destructor
+        //! \{
 
         //! Constructor.
         explicit element(xmlNode* px);
@@ -76,9 +84,13 @@ namespace xtree {
         //! Destructor.
         ~element();
 
+        //! \}
+
+        //! \endcond
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // element information
-        //
+        //! \name Property Access
+        //! \{
 
         //! Returns the namespace URI of this element.
         std::string uri() const;
@@ -101,9 +113,11 @@ namespace xtree {
         //! Sets the local name of this element.
         void set_name(const std::string& name);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // namespaces
-        //
+        //! \name Namespace Access
+        //! \{
 
         //! Declares a namespace on this element. This function refuses to declare the namespace
         //! if the prefix is already declared on the element.
@@ -184,9 +198,11 @@ namespace xtree {
             return basic_xmlns_ptr<const xmlns>(find_xmlns_by_uri_(uri));
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // attributes
-        //
+        //! \name Attribute Access
+        //! \{
 
         //! Returns the value of an attribute by QName.
         //! \param qname  the attribute QName.
@@ -227,9 +243,11 @@ namespace xtree {
             return attrs_;
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: capacity
-        //
+        //! \name Children Access: Capacity
+        //! \{
 
         bool empty() const
         {
@@ -241,9 +259,11 @@ namespace xtree {
             return children_.size();
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: iterators
-        //
+        //! \name Children Access: Iterators
+        //! \{
 
         child_iterator begin()
         {
@@ -265,9 +285,11 @@ namespace xtree {
             return children_.end();
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers
-        //
+        //! \name Children Access: Front and Back
+        //! \{
 
         child_node& front()
         {
@@ -289,14 +311,11 @@ namespace xtree {
             return children_.back();
         }
 
-        void clear()
-        {
-            children_.clear();
-        }
+        //! \}
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/push_back
-        //
+        //! \name Children Access: Modifiers: push_back
+        //! \{
 
         basic_node_ptr<element> push_back_element(const std::string& qname)
         {
@@ -345,9 +364,11 @@ namespace xtree {
             return children_.push_back_adopt(child);
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/push_front
-        //
+        //! \name Children Access: Modifiers: push_front
+        //! \{
 
         basic_node_ptr<element> push_front_element(const std::string& qname)
         {
@@ -396,9 +417,11 @@ namespace xtree {
             return children_.push_front_adopt(child);
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/pop
-        //
+        //! \name Children Access: Modifiers: pop
+        //! \{
 
         void pop_back()
         {
@@ -410,9 +433,11 @@ namespace xtree {
             children_.pop_front();
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/insert
-        //
+        //! \name Children Access: Modifiers: insert
+        //! \{
 
         basic_node_ptr<element> insert_element(child_iterator pos, const std::string& qname)
         {
@@ -475,9 +500,11 @@ namespace xtree {
             return children_.insert_adopt(pos, first, last);
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // children: modifiers/erase
-        //
+        //! \name Children Access: Modifiers: erase and clear
+        //! \{
 
         child_iterator erase(child_iterator pos)
         {
@@ -489,9 +516,16 @@ namespace xtree {
             return children_.erase(first, last);
         }
 
+        void clear()
+        {
+            children_.clear();
+        }
+
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // subelements
-        //
+        //! \name Subelement Access
+        //! \{
 
         //! Returns the first subelement, or null if no subelement exists.
         //! \return the first subelement, or null if no subelement exists.
@@ -565,9 +599,11 @@ namespace xtree {
             return basic_node_ptr<const element>( find_elem_(name, uri) );
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // sibling elements
-        //
+        //! \name Sibling Element Access
+        //! \{
 
         //! Returns the previous sibling element.
         //! \return the previous sibling element.
@@ -595,28 +631,26 @@ namespace xtree {
             return basic_node_ptr<const element>( get_next_sibling_elem_() );
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // XPath
-        //
+        //! \name XPath
+        //! \{
 
         //! Evaluates the XPath expression and selects nodes.
         //! \param expr   the XPath expression, should be evaluated to a node set.
         //! \param nodes  the result node set.
         void select_nodes(const xpath& expr, node_set& nodes);
 
-    private:
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // private static
-        //
-
-        static const element* cast_(const xmlNode* px);
+        //! \}
 
     private:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // private
-        //
+        //! \name Private Functions
+        //! \{
+
+        static const element* cast_(const xmlNode* px);
 
         element* clone(bool recursive) const;
 
@@ -676,6 +710,8 @@ namespace xtree {
 
         //! Returns the next sibling element.
         const element* get_next_sibling_elem_() const;
+
+        //! \}
 
     private:
 

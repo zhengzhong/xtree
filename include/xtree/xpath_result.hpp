@@ -25,6 +25,8 @@ namespace xtree {
         //! Constructs an empty xpath_result.
         explicit xpath_result();
 
+        //! \cond DEV
+
         //! Constructs an xpath_result to wrap an xmlXPathObject pointer.
         //! \param xpath  the XPath expression that generates this result.
         //! \param px     the xmlXPathObject pointer to wrap.
@@ -32,6 +34,8 @@ namespace xtree {
 
         //! Destructor.
         virtual ~xpath_result();
+
+        //! \endcond
 
         //! Transfers the ownership of the underlying xmlXPathObject to the other xpath_result.
         //! \param other  the other xpath_result to take over the ownership of the xmlXPathObject.
@@ -48,11 +52,15 @@ namespace xtree {
             return xpath_;
         }
 
+        //! \cond DEV
+
         //! Returns the underlying xmlXPathObject.
         const xmlXPathObject* raw() const
         {
             return raw_;
         }
+
+        //! \endcond
 
     private:
 
@@ -61,6 +69,8 @@ namespace xtree {
 
         //! Non-implemented copy assignment.
         xpath_result& operator=(const xpath_result&);
+
+    private:
 
         virtual void check_acceptable(const xpath_result& result);
 

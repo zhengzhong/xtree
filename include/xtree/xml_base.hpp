@@ -9,6 +9,7 @@
 
 namespace xtree {
 
+    //! \cond DEV
 
     //! The base class for all libxml2-related classes. The constructor of this class ensures that
     //! the globals singleton is created by requesting a reference to the singleton instance. This
@@ -24,6 +25,7 @@ namespace xtree {
 
     };
 
+    //! \endcond
 
 }  // namespace xtree
 

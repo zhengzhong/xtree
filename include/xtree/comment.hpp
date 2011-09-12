@@ -26,6 +26,8 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         static comment* cast(xmlNode* px)
         {
             return const_cast<comment*>(cast_(px));
@@ -36,13 +38,19 @@ namespace xtree {
             return cast_(px);
         }
 
+        //! \endcond
+
     public:
+
+        //! \cond DEV
 
         //! Constructor.
         explicit comment(xmlNode* px);
 
         //! Destructor.
         ~comment();
+
+        //! \endcond
 
         //! Returns the value of this comment.
         //! \return the value of this comment.

@@ -33,9 +33,11 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // static
-        //
+        //! \name Static Functions
+        //! \{
 
         static node* cast(xmlNode* px)
         {
@@ -53,10 +55,16 @@ namespace xtree {
         //! \param ptr  the node pointer to be deleted.
         static void delete_(node* ptr);
 
+        //! \}
+
+        //! \endcond
+
     public:
 
+        //! \cond DEV
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // constructor/destructor
+        //! \name Constructor and Destructor
         //
 
         //! Constructs an object to wrap the underlying libxml2 node object. This function should
@@ -69,9 +77,13 @@ namespace xtree {
         //! and the wrapper object is then destructed by the callback function.
         virtual ~node() = 0;
 
+        //! \}
+
+        //! \endcond
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // node information access
-        //
+        //! \name Property Access
+        //! \{
 
         //! Returns the type of this node.
         //! \return the type of this node.
@@ -126,9 +138,11 @@ namespace xtree {
         //! \param str  a string to hold the result.
         void str(std::string& str) const;
 
+        //! \}
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // owner/parent access
-        //
+        //! \name Owner Access
+        //! \{
 
         //! Returns the owner document of this node.
         //! \return the owner document of this node.
@@ -144,7 +158,15 @@ namespace xtree {
         //! Const version of parent().
         basic_node_ptr<const element> parent() const;
 
+        //! \}
+
     public:
+
+        //! \cond DEV
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //! \name Underlying Libxml2 Object Access
+        //! \{
 
         //! Returns the underlying libxml2 node. This function should NOT be called by client code.
         xmlNode* raw()
@@ -165,21 +187,31 @@ namespace xtree {
         //! \return the cloned libxml2 node.
         xmlNode* clone_raw(bool recursive) const;
 
+        //! \}
+
+        //! \endcond
+
     private:
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // private static
-        //
-
-        static const node* cast_(const xmlNode* px);
-
-    private:
+        //! \name Non-Copyable
+        //! \{
 
         //! Non-implemented copy constructor.
         node(const node&);
 
         //! Non-implemented copy assignment.
         node& operator=(const node&);
+
+        //! \}
+
+    private:
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //! \name Private Functions
+        //! \{
+
+        static const node* cast_(const xmlNode* px);
 
         //! Clones a copy of this node. If it is a recursive clone, copies all attributes,
         //! namespace declarations and children when applicable. Otherwise, copies only attributes
@@ -196,6 +228,8 @@ namespace xtree {
         const node* prev_sibling_() const;
 
         const node* next_sibling_() const;
+
+        //! \}
 
     private:
 

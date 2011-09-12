@@ -34,10 +34,6 @@ namespace xtree {
 
     public:
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // typedefs
-        //
-
         typedef basic_node_ptr<child_node>            auto_type;
 
         typedef child_node&                           reference;
@@ -48,9 +44,11 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // constructor/destructor
-        //
+        //! \name Constructor and Destructor
+        //! \{
 
         //! Constructs a child_node_list whose owner is a libxml2 document. This function should
         //! NOT be called by client code.
@@ -65,9 +63,13 @@ namespace xtree {
         //! Destructor. This function should NOT be called by client code.
         ~child_node_list();
 
+        //! \}
+
+        //! \endcond
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // owner access
-        //
+        //! \name Owner Access
+        //! \{
 
         //! Returns the owner document of this child node list.
         //! \return the owner document of this child node list.
@@ -95,9 +97,11 @@ namespace xtree {
             return basic_node_ptr<const element>(owner_element_());
         }
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // capacity
-        //
+        //! \name Capacity
+        //! \{
 
         //! Checks if this container is empty.
         //! \return true if this container is empty, false otherwise.
@@ -107,9 +111,11 @@ namespace xtree {
         //! \return the number of items in this list.
         size_type size() const;
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // iterators
-        //
+        //! \name Iterators
+        //! \{
 
         //! Returns an iterator to the first child_node of the list.
         //! \return an iterator to the first child_node of the list.
@@ -125,9 +131,11 @@ namespace xtree {
         //! Const version of end().
         const_iterator end() const;
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers
-        //
+        //! \name Front and Back Access
+        //! \{
 
         //! Returns a reference to the first child node of this list.
         //! \pre !empty()
@@ -147,16 +155,11 @@ namespace xtree {
         //! Const version of back().
         const child_node& back() const;
 
-        //! Removes all the child_node objects from this list.
-        //! \post empty() == true
-        void clear()
-        {
-            erase(begin(), end());
-        }
+        //! \}
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers/push_back
-        //
+        //! \name Modifiers: push_back
+        //! \{
 
         //! Pushes an element node to the end of this list.
         //! \post size() is one more.
@@ -218,9 +221,11 @@ namespace xtree {
         //! \return pointer to the pushed child node.
         basic_node_ptr<child_node> push_back_adopt(child_node& child);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers/push_front
-        //
+        //! \name Modifiers: push_front
+        //! \{
 
         //! Pushes an element node to the beginning of this list.
         //! \post size() is one more.
@@ -282,9 +287,11 @@ namespace xtree {
         //! \return pointer to the pushed child node.
         basic_node_ptr<child_node> push_front_adopt(child_node& child);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers/pop
-        //
+        //! \name Modifiers: pop
+        //! \{
 
         //! Pops the last child node from the list. The child node popped out is destroyed.
         //! \pre  !empty()
@@ -298,9 +305,11 @@ namespace xtree {
         //! \throws bad_dom_operation  if the list is empty.
         void pop_front();
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers/insert
-        //
+        //! \name Modifiers: insert
+        //! \{
 
         //! Inserts an element node to the node list before the specified position.
         //! \post size() is one more.
@@ -400,9 +409,11 @@ namespace xtree {
         //! \throws bad_dom_operation  if $pos does not belong to this list.
         void insert_adopt(iterator pos, iterator first, iterator last);
 
+        //! \}
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // modifiers/erase
-        //
+        //! \name Modifiers: erase and clear
+        //! \{
 
         //! Removes and destroys the child node at the given position from the list.
         //! \post size() is one less.
@@ -419,11 +430,20 @@ namespace xtree {
         //! \return an iterator to the child node after the last erased one (thus, ==last).
         iterator erase(iterator first, iterator last);
 
+        //! Removes all the child_node objects from this list.
+        //! \post empty() == true
+        void clear()
+        {
+            erase(begin(), end());
+        }
+
+        //! \}
+
     private:
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // noncopyable
-        //
+        //! \name Non-Copyable
+        //! \{
 
         //! Non-implemented copy constructor.
         child_node_list(const child_node_list&);
@@ -431,9 +451,13 @@ namespace xtree {
         //! Non-implemented copy assignment.
         child_node_list& operator=(const child_node_list&);
 
+        //! \}
+
+    private:
+
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // private functions
-        //
+        //! \name Private Functions
+        //! \{
 
         //! Returns the owner document of this child node list.
         //! \return the owner document of this child node list.
@@ -479,6 +503,8 @@ namespace xtree {
 
         //! Creates a libxml2 processing instruction (PI) node.
         xmlNode* create_instruction_(const std::string& target, const std::string& value);
+
+        //! \}
 
     private:
 

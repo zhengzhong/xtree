@@ -29,8 +29,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // constructor/destructor
-    //
+    //! \name Constructor and Destructor
+    //! \{
 
 
     element::element(xmlNode* px): child_node(px), children_(px), attrs_(px)
@@ -45,9 +45,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // element information
-    //
+    //! \name Property Access
+    //! \{
 
 
     std::string element::uri() const
@@ -147,9 +150,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // namespaces
-    //
+    //! \name Namespace Access
+    //! \{
 
 
     basic_xmlns_ptr<xmlns> element::get_xmlns()
@@ -175,9 +181,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // XPath
-    //
+    //! \name XPath
+    //! \{
 
 
     void element::select_nodes(const xpath& expr, node_set& nodes)
@@ -187,9 +196,12 @@ namespace xtree {
     }
 
 
+    //! \}
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // private static
-    //
+    //! \name Private Functions
+    //! \{
 
 
     const element* element::cast_(const xmlNode* px)
@@ -207,11 +219,6 @@ namespace xtree {
             return 0;
         }
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // private
-    //
 
 
     element* element::clone(bool recursive) const
@@ -407,6 +414,9 @@ namespace xtree {
             return 0;
         }
     }
+
+
+    //! \}
 
 
 } // namespace xtree

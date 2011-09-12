@@ -66,6 +66,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    //! \name XML Parsing Functions
+    //! \{
 
 
     //! Parses an XML file to a document object.
@@ -91,6 +93,9 @@ namespace xtree {
         dom_parser p;
         return p.parse_url(url, proxy);
     }
+
+
+    //! \}
 
 
 }  // namespace xtree

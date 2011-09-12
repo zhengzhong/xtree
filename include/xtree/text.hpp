@@ -26,6 +26,8 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         static text* cast(xmlNode* px)
         {
             return const_cast<text*>(cast_(px));
@@ -36,13 +38,19 @@ namespace xtree {
             return cast_(px);
         }
 
+        //! \endcond
+
     public:
+
+        //! \cond DEV
 
         //! Constructor.
         explicit text(xmlNode* px);
 
         //! Destructor.
         ~text();
+
+        //! \endcond
 
         //! Checks if this node is a CData section.
         //! \return true if this node is a CData section, false otherwise.

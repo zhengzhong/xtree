@@ -26,6 +26,8 @@ namespace xtree {
 
     public:
 
+        //! \cond DEV
+
         static instruction* cast(xmlNode* px)
         {
             return const_cast<instruction*>(cast_(px));
@@ -36,13 +38,19 @@ namespace xtree {
             return cast_(px);
         }
 
+        //! \endcond
+
     public:
+
+        //! \cond DEV
 
         //! Constructor.
         explicit instruction(xmlNode* px);
 
         //! Destructor.
         ~instruction();
+
+        //! \endcond
 
         //! Returns the target of this processing instruction.
         std::string target() const

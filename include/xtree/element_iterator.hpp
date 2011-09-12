@@ -16,9 +16,10 @@
 namespace xtree {
 
 
+    //! \cond DEV
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // basic_element_iterator
-    //
 
 
     //! This class template represents an iterator to XML elements.
@@ -128,8 +129,6 @@ namespace xtree {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // subelement_mover
-    //
 
 
     //! Given a parent element, this class is used with basic_element_iterator to iterate over its
@@ -222,8 +221,6 @@ namespace xtree {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // df_element_mover
-    //
 
 
     //! Given a parent element, this class is used with basic_element_iterator to iterate over all
@@ -360,9 +357,12 @@ namespace xtree {
     };
 
 
+    //! \endcond
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    // element iterator typedefs
-    //
+    //! \name Element Iterators
+    //! \{
 
 
     typedef basic_element_iterator<
@@ -385,6 +385,9 @@ namespace xtree {
         element,
         df_element_mover<element>
     > df_element_iterator;
+
+
+    //! \}
 
 
 } // namespace xtree

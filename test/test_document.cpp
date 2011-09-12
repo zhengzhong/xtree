@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(test_document_as_node)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_document_clone)
+BOOST_AUTO_TEST_CASE(test_document_insert_clone_range)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
@@ -65,7 +65,8 @@ BOOST_AUTO_TEST_CASE(test_document_clone)
     try
     {
         std::auto_ptr<xtree::document> doc1 = xtree::parse_string(TEST_XML);
-        std::auto_ptr<xtree::document> doc2(doc1->clone(true));
+        std::auto_ptr<xtree::document> doc2 = xtree::create_document();
+        doc2->insert_clone(doc2->begin(), doc1->begin(), doc1->end());
         xtree::element_ptr root1 = doc1->root();
         xtree::element_ptr root2 = doc2->root();
         // Check cloned document and the original one are the same.

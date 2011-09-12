@@ -488,13 +488,11 @@ namespace xtree {
             return children_.insert_instruction(pos, target, value);
         }
 
-        //! Clones and inserts the child node to the position of the document's child node list.
+        //! Clones and inserts the child node to the document.
         //! \param pos    the position before which the child node is to be inserted.
         //! \param child  the child node to clone and insert.
         //! \return an iterator to the inserted child node.
-        //! \throws bad_dom_operation  if the child node cannot be inserted (e.g. the child node is
-        //!                            a text or CData node, or the child node is an element while
-        //!                            the document already has a root element).
+        //! \throws bad_dom_operation  if the child node cannot be inserted.
         child_iterator insert_clone(child_iterator pos, const child_node& child)
         {
             if (child.type() == text_node || child.type() == cdata_node)
@@ -511,13 +509,40 @@ namespace xtree {
             }
         }
 
-        //! Adopts and inserts the child node to the position of the document's child node list.
+        //! Clones and inserts a range of child nodes to the document.
+        //! \param pos    the position before which the child nodes are to be inserted.
+        //! \param first  iterator to the first child node in the range.
+        //! \param last   iterator to the last child node (not included) in the range.
+        //! \throws bad_dom_operation  if any of the child nodes cannot be inserted.
+        void insert_clone(child_iterator pos, const_child_iterator first, const_child_iterator last)
+        {
+            int root_count = (root_() != 0 ? 1 : 0);
+            for (const_child_iterator i = first; i != last; ++i)
+            {
+                if (i->type() == text_node || i->type() == cdata_node)
+                {
+                    throw bad_dom_operation("document does not accept text or CData node");
+                }
+                else if (i->type() == element_node)
+                {
+                    if (root_count >= 1)
+                    {
+                        throw bad_dom_operation("document does not accept more than one root");
+                    }
+                    else
+                    {
+                        ++root_count;
+                    }
+                }
+            }
+            children_.insert_clone(pos, first, last);
+        }
+
+        //! Adopts and inserts the child node to the document.
         //! \param pos    the position before which the child node is to be inserted.
         //! \param child  the child node to clone and insert.
         //! \return an iterator to the inserted child node.
-        //! \throws bad_dom_operation  if the child node cannot be inserted (e.g. the child node is
-        //!                            a text or CData node, or the child node is an element while
-        //!                            the document already has a root element).
+        //! \throws bad_dom_operation  if the child node cannot be inserted.
         child_iterator insert_adopt(child_iterator pos, child_node& child)
         {
             if (child.type() == text_node || child.type() == cdata_node)
@@ -532,6 +557,35 @@ namespace xtree {
             {
                 return children_.insert_adopt(pos, child);
             }
+        }
+
+        //! Adopts and inserts a range of child nodes to the document.
+        //! \param pos    the position before which the child node is to be inserted.
+        //! \param first  iterator to the first child node in the range.
+        //! \param last   iterator to the last child node (not included) in the range.
+        //! \throws bad_dom_operation  if any of the child nodes cannot be inserted.
+        void insert_adopt(child_iterator pos, child_iterator first, child_iterator last)
+        {
+            int root_count = (root_() != 0 ? 1 : 0);
+            for (child_iterator i = first; i != last; ++i)
+            {
+                if (i->type() == text_node || i->type() == cdata_node)
+                {
+                    throw bad_dom_operation("document does not accept text or CData node");
+                }
+                else if (i->type() == element_node)
+                {
+                    if (root_count >= 1)
+                    {
+                        throw bad_dom_operation("document does not accept more than one root");
+                    }
+                    else
+                    {
+                        ++root_count;
+                    }
+                }
+            }
+            children_.insert_adopt(pos, first, last);
         }
 
         //! \}

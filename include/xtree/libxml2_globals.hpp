@@ -79,6 +79,10 @@ namespace detail {
 namespace xtree {
 
 
+    //! \name Memory Debugging Functions
+    //! \{
+
+
     //! Sets the cleanup parser flag to indicate whether to call xmlCleanupParser() at exit.
     //! \param flag  the new cleanup parser flag.
     XTREE_DECL void set_libxml2_cleanup_parser(bool flag);
@@ -87,6 +91,9 @@ namespace xtree {
     //! Returns the cleanup parser flag.
     //! \return the cleanup parser flag.
     XTREE_DECL bool get_libxml2_cleanup_parser();
+
+
+    //! \}
 
 
 }  // namespace xtree

@@ -14,10 +14,20 @@
 namespace xtree {
 
 
-    void on_validity_error(void* ctxt, const char* message, ...);
+    //! \cond DEV
+
+    namespace detail {
+
+        void on_validity_error(void* ctxt, const char* message, ...);
+
+        void on_validity_warning(void* ctxt, const char* message, ...);
+
+    }  // namespace xtree::detail
+
+    //! \endcond
 
 
-    void on_validity_warning(void* ctxt, const char* message, ...);
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     //! This class contains validation result of an XML document. A validity object is immutable.
@@ -27,8 +37,12 @@ namespace xtree {
     class XTREE_DECL validity
     {
 
-        friend void on_validity_error(void* ctxt, const char* message, ...);
-        friend void on_validity_warning(void* ctxt, const char* message, ...);
+        //! \cond DEV
+
+        friend void detail::on_validity_error(void* ctxt, const char* message, ...);
+        friend void detail::on_validity_warning(void* ctxt, const char* message, ...);
+
+        //! \endcond
 
     public:
 

@@ -15,28 +15,34 @@
 namespace xtree {
 
 
-    void on_validity_error(void* ctxt, const char* message, ...)
-    {
-        assert(ctxt != 0);
-        assert(message != 0);
-        if (ctxt != 0 && message != 0)
-        {
-            validity* result = static_cast<validity*>(ctxt);
-            result->add_error(message);
-        }
-    }
+    namespace detail {
 
 
-    void on_validity_warning(void* ctxt, const char* message, ...)
-    {
-        assert(ctxt != 0);
-        assert(message != 0);
-        if (ctxt != 0 && message != 0)
+        void on_validity_error(void* ctxt, const char* message, ...)
         {
-            validity* result = static_cast<validity*>(ctxt);
-            result->add_warning(message);
+            assert(ctxt != 0);
+            assert(message != 0);
+            if (ctxt != 0 && message != 0)
+            {
+                validity* result = static_cast<validity*>(ctxt);
+                result->add_error(message);
+            }
         }
-    }
+
+
+        void on_validity_warning(void* ctxt, const char* message, ...)
+        {
+            assert(ctxt != 0);
+            assert(message != 0);
+            if (ctxt != 0 && message != 0)
+            {
+                validity* result = static_cast<validity*>(ctxt);
+                result->add_warning(message);
+            }
+        }
+
+
+    }  // namespace xtree::detail
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -139,8 +139,8 @@ namespace xtree {
         // Set validation callback functions, and validate the XML document.
         validity result;
         xmlSchemaSetValidErrors( valid_ctxt.get(),
-                                 &on_validity_error,
-                                 &on_validity_warning,
+                                 &detail::on_validity_error,
+                                 &detail::on_validity_warning,
                                  static_cast<void*>(&result) );
         int return_code = xmlSchemaValidateDoc(valid_ctxt.get(), doc.raw_doc());
         // Check the return code.

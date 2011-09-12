@@ -16,12 +16,6 @@
 namespace xtree {
 
 
-    //! \cond DEV
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
     //! This class template represents an iterator to XML elements.
     template<class E, class Mover>
     class basic_element_iterator: public std::iterator<std::bidirectional_iterator_tag, E>
@@ -129,6 +123,9 @@ namespace xtree {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    //! \cond DEV
 
 
     //! Given a parent element, this class is used with basic_element_iterator to iterate over its

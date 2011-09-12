@@ -21,8 +21,6 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // basic_node_set_iterator
-    //
 
 
     //! This class template represents an iterator for node_set.
@@ -134,8 +132,9 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // node_set_mover
-    //
+
+
+    //! \cond DEV
 
 
     //! This class is used with basic_node_set_iterator to iterate over all the nodes in a given
@@ -171,8 +170,6 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // node_set_element_mover
-    //
 
 
     //! This class is used with basic_node_set_iterator to iterate over all the elements (by
@@ -207,9 +204,10 @@ namespace xtree {
     };
 
 
+    //! \endcond
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // node_set
-    //
 
 
     //! This class represents a node set evaluated from an XPath expression.

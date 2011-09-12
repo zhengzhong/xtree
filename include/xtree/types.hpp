@@ -31,6 +31,8 @@ namespace xtree {
     };
 
 
+    //! \cond DEV
+
     //! Converts a node type enumeration to string representation.
     inline std::string to_string(node_t type)
     {
@@ -52,6 +54,8 @@ namespace xtree {
             return "unknown";
         }
     }
+
+    //! \endcond
 
 
     //! The XPath result type enumerations.

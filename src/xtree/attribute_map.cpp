@@ -69,69 +69,12 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //! \name Iterators
-    //! \{
-
-
-    attribute_map::iterator attribute_map::begin()
-    {
-        return iterator( const_cast<attribute*>(first_attr_()) );
-    }
-
-
-    attribute_map::iterator attribute_map::end()
-    {
-        return iterator();
-    }
-
-
-    attribute_map::const_iterator attribute_map::begin() const
-    {
-        return const_iterator( first_attr_() );
-    }
-
-
-    attribute_map::const_iterator attribute_map::end() const
-    {
-        return const_iterator();
-    }
-
-
-    //! \}
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //! \name Attribute Access
-    //! \{
-
-
-    void attribute_map::set(const std::string& qname, const std::string& value)
-    {
-        detail::check_qname(qname);
-        attribute* existing = const_cast<attribute*>(find_attr_(qname));
-        if (existing == 0)
-        {
-            attribute* new_attribute = create_attr_(qname, value);
-            assert(new_attribute != 0);
-            detail::unused_arg(new_attribute);  // disable warning 4189 in release mode.
-        }
-        else
-        {
-            existing->set_value(value);
-        }
-    }
-
-
-    //! \}
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     //! \name Modifiers
     //! \{
 
 
-    std::pair<basic_node_ptr<attribute>, bool> attribute_map::insert(const std::string& qname,
-                                                                     const std::string& value)
+    std::pair<attribute_map::iterator, bool> attribute_map::insert(const std::string& qname,
+                                                                   const std::string& value)
     {
         detail::check_qname(qname);
         attribute* existing = const_cast<attribute*>(find_attr_(qname));
@@ -139,20 +82,19 @@ namespace xtree {
         {
             attribute* new_attribute = create_attr_(qname, value);
             assert(new_attribute != 0);
-            return std::make_pair(basic_node_ptr<attribute>(new_attribute), true);
+            return std::make_pair(iterator(new_attribute), true);
         }
         else
         {
-            return std::make_pair(basic_node_ptr<attribute>(existing), false);
+            return std::make_pair(iterator(existing), false);
         }
     }
 
 
-    basic_node_ptr<attribute> attribute_map::update(const std::string& qname,
-                                                    const std::string& value)
+    attribute_map::iterator attribute_map::update(const std::string& qname,
+                                                  const std::string& value)
     {
-        detail::check_qname(qname);
-        std::pair<basic_node_ptr<attribute>, bool> inserted = insert(qname, value);
+        std::pair<iterator, bool> inserted = insert(qname, value);
         if (!inserted.second)
         {
             inserted.first->set_value(value);
@@ -268,16 +210,17 @@ namespace xtree {
     const attribute* attribute_map::find_attr_(const std::string& qname) const
     {
         std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
-        const attribute* found = 0;
-        for (const xmlAttr* i = raw()->properties; found == 0 && i != 0; i = i->next)
+        const std::string& prefix = name_pair.first;
+        const std::string& name = name_pair.second;
+        if (prefix.empty())
         {
-            const attribute* attr = static_cast<const attribute*>(i->_private);
-            if (attr->prefix() == name_pair.first && attr->name() == name_pair.second)
-            {
-                found = attr;
-            }
+            return find_attr_(name, std::string());
         }
-        return found;
+        else
+        {
+            basic_xmlns_ptr<const xmlns> ns = owner().find_xmlns_by_prefix(prefix);
+            return ( ns != 0 ? find_attr_(name, ns->uri()) : 0 );
+        }
     }
 
 
@@ -301,18 +244,21 @@ namespace xtree {
     {
         // Find xmlns for the attribute prefix (if exists).
         std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
-        basic_xmlns_ptr<xmlns> ns = owner().find_xmlns_by_prefix(name_pair.first);
-        // TODO: if the prefix is empty, we use null xmlns or the default one (if exists)?
-        if (!name_pair.first.empty() && ns == 0)
+        const std::string& prefix = name_pair.first;
+        const std::string& name = name_pair.second;
+        basic_xmlns_ptr<xmlns> ns = ( prefix.empty()
+                                    ? basic_xmlns_ptr<xmlns>()
+                                    : owner().find_xmlns_by_prefix(prefix) );
+        if (!prefix.empty() && ns == 0)
         {
             std::string what = "fail to create attribute " + qname
-                             + ": xmlns for prefix " + name_pair.first + " not found";
+                             + ": xmlns for prefix " + prefix + " not found";
             throw bad_dom_operation(what);
         }
         // Create the libxml2 attribute for the owner element.
         xmlAttr* px = xmlNewNsProp( raw(),
                                     (ns != 0 ? ns->raw() : 0),
-                                    detail::to_xml_chars(name_pair.second.c_str()),
+                                    detail::to_xml_chars(name.c_str()),
                                     detail::to_xml_chars(value.c_str()) );
         if (px == 0)
         {

@@ -4,7 +4,7 @@
 
 #include "xtree_test_utils.hpp"
 
-#include <xtree/xtree.hpp>
+#include <xtree/xtree_dom.hpp>
 
 #include <memory>
 #include <string>
@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_root_element_no_ns)
+BOOST_AUTO_TEST_CASE(test_root_element_no_xmlns)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(test_root_element_no_ns)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         BOOST_CHECK_EQUAL(root->name(), "root");
         BOOST_CHECK_EQUAL(root->uri(), std::string());
@@ -42,24 +42,24 @@ BOOST_AUTO_TEST_CASE(test_root_element_no_ns)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_root_element_default_ns)
+BOOST_AUTO_TEST_CASE(test_root_element_default_xmlns)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<?xml version='1.0' encoding='UTF-8'?>"
         "<!-- comment before root -->"
-        "<root xmlns='http://www.zhengzhong.net'>hello world</root>"
+        "<root xmlns='http://example.com/xtree'>hello world</root>"
         "<!-- comment after root -->"
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         BOOST_CHECK_EQUAL(root->name(), "root");
-        BOOST_CHECK_EQUAL(root->uri(), "http://www.zhengzhong.net");
+        BOOST_CHECK_EQUAL(root->uri(), "http://example.com/xtree");
         BOOST_CHECK_EQUAL(root->prefix(), std::string());
         BOOST_CHECK_EQUAL(root->qname(), "root");
-        BOOST_CHECK_EQUAL(root->tag(), "{http://www.zhengzhong.net}root");
+        BOOST_CHECK_EQUAL(root->tag(), "{http://example.com/xtree}root");
     }
     catch (const xtree::dom_error& ex)
     {
@@ -71,24 +71,24 @@ BOOST_AUTO_TEST_CASE(test_root_element_default_ns)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_root_element_prefixed_ns)
+BOOST_AUTO_TEST_CASE(test_root_element_prefixed_xmlns)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =
         "<?xml version='1.0' encoding='UTF-8'?>"
         "<!-- comment before root -->"
-        "<z:root xmlns:z='http://www.zhengzhong.net'>hello world</z:root>"
+        "<z:root xmlns:z='http://example.com/xtree'>hello world</z:root>"
         "<!-- comment after root -->"
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         BOOST_CHECK_EQUAL(root->name(), "root");
-        BOOST_CHECK_EQUAL(root->uri(), "http://www.zhengzhong.net");
+        BOOST_CHECK_EQUAL(root->uri(), "http://example.com/xtree");
         BOOST_CHECK_EQUAL(root->prefix(), "z");
         BOOST_CHECK_EQUAL(root->qname(), "z:root");
-        BOOST_CHECK_EQUAL(root->tag(), "{http://www.zhengzhong.net}root");
+        BOOST_CHECK_EQUAL(root->tag(), "{http://example.com/xtree}root");
     }
     catch (const xtree::dom_error& ex)
     {
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(test_root_element_head_tail_1)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         xtree::element_ptr item = root->find_first_elem();
         BOOST_REQUIRE(item != 0);
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(test_root_element_head_tail_2)
     ;
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         xtree::element_ptr item = root->find_first_elem();
         BOOST_REQUIRE(item != 0);
@@ -155,7 +155,4 @@ BOOST_AUTO_TEST_CASE(test_root_element_head_tail_2)
         BOOST_ERROR(ex.what());
     }
 }
-
-
-
 

@@ -181,6 +181,13 @@ namespace xtree {
     }
 
 
+    std::string element::find_uri_by_prefix(const std::string& prefix) const
+    {
+        const xmlns* ns = find_xmlns_by_prefix_(prefix);
+        return (ns != 0 ? ns->uri() : std::string());
+    }
+
+
     //! \}
 
 

@@ -256,7 +256,7 @@
 				RelativePath=".\test\test_node_set_iterators.cpp">
 			</File>
 			<File
-				RelativePath=".\test\test_sax_parsing.cpp">
+				RelativePath=".\test\test_sax_parser.cpp">
 			</File>
 			<File
 				RelativePath=".\test\test_xmlns.cpp">

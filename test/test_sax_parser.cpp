@@ -4,7 +4,7 @@
 
 #include "xtree_test_utils.hpp"
 
-#include <xtree/xtree.hpp>
+#include <xtree/xtree_sax.hpp>
 
 #include <memory>
 #include <string>
@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-BOOST_AUTO_TEST_CASE(test_sax_parsing_no_handler)
+BOOST_AUTO_TEST_CASE(test_sax_parser_no_handler)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML = "<root a='A' xmlns='http://www.example.com/xtree'>hello,world!</root>";
@@ -128,7 +128,7 @@ namespace {
 }  // anonymous namespace
 
 
-BOOST_AUTO_TEST_CASE(test_sax_parsing_2)
+BOOST_AUTO_TEST_CASE(test_sax_parser_with_handler)
 {
     XTREE_LOG_TEST_NAME;
     const char* TEST_XML =

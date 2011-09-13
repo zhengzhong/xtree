@@ -15,9 +15,8 @@
 #  pragma warning(pop)
 #endif
 
-#include <xtree/xtree.hpp>
+#include <xtree/xtree_dom.hpp>
 
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -44,7 +43,7 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_string)
 
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_string(TEST_XML));
+        std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         BOOST_CHECK_EQUAL(doc->empty(), false);
         BOOST_CHECK_EQUAL(doc->version(), "1.0");
         BOOST_CHECK_EQUAL(doc->encoding(), "UTF-8");
@@ -89,7 +88,7 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_url)
 
     try
     {
-        std::auto_ptr<xtree::document> doc(xtree::parse_url(URL, PROXY));
+        std::auto_ptr<xtree::document> doc = xtree::parse_url(URL, PROXY);
         BOOST_REQUIRE(!doc->empty());
         xtree::element_ptr root = doc->root();
         BOOST_CHECK_EQUAL(root->name(), "note");
@@ -116,12 +115,16 @@ BOOST_AUTO_TEST_CASE(test_dom_parse_url)
 BOOST_AUTO_TEST_CASE(test_dom_parse_bad_xml)
 {
     XTREE_LOG_TEST_NAME;
-
     const char* TEST_XML[] = {
-        "<root><bad element/></root>",  // invalid element tag.
-        "<root a='A1' b='B' a='A2'/>",  // attributes with the same name.
-        "<root>hello",                  // unclosed tag.
-        "<root>hello</Root>",           // unmatched begin/close tag.
+        // invalid element tag...
+        "<root><bad element/></root>",
+        // attributes with the same name...
+        "<root a='A1' b='B' a='A2'/>",
+        "<root xmlns:x='http://example.com' xmlns:y='http://example.com' x:a='A' y:a='B'/>",
+        // unmatched begin/close tag...
+        "<root>hello",
+        "<root>hello</Root>",
+        
     };
     for (unsigned int i = 0; i < sizeof(TEST_XML) / sizeof(const char*); ++i)
     {

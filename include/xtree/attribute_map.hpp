@@ -9,7 +9,6 @@
 #include "xtree/types.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/basic_node_iterator.hpp"
-
 #include "xtree/attribute.hpp"
 #include "xtree/libxml2_fwd.hpp"
 
@@ -20,7 +19,7 @@
 namespace xtree {
 
 
-    class XTREE_DECL element;  // forward declaration.
+    class XTREE_DECL element;
 
 
     //! This class represents an attribute map attached to an element. It may be viewed as a
@@ -76,13 +75,25 @@ namespace xtree {
         //! \name Iterators
         //! \{
 
-        iterator begin();
+        iterator begin()
+        {
+            return iterator( const_cast<attribute*>(first_attr_()) );
+        }
 
-        iterator end();
+        iterator end()
+        {
+            return iterator();
+        }
 
-        const_iterator begin() const;
+        const_iterator begin() const
+        {
+            return const_iterator( first_attr_() );
+        }
 
-        const_iterator end() const;
+        const_iterator end() const
+        {
+            return const_iterator();
+        }
 
         //! \}
 
@@ -108,12 +119,6 @@ namespace xtree {
             const attribute* attr = find_attr_(name, uri);
             return (attr != 0 ? attr->value() : std::string());
         }
-
-        //! Sets an attribute to this element. If the attribute with the same name already exists,
-        //! its value will be updated.
-        //! \param qname   the attribute QName.
-        //! \param value  the attribute value.
-        void set(const std::string& qname, const std::string& value);
 
         //! \}
 
@@ -152,21 +157,15 @@ namespace xtree {
         //! already exists.
         //! \param qname  QName of the attribute to insert.
         //! \param value  value of the attribute to insert.
-        //! \return a std::pair containing a pointer to the attribute inserted (or an existing
-        //!         attribute with the same name and namespace URI), and a boolean which is true
-        //!         if an insertion took place.
-        std::pair<basic_node_ptr<attribute>, bool> insert(const std::string& qname,
-                                                          const std::string& value);
+        //! \return a std::pair containing an iterator to the attribute inserted (or an existing
+        //!         one), and a boolean which is true if an insertion took place.
+        std::pair<iterator, bool> insert(const std::string& qname, const std::string& value);
 
-        //! \todo TODO: implement me!
-        std::pair<iterator, bool> insert(const basic_node_ptr<attribute>& attr);
-
-        //! Updates attribute value in the map. If the attribute to update does not exist,
-        //! this function will create a new attribute.
+        //! Updates attribute value in the map.
         //! \param qname  QName of the attribute to update.
         //! \param value  value of the attribute to update.
-        //! \return a pointer to the updated attribute.
-        basic_node_ptr<attribute> update(const std::string& qname, const std::string& value);
+        //! \return an iterator to the updated attribute.
+        iterator update(const std::string& qname, const std::string& value);
 
         //! Removes and destroys the attribute at the given position from the attribute map.
         //! \post size() is one less.

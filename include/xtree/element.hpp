@@ -168,7 +168,7 @@ namespace xtree {
             return basic_xmlns_ptr<const xmlns>(get_first_xmlns_());
         }
 
-        //! Find XML namespace by prefix. This function searches namespace declarations on this
+        //! Finds XML namespace by prefix. This function searches namespace declarations on this
         //! element and all its parents.
         //! \param prefix  the namespace prefix to search for.
         //! \return the XML namespace, or null if not found.
@@ -183,7 +183,12 @@ namespace xtree {
             return basic_xmlns_ptr<const xmlns>(find_xmlns_by_prefix_(prefix));
         }
 
-        //! Find the XML namespace by URI. This function searches namespace declarations on this
+        //! Finds XML namespace URI by prefix.
+        //! \param prefix  the namespace prefix to search for.
+        //! \return the namespace URI or an empty string if the prefix is not found.
+        std::string find_uri_by_prefix(const std::string& prefix) const;
+
+        //! Finds the XML namespace by URI. This function searches namespace declarations on this
         //! element and all its parents.
         //! \param uri  the namespace URI to search for.
         //! \return the XML namespace, or null if not found.
@@ -227,7 +232,7 @@ namespace xtree {
         //! \param value  the attribute value.
         void set_attr(const std::string& qname, const std::string& value)
         {
-            attrs_.set(qname, value);
+            attrs_.update(qname, value);
         }
 
         //! Returns a reference to the attribute map of this element.

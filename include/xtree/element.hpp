@@ -657,8 +657,6 @@ namespace xtree {
 
         static const element* cast_(const xmlNode* px);
 
-        element* clone(bool recursive) const;
-
         //! Declares a namespace on the element. This function refuses to declare the namespace
         //! if the prefix is already declared on the element.
         //! \param prefix  the namespace prefix.

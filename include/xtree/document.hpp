@@ -665,8 +665,6 @@ namespace xtree {
         //! \name Private Functions
         //! \{
 
-        document* clone(bool recursive) const;
-
         //! Returns the root element of this document, or null if this document is empty.
         //! \return the root element of this document, or null if this document is empty.
         const element* root_() const;
@@ -708,6 +706,11 @@ namespace xtree {
     //! \return the new XML document.
     XTREE_DECL std::auto_ptr<document> create_document(const std::string& qname,
                                                        const std::string& uri);
+
+
+    //! Clones an XML document.
+    //! \return the cloned document.
+    XTREE_DECL std::auto_ptr<document> clone_document(const document& doc);
 
 
     //! \}

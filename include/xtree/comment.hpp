@@ -70,10 +70,6 @@ namespace xtree {
 
         static const comment* cast_(const xmlNode* px);
 
-    private:
-
-        comment* clone(bool recursive) const;
-
     };
 
 

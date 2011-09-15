@@ -228,13 +228,6 @@ namespace xtree {
     }
 
 
-    element* element::clone(bool recursive) const
-    {
-        xmlNode* px = clone_raw(recursive);
-        return static_cast<element*>(px->_private);
-    }
-
-
     std::pair<xmlns*, bool> element::declare_xmlns_(const std::string& prefix,
                                                     const std::string& uri)
     {

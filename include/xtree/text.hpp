@@ -74,10 +74,6 @@ namespace xtree {
 
         static const text* cast_(const xmlNode* px);
 
-    private:
-
-        text* clone(bool recursive) const;
-
     };
 
 

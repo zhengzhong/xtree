@@ -183,8 +183,8 @@ namespace xtree {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // private
-    //
+    //! \name Private Functions
+    //! \{
 
 
     const attribute* attribute::prev_sibling_() const
@@ -213,11 +213,7 @@ namespace xtree {
     }
 
 
-    attribute* attribute::clone(bool recursive) const
-    {
-        xmlNode* px = clone_raw(recursive);
-        return static_cast<attribute*>(px->_private);
-    }
+    //! \}
 
 
 }  // namespace xtree

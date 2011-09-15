@@ -45,13 +45,6 @@ namespace xtree {
     }
 
 
-    comment* comment::clone(bool recursive) const
-    {
-        xmlNode* px = clone_raw(recursive);
-        return static_cast<comment*>(px->_private);
-    }
-
-
 } // namespace xtree
 
 

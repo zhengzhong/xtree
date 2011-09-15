@@ -62,10 +62,6 @@ namespace xtree {
 
         static const instruction* cast_(const xmlNode* px);
 
-    private:
-
-        instruction* clone(bool recursive) const;
-
     };
 
 

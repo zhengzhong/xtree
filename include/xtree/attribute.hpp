@@ -135,8 +135,6 @@ namespace xtree {
 
         static const attribute* cast_(const xmlNode* px);
 
-        attribute* clone(bool recursive) const;
-
         const attribute* prev_sibling_() const;
 
         const attribute* next_sibling_() const;

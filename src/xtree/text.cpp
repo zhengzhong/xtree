@@ -51,13 +51,6 @@ namespace xtree {
     }
 
 
-    text* text::clone(bool recursive) const
-    {
-        xmlNode* px = clone_raw(recursive);
-        return static_cast<text*>(px->_private);
-    }
-
-
 } // namespace xtree
 
 

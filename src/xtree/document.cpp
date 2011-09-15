@@ -199,17 +199,6 @@ namespace xtree {
     //! \{
 
 
-    document* document::clone(bool recursive) const
-    {
-        xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(raw_doc()), recursive ? 1 : 0);
-        if (px == 0)
-        {
-            throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returned null");
-        }
-        return new document(px);
-    }
-
-
     const element* document::root_() const
     {
         const xmlNode* px = xmlDocGetRootElement( const_cast<xmlDoc*>(raw_doc()) );
@@ -279,6 +268,17 @@ namespace xtree {
         std::auto_ptr<document> doc = create_document();
         doc->reset_root(qname, uri);
         return doc;
+    }
+
+
+    std::auto_ptr<document> clone_document(const document& doc)
+    {
+        xmlDoc* px = xmlCopyDoc(const_cast<xmlDoc*>(doc.raw_doc()), 1);
+        if (px == 0)
+        {
+            throw internal_dom_error("fail to clone libxml2 document: xmlCopyDoc() returned null");
+        }
+        return std::auto_ptr<document>(new document(px));
     }
 
 

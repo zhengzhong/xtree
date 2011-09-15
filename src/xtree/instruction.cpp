@@ -44,12 +44,5 @@ namespace xtree {
     }
 
 
-    instruction* instruction::clone(bool recursive) const
-    {
-        xmlNode* px = clone_raw(recursive);
-        return static_cast<instruction*>(px->_private);
-    }
-
-
 } // namespace xtree
 

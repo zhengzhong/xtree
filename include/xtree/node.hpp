@@ -109,13 +109,6 @@ namespace xtree {
         //! \param content  the content to set.
         void set_content(const std::string& content);
 
-        //! Checks if this node is an orphan node. An orphan node should satisfy the following
-        //! conditions:
-        //! - it is not the root element of the document.
-        //! - it does not have a parent node.
-        //! \return true if this node is an orphan node, false otherwise.
-        bool is_orphan() const;
-
         //! Returns the name of this node. For element or attribute, this function returns the
         //! local name of the node.
         //! \return the name of this node.
@@ -212,15 +205,6 @@ namespace xtree {
         //! \{
 
         static const node* cast_(const xmlNode* px);
-
-        //! Clones a copy of this node. If it is a recursive clone, copies all attributes,
-        //! namespace declarations and children when applicable. Otherwise, copies only attributes
-        //! and namespace declarations when applicable. This function throws a dom_error if fail to
-        //! clone the node.
-        //! \param recursive  true to perform a recursive clone, false otherwise.
-        //! \return the cloned node object.
-        //! \throws dom_error  if fail to clone the node.
-        virtual node* clone(bool recursive) const = 0;
 
         //! Returns a const pointer to the parent element.
         const element* parent_() const;

@@ -140,13 +140,6 @@ namespace xtree {
     }
 
 
-    bool node::is_orphan() const
-    {
-        // Note: in libxml2, the root element's parent node is the owner document.
-        return (raw()->parent == 0);
-    }
-
-
     std::string node::name() const
     {
         switch (raw()->type)
@@ -236,7 +229,12 @@ namespace xtree {
 
     xmlNode* node::clone_raw(bool recursive) const
     {
-        // The third parameter (extends) of xmlDocCopyNode takes the value 1 or 2:
+        // This function should not be called on a document node.
+        if (raw()->type == XML_DOCUMENT_NODE)
+        {
+            throw internal_dom_error("fail to clone a document node");
+        }
+        // The third parameter (extended) of xmlDocCopyNode takes the value 1 or 2:
         // - 1 to do a recursive copy (attributes, namespaces and children when applicable);
         // - 2 to copy attributes and namespaces (when applicable).
         xmlNode* px = xmlDocCopyNode( const_cast<xmlNode*>(raw()),
@@ -245,22 +243,12 @@ namespace xtree {
         // Check the cloned node.
         if (px == 0)
         {
-            throw internal_dom_error("Fail to clone node: xmlDocCopyNode() returned null.");
-        }
-        else if (px->type != raw()->type)
-        {
-            throw internal_dom_error("Fail to clone node: the cloned node has a wrong node type.");
-        }
-        else if (px->doc != raw()->doc)
-        {
-            throw internal_dom_error("Fail to clone node: the cloned node has a wrong document.");
+            throw internal_dom_error("Fail to clone node: xmlDocCopyNode() returned null");
         }
         else if (px->_private == 0)
         {
-            throw internal_dom_error("Fail to clone node: the cloned node hasn't _private.");
+            throw internal_dom_error("Fail to clone node: the cloned node has null _private");
         }
-        // TODO: Add the cloned libxml2 node object to the owner document's orphan list.
-        // doc().add_orphan_(static_cast<node*>(px->_private));
         // Return a pointer to the cloned node.
         return px;
     }

@@ -68,9 +68,6 @@ namespace xtree {
         unsigned int line_;
         unsigned int column_;
 
-        // TODO: std::string public_id_;
-        // TODO: std::string system_id_;
-
     };
 
 

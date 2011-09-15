@@ -145,7 +145,7 @@ namespace xtree {
 
     void element::set_name(const std::string& name)
     {
-        detail::check_name(name);
+        detail::check_local_part(name);
         xmlNodeSetName(raw(), detail::to_xml_chars(name.c_str()));
     }
 
@@ -156,6 +156,16 @@ namespace xtree {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //! \name Namespace Access
     //! \{
+
+
+    std::pair<basic_xmlns_ptr<xmlns>, bool> element::declare_xmlns(const std::string& prefix,
+                                                                   const std::string& uri)
+    {
+        detail::check_prefix(prefix);
+        detail::check_uri(uri);
+        std::pair<xmlns*, bool> declared = declare_xmlns_(prefix, uri);
+        return std::make_pair(basic_xmlns_ptr<xmlns>(declared.first), declared.second);
+    }
 
 
     basic_xmlns_ptr<xmlns> element::get_xmlns()
@@ -231,14 +241,13 @@ namespace xtree {
     std::pair<xmlns*, bool> element::declare_xmlns_(const std::string& prefix,
                                                     const std::string& uri)
     {
-        // TODO: check the namespace URI is valid.
         // Search for existing xmlns with the same prefix.
         for (xmlNs* i = raw()->nsDef; i != 0; i = i->next)
         {
-            std::string check_prefix = ( i->prefix == 0
-                                       ? std::string()
-                                       : detail::to_chars(i->prefix) );
-            if (check_prefix == prefix)
+            std::string declared_prefix = ( i->prefix == 0
+                                          ? std::string()
+                                          : detail::to_chars(i->prefix) );
+            if (declared_prefix == prefix)
             {
                 return std::make_pair(xmlns::get_or_create(i), false);
             }

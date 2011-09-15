@@ -11,6 +11,7 @@
 #include "xtree/libxml2_utility.hpp"
 
 #include <libxml/tree.h>
+#include <libxml/uri.h>
 
 #include <string>
 
@@ -61,6 +62,22 @@ namespace detail {
             std::string what = value + " does not conform to the lexical scope of QName";
             throw bad_dom_operation(what);
         }
+    }
+
+
+    void check_uri(const std::string& value)
+    {
+        if (value.empty())
+        {
+            throw bad_dom_operation("URI should not be empty");
+        }
+        xmlURI* px = xmlParseURI(value.c_str());
+        if (px == 0)
+        {
+            std::string what = value + " is not a valid URI";
+            throw bad_dom_operation(what);
+        }
+        xmlFreeURI(px);
     }
 
 

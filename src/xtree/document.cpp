@@ -75,7 +75,7 @@ namespace xtree {
 
     std::string document::version() const
     {
-        return "1.0";  // TODO: always 1.0?
+        return "1.0";  // always returns "1.0".
     }
 
 
@@ -101,7 +101,7 @@ namespace xtree {
 
     basic_node_ptr<element> document::reset_root(const std::string& name)
     {
-        detail::check_name(name);
+        detail::check_local_part(name);
         // Create a new element without namespace.
         xmlNode* px = xmlNewDocNode( raw_doc(), 0, detail::to_xml_chars(name.c_str()), 0 );
         if (px == 0)
@@ -118,6 +118,7 @@ namespace xtree {
     basic_node_ptr<element> document::reset_root(const std::string& qname, const std::string& uri)
     {
         detail::check_qname(qname);
+        detail::check_uri(uri);
         // Split QName into prefix and local name.
         std::pair<std::string, std::string> name_pair = detail::split_qname(qname);
         const std::string& prefix = name_pair.first;
@@ -228,7 +229,7 @@ namespace xtree {
         int count = xmlReconciliateNs(px->doc, px);
         if (count < 0)
         {
-            throw internal_dom_error("fail to reconciliate xmlns on the new root element");
+            throw internal_dom_error("fail to reconciliate xmlns on the root element");
         }
         // Return the new root element.
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );

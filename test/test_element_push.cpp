@@ -98,8 +98,8 @@ BOOST_AUTO_TEST_CASE(test_element_push_elements_with_unprefixed_xmlns)
         BOOST_CHECK_EQUAL(e2->prefix(), std::string());
         BOOST_CHECK_EQUAL(e2->uri(), "http://example.com/x");
         BOOST_CHECK_EQUAL(e2->content(), std::string());
-        // Push element without namespace.
-        xtree::element_ptr e3 = root->push_back_element("e3", std::string());
+        // Push element with null namespace (this will cause inconsistent namespace).
+        xtree::element_ptr e3 = root->push_back_element("e3", xtree::xmlns_ptr());
         BOOST_CHECK_EQUAL(e3->name(), "e3");
         BOOST_CHECK_EQUAL(e3->prefix(), std::string());
         BOOST_CHECK_EQUAL(e3->uri(), std::string());

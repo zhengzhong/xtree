@@ -85,7 +85,7 @@ namespace xtree {
 
     void attribute::set_name(const std::string& name)
     {
-        detail::check_name(name);
+        detail::check_local_part(name);
         xmlNodeSetName(raw(), detail::to_xml_chars(name.c_str()));
     }
 

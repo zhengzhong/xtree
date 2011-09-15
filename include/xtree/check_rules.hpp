@@ -22,6 +22,23 @@ namespace detail {
     void check_nc_name(const std::string& value);
 
 
+    //! Prefix ::= NCName
+    inline void check_prefix(const std::string& value)
+    {
+        if (!value.empty())
+        {
+            check_nc_name(value);
+        }
+    }
+
+
+    //! LocalPart ::= NCName
+    inline void check_local_part(const std::string& value)
+    {
+        check_nc_name(value);
+    }
+
+
     //! Checks if the given value conforms to the lexical scope of Name.
     //! \param value  the value to check.
     //! \throws bad_dom_operation  if the value is not a valid Name.
@@ -32,6 +49,12 @@ namespace detail {
     //! \param value  the value to check.
     //! \throws bad_dom_operation  if the value is not a valid QName.
     void check_qname(const std::string& value);
+
+
+    //! Checks if the given value is a valid URI.
+    //! \param value  the URI to check.
+    //! \throws bad_dom_operation  if the value is not a valid URI.
+    void check_uri(const std::string& value);
 
 
 }  // namespace xtree::detail

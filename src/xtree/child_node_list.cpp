@@ -177,6 +177,7 @@ namespace xtree {
                                                                const std::string& uri)
     {
         detail::check_qname(qname);
+        detail::check_uri(uri);
         xmlNode* px = insert_(end(), create_element_(qname, uri));
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
@@ -185,7 +186,7 @@ namespace xtree {
     basic_node_ptr<element> child_node_list::push_back_element(const std::string& name,
                                                                basic_xmlns_ptr<const xmlns> ns)
     {
-        detail::check_name(name);
+        detail::check_local_part(name);
         xmlNode* px = insert_(end(), create_element_(name, ns));
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
@@ -255,6 +256,7 @@ namespace xtree {
                                                                 const std::string& uri)
     {
         detail::check_qname(qname);
+        detail::check_uri(uri);
         xmlNode* px = insert_(begin(), create_element_(qname, uri));
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
@@ -263,7 +265,7 @@ namespace xtree {
     basic_node_ptr<element> child_node_list::push_front_element(const std::string& name,
                                                                 basic_xmlns_ptr<const xmlns> ns)
     {
-        detail::check_name(name);
+        detail::check_local_part(name);
         xmlNode* px = insert_(begin(), create_element_(name, ns));
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
@@ -373,6 +375,7 @@ namespace xtree {
                                                             const std::string& uri)
     {
         detail::check_qname(qname);
+        detail::check_uri(uri);
         xmlNode* px = insert_(pos, create_element_(qname, uri));
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
@@ -382,7 +385,7 @@ namespace xtree {
                                                             const std::string& name,
                                                             basic_xmlns_ptr<const xmlns> ns)
     {
-        detail::check_name(name);
+        detail::check_local_part(name);
         xmlNode* px = insert_(pos, create_element_(name, ns));
         return basic_node_ptr<element>( static_cast<element*>(px->_private) );
     }
@@ -473,17 +476,10 @@ namespace xtree {
         {
             throw bad_dom_operation("the iterator to erase should not point to the end");
         }
-        // Unlink and free the libxml2 node pointed by the iterator.
-        // TODO: use basic_node_ptr::delete_() function to erase the child node.
-        //   basic_node_ptr<child_node> ptr = pos.ptr();
-        //   ++pos;
-        //   ptr.delete_();
-        //   return pos;
-        xmlNode* px = pos->raw();
-        assert(px != 0);
+        // Delete the node pointed by the iterator.
+        basic_node_ptr<child_node> ptr = pos.ptr();
         ++pos;
-        xmlUnlinkNode(px);
-        xmlFreeNode(px);
+        ptr.delete_();
         return pos;
     }
 

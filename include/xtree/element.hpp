@@ -138,11 +138,7 @@ namespace xtree {
         //! \return a pair where its first is either the new xmlns or the existing xmlns with the
         //!         same prefix, and its second is a bool indicating if a new xmlns is declared.
         std::pair<basic_xmlns_ptr<xmlns>, bool> declare_xmlns(const std::string& prefix,
-                                                              const std::string& uri)
-        {
-            std::pair<xmlns*, bool> declared = declare_xmlns_(prefix, uri);
-            return std::make_pair(basic_xmlns_ptr<xmlns>(declared.first), declared.second);
-        }
+                                                              const std::string& uri);
 
         //! Returns the namespace associate to this element.
         //! \return the namespace associate to this element.

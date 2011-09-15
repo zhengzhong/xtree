@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(test_declare_xmlns)
         BOOST_CHECK_EQUAL(decl.first->prefix(), "x");
         BOOST_CHECK_EQUAL(decl.first->uri(), "http://example.com/x");
         BOOST_CHECK_EQUAL(decl.second, false);
-        // Declaring namespace whose prefix equals to the element prefix should throw.
+        // Declaring namespace with empty prefix will cause inconsistent namespace.
         decl = root->declare_xmlns(std::string(), "http://example.com/xtree");
         BOOST_CHECK_EQUAL(root->uri(), std::string());
         BOOST_CHECK_EQUAL(decl.first->prefix(), std::string());

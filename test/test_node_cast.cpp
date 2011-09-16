@@ -4,7 +4,7 @@
 
 #include "xtree_test_utils.hpp"
 
-#include <xtree/xtree.hpp>
+#include <xtree/xtree_dom.hpp>
 
 #include <memory>
 #include <string>

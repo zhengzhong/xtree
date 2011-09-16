@@ -15,7 +15,7 @@
 #  pragma warning(pop)
 #endif
 
-#include <xtree/xtree.hpp>
+#include <xtree/xtree_dom.hpp>
 
 #include <iterator>
 #include <memory>

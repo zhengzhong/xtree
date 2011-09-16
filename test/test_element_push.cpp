@@ -15,7 +15,7 @@
 #  pragma warning(pop)
 #endif
 
-#include <xtree/xtree.hpp>
+#include <xtree/xtree_dom.hpp>
 
 #include <memory>
 #include <string>
@@ -33,39 +33,75 @@ BOOST_AUTO_TEST_CASE(test_element_push_elements)
         std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         BOOST_REQUIRE(root != 0);
+        unsigned int elem_count = 0;
         // Push element without namespace.
-        xtree::element_ptr e1 = root->push_back_element("e1");
-        BOOST_CHECK_EQUAL(e1->name(), "e1");
-        BOOST_CHECK_EQUAL(e1->prefix(), std::string());
-        BOOST_CHECK_EQUAL(e1->uri(), std::string());
-        BOOST_CHECK_EQUAL(e1->content(), std::string());
+        {
+            xtree::element_ptr elem = root->push_back_element("elem");
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), std::string());
+            BOOST_CHECK_EQUAL(elem->uri(), std::string());
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Push element with predefined prefix.
-        xtree::element_ptr e2 = root->push_back_element("x:e2");
-        BOOST_CHECK_EQUAL(e2->name(), "e2");
-        BOOST_CHECK_EQUAL(e2->prefix(), "x");
-        BOOST_CHECK_EQUAL(e2->uri(), "http://example.com/x");
-        BOOST_CHECK_EQUAL(e2->content(), std::string());
+        {
+            xtree::element_ptr elem = root->push_back_element("x:elem");
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), "x");
+            BOOST_CHECK_EQUAL(elem->uri(), "http://example.com/x");
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Push element with new (unprefixed) namespace.
-        xtree::element_ptr e3 = root->push_back_element("e3", "http://example.com/y");
-        BOOST_CHECK_EQUAL(e3->name(), "e3");
-        BOOST_CHECK_EQUAL(e3->prefix(), std::string());
-        BOOST_CHECK_EQUAL(e3->uri(), "http://example.com/y");
-        BOOST_CHECK_EQUAL(e2->content(), std::string());
+        {
+            xtree::element_ptr elem = root->push_back_element("elem", "http://example.com/y");
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), std::string());
+            BOOST_CHECK_EQUAL(elem->uri(), "http://example.com/y");
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
+        // Push element with existing namespace.
+        {
+            xtree::xmlns_ptr ns = root->find_xmlns_by_uri("http://example.com/x");
+            xtree::element_ptr elem = root->push_back_element("elem", ns);
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), "x");
+            BOOST_CHECK_EQUAL(elem->uri(), "http://example.com/x");
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
+        // Push element with null namespace.
+        {
+            xtree::xmlns_ptr ns = root->find_xmlns_by_uri("http://example.com/xtree");
+            xtree::element_ptr elem = root->push_back_element("elem", ns);
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), std::string());
+            BOOST_CHECK_EQUAL(elem->uri(), std::string());
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Push element with new (prefixed) namespace.
-        xtree::element_ptr e4 = root->push_back_element("z:e4", "http://example.com/z");
-        BOOST_CHECK_EQUAL(e4->name(), "e4");
-        BOOST_CHECK_EQUAL(e4->prefix(), "z");
-        BOOST_CHECK_EQUAL(e4->uri(), "http://example.com/z");
-        BOOST_CHECK_EQUAL(e4->content(), std::string());
+        {
+            xtree::element_ptr elem = root->push_back_element("z:elem", "http://example.com/z");
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), "z");
+            BOOST_CHECK_EQUAL(elem->uri(), "http://example.com/z");
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Push element with newly-declared namespace.
-        root->declare_xmlns("u", "http://example.com/u");
-        xtree::element_ptr e5 = root->push_back_element("u:e5");
-        BOOST_CHECK_EQUAL(e5->name(), "e5");
-        BOOST_CHECK_EQUAL(e5->prefix(), "u");
-        BOOST_CHECK_EQUAL(e5->uri(), "http://example.com/u");
-        BOOST_CHECK_EQUAL(e5->content(), std::string());
+        {
+            root->declare_xmlns("u", "http://example.com/u");
+            xtree::element_ptr elem = root->push_back_element("u:elem");
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), "u");
+            BOOST_CHECK_EQUAL(elem->uri(), "http://example.com/u");
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Check subelement count.
-        BOOST_CHECK_EQUAL(root->size(), 5U);
+        BOOST_CHECK_EQUAL(root->size(), elem_count);
     }
     catch (const xtree::dom_error& ex)
     {
@@ -86,26 +122,36 @@ BOOST_AUTO_TEST_CASE(test_element_push_elements_with_unprefixed_xmlns)
         std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::element_ptr root = doc->root();
         BOOST_REQUIRE(root != 0);
+        unsigned int elem_count = 0;
         // Push element with unprefixed namespace.
-        xtree::element_ptr e1 = root->push_back_element("e1");
-        BOOST_CHECK_EQUAL(e1->name(), "e1");
-        BOOST_CHECK_EQUAL(e1->prefix(), std::string());
-        BOOST_CHECK_EQUAL(e1->uri(), "http://example.com/xtree");
-        BOOST_CHECK_EQUAL(e1->content(), std::string());
+        {
+            xtree::element_ptr elem = root->push_back_element("elem");
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), std::string());
+            BOOST_CHECK_EQUAL(elem->uri(), "http://example.com/xtree");
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Push element with new unprefixed namespace.
-        xtree::element_ptr e2 = root->push_back_element("e2", "http://example.com/x");
-        BOOST_CHECK_EQUAL(e2->name(), "e2");
-        BOOST_CHECK_EQUAL(e2->prefix(), std::string());
-        BOOST_CHECK_EQUAL(e2->uri(), "http://example.com/x");
-        BOOST_CHECK_EQUAL(e2->content(), std::string());
+        {
+            xtree::element_ptr elem = root->push_back_element("elem", "http://example.com/x");
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), std::string());
+            BOOST_CHECK_EQUAL(elem->uri(), "http://example.com/x");
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Push element with null namespace (this will cause inconsistent namespace).
-        xtree::element_ptr e3 = root->push_back_element("e3", xtree::xmlns_ptr());
-        BOOST_CHECK_EQUAL(e3->name(), "e3");
-        BOOST_CHECK_EQUAL(e3->prefix(), std::string());
-        BOOST_CHECK_EQUAL(e3->uri(), std::string());
-        BOOST_CHECK_EQUAL(e3->content(), std::string());
+        {
+            xtree::element_ptr elem = root->push_back_element("elem", xtree::xmlns_ptr());
+            ++elem_count;
+            BOOST_CHECK_EQUAL(elem->name(), "elem");
+            BOOST_CHECK_EQUAL(elem->prefix(), std::string());
+            BOOST_CHECK_EQUAL(elem->uri(), std::string());
+            BOOST_CHECK_EQUAL(elem->content(), std::string());
+        }
         // Check subelement count.
-        BOOST_CHECK_EQUAL(root->size(), 3U);
+        BOOST_CHECK_EQUAL(root->size(), elem_count);
     }
     catch (const xtree::dom_error& ex)
     {

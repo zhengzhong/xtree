@@ -80,9 +80,12 @@ namespace xtree {
     node_set_element_mover::node_set_element_mover(xmlNodeSet* nodes, int index)
     : nodes_(nodes), index_(index)
     {
-        while (index_ < nodes_->nodeNr && nodes_->nodeTab[index_]->type != XML_ELEMENT_NODE)
+        if (nodes_ != 0)
         {
-            ++index_;
+            while (index_ < nodes_->nodeNr && nodes_->nodeTab[index_]->type != XML_ELEMENT_NODE)
+            {
+                ++index_;
+            }
         }
     }
 
@@ -149,7 +152,7 @@ namespace xtree {
         template<class Iterator>
         inline Iterator make_iterator_(const xmlXPathObject* raw, bool is_begin)
         {
-            const xmlNodeSet* px = raw->nodesetval;
+            const xmlNodeSet* px = (raw != 0 ? raw->nodesetval : 0);
             if (px == 0)
             {
                 return Iterator();
@@ -177,14 +180,14 @@ namespace xtree {
 
     bool node_set::empty() const
     {
-        const xmlNodeSet* px = raw()->nodesetval;
+        const xmlNodeSet* px = (raw() != 0 ? raw()->nodesetval : 0);
         return (px == 0 || px->nodeNr <= 0);
     }
 
 
     size_type node_set::size() const
     {
-        const xmlNodeSet* px = raw()->nodesetval;
+        const xmlNodeSet* px = (raw() != 0 ? raw()->nodesetval : 0);
         if (px == 0 || px->nodeNr <= 0)
         {
             return 0;
@@ -244,12 +247,9 @@ namespace xtree {
     }
 
 
-    void node_set::check_acceptable(const xpath_result& result)
+    bool node_set::is_acceptable_(xpath_result_t type) const
     {
-        if (result.type() != node_set_result)
-        {
-            throw xpath_error(result.xpath() + " does not evaluate to a node_set");
-        }
+        return (type == node_set_result);
     }
 
 

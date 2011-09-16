@@ -72,7 +72,7 @@ namespace xtree {
 
     private:
 
-        virtual void check_acceptable(const xpath_result& result);
+        virtual bool is_acceptable_(xpath_result_t type) const;
 
     private:
 

@@ -46,7 +46,11 @@ namespace xtree {
     {
         if (this != &other)
         {
-            other.check_acceptable(*this);
+            if (!other.is_acceptable_(type()))
+            {
+                std::string what = "inconsistent XPath result type for " + xpath_;
+                throw xpath_error(what);
+            }
             std::swap(other.xpath_, xpath_);
             std::swap(other.raw_, raw_);
         }
@@ -55,12 +59,11 @@ namespace xtree {
 
     xpath_result_t xpath_result::type() const
     {
-        const xmlXPathObject* px = raw();
-        if (px == 0)
+        if (raw() == 0)
         {
             return undefined_result;
         }
-        switch (px->type)
+        switch (raw()->type)
         {
         case XPATH_NODESET:
             return node_set_result;
@@ -76,9 +79,9 @@ namespace xtree {
     }
 
 
-    void xpath_result::check_acceptable(const xpath_result&)
+    bool xpath_result::is_acceptable_(xpath_result_t) const
     {
-        // Do nothing.
+        return true;  // always return true: this class represents a catch-all XPath result.
     }
 
 

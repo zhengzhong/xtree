@@ -630,9 +630,28 @@ namespace xtree {
         //! \name XPath
         //! \{
 
-        //! Selects a node set by an XPath expression.
-        //! \param expr   the XPath expression that evaluates to a node set.
-        //! \param nodes  output argument to hold the result node set.
+        //! Evaluates an XPath expression to a boolean.
+        //! \param expr  the XPath expression.
+        //! \return the boolean result.
+        //! \throws xpath_error  if the XPath expression is invalid.
+        bool eval_boolean(const xpath& expr) const;
+
+        //! Evaluates an XPath expression to a number.
+        //! \param expr  the XPath expression.
+        //! \return the number result.
+        //! \throws xpath_error  if the XPath expression is invalid.
+        double eval_number(const xpath& expr) const;
+
+        //! Evaluates an XPath expression to a string.
+        //! \param expr  the XPath expression.
+        //! \return the string result.
+        //! \throws xpath_error  if the XPath expression is invalid.
+        std::string eval_string(const xpath& expr) const;
+
+        //! Evaluates the XPath expression to a node set.
+        //! \param expr   the XPath expression.
+        //! \param nodes  the result node set.
+        //! \throws xpath_error  if the XPath expression is invalid.
         void select_nodes(const xpath& expr, node_set& nodes);
 
         //! \}

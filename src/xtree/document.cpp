@@ -17,6 +17,7 @@
 #include "xtree/xpath.hpp"
 #include "xtree/xpath_context.hpp"
 #include "xtree/xpath_result.hpp"
+#include "xtree/xpath_typed_results.hpp"
 #include "xtree/node_set.hpp"
 
 #include "xtree/check_rules.hpp"
@@ -183,6 +184,33 @@ namespace xtree {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //! \name XPath
     //! \{
+
+
+    bool document::eval_boolean(const xpath& expr) const
+    {
+        xpath_boolean result;
+        detail::xpath_context context(const_cast<xmlDoc*>(raw_doc()), 0);
+        context.eval(expr, result);
+        return result.value();
+    }
+
+
+    double document::eval_number(const xpath& expr) const
+    {
+        xpath_number result;
+        detail::xpath_context context(const_cast<xmlDoc*>(raw_doc()), 0);
+        context.eval(expr, result);
+        return result.value();
+    }
+
+
+    std::string document::eval_string(const xpath& expr) const
+    {
+        xpath_string result;
+        detail::xpath_context context(const_cast<xmlDoc*>(raw_doc()), 0);
+        context.eval(expr, result);
+        return result.value();
+    }
 
 
     void document::select_nodes(const xpath& expr, node_set& nodes)

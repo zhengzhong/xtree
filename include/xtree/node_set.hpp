@@ -7,6 +7,7 @@
 
 #include "xtree/config.hpp"
 #include "xtree/xpath_result.hpp"
+#include "xtree/types.hpp"
 #include "xtree/node.hpp"
 #include "xtree/basic_node_ptr.hpp"
 #include "xtree/libxml2_fwd.hpp"
@@ -275,7 +276,7 @@ namespace xtree {
 
     private:
 
-        virtual void check_acceptable(const xpath_result& result);
+        virtual bool is_acceptable_(xpath_result_t type) const;
 
     };
 

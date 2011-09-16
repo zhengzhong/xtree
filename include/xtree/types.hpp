@@ -31,9 +31,24 @@ namespace xtree {
     };
 
 
+    //! The XPath result type enumerations.
+    enum xpath_result_t
+    {
+        undefined_result = 0,
+        node_set_result,
+        boolean_result,
+        number_result,
+        string_result,
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     //! \cond DEV
 
-    //! Converts a node type enumeration to string representation.
+
+    //! Converts a node type enumerator to string representation.
     inline std::string to_string(node_t type)
     {
         switch (type)
@@ -55,18 +70,29 @@ namespace xtree {
         }
     }
 
-    //! \endcond
 
-
-    //! The XPath result type enumerations.
-    enum xpath_result_t
+    //! Converts an XPath result type enumerator to string representation.
+    inline std::string to_string(xpath_result_t type)
     {
-        undefined_result = 0,
-        node_set_result,
-        boolean_result,
-        number_result,
-        string_result,
-    };
+        switch (type)
+        {
+        case undefined_result:
+            return "undefined";
+        case node_set_result:
+            return "node_set";
+        case boolean_result:
+            return "boolean";
+        case number_result:
+            return "number";
+        case string_result:
+            return "string";
+        default:
+            return "unknown";
+        }
+    }
+
+
+    //! \endcond
 
 
 } // namespace xtree

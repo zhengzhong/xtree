@@ -36,9 +36,9 @@ BOOST_AUTO_TEST_CASE(test_document_select_subelements_no_ns)
         "</root>"
     ;
     const xtree::xpath XPATHS[] = {
-        xtree::xpath("/root/item"),
-        xtree::xpath("//item"),
-        xtree::xpath("/root/*"),
+        "/root/item",
+        "//item",
+        "/root/*",
     };
     const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const xtree::xpath);
     try
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(test_document_select_attributes)
     {
         std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::node_set nodes;
-        doc->select_nodes(xtree::xpath("/root/@*"), nodes);
+        doc->select_nodes("/root/@*", nodes);
         BOOST_CHECK_EQUAL(nodes.size(), 3U);
         for (xtree::node_set::iterator i = nodes.begin(); i != nodes.end(); ++i)
         {
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE(test_document_select_document)
     {
         std::auto_ptr<xtree::document> doc = xtree::parse_string(TEST_XML);
         xtree::node_set nodes;
-        doc->select_nodes(xtree::xpath("/"), nodes);
+        doc->select_nodes("/", nodes);
         BOOST_CHECK_EQUAL(nodes.size(), 1U);
         for (xtree::node_set::iterator i = nodes.begin(); i != nodes.end(); ++i)
         {

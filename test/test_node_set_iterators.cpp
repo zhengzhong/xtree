@@ -25,6 +25,27 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+BOOST_AUTO_TEST_CASE(test_default_constructed_empty_node_set)
+{
+    XTREE_LOG_TEST_NAME;
+    try
+    {
+        xtree::node_set nothing;
+        BOOST_CHECK_EQUAL(nothing.empty(), true);
+        BOOST_CHECK_EQUAL(nothing.size(), 0U);
+        BOOST_CHECK(nothing.begin() == nothing.end());
+        BOOST_CHECK(nothing.begin_element() == nothing.end_element());
+    }
+    catch (const xtree::dom_error& ex)
+    {
+        BOOST_ERROR(ex.what());
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 namespace {
 
 

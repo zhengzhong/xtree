@@ -39,6 +39,9 @@ namespace xtree {
 
     class XTREE_DECL xpath;
     class XTREE_DECL xpath_result;
+    class XTREE_DECL xpath_boolean;
+    class XTREE_DECL xpath_number;
+    class XTREE_DECL xpath_string;
     class XTREE_DECL node_set;
 
     class XTREE_DECL validity;

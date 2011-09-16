@@ -22,9 +22,15 @@ namespace xtree {
 
     public:
 
-        //! Constructs an XPath from an expression.
+        //! Constructs an XPath from an expression. This non-explicit constructor allows implicit
+        //! conversion from std::string.
         //! \param str  the XPath expression.
-        explicit xpath(const std::string& str);
+        xpath(const std::string& str);
+
+        //! Constructs an XPath from an expression. This non-explicit constructor allows implicit
+        //! conversion from const char*.
+        //! \param str  the XPath expression.
+        xpath(const char* str);
 
         //! Constructs an XPath from an expression.
         //! \param str     the XPath expression.
@@ -89,11 +95,15 @@ namespace xtree {
             return raw_;
         }
 
+        //! Initializes the underlying libxml2 xpath object. This function is used by constructors.
+        //! \param str  the XPath expression.
+        void init_raw_(const std::string& str);
+
     private:
 
         std::string       str_;       //!< The string representation of the XPath expression.
-        xmlXPathCompExpr* raw_;       //!< The underlying libxml2 XPath object.
         xmlns_registry    registry_;  //!< The XML namespace registry.
+        xmlXPathCompExpr* raw_;       //!< The underlying libxml2 XPath object.
 
     };
 

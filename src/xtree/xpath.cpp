@@ -16,50 +16,36 @@
 namespace xtree {
 
 
-    xpath::xpath(const std::string& str): str_(str), raw_(0), registry_()
+    xpath::xpath(const std::string& str): str_(str), registry_(), raw_(0)
     {
-        raw_ = xmlXPathCompile(detail::to_xml_chars(str.c_str()));
-        if (raw_ == 0)
-        {
-            std::string what = "fail to compile XPath expression: " + str;
-            throw xpath_error(what);
-        }
+        init_raw_(str);
+    }
+
+
+    xpath::xpath(const char* str): str_(str), registry_(), raw_(0)
+    {
+        init_raw_(str);
     }
 
 
     xpath::xpath(const std::string& str, const std::string& prefix, const std::string& uri)
-    : str_(str), raw_(0), registry_()
+    : str_(str), registry_(), raw_(0)
     {
-        raw_ = xmlXPathCompile(detail::to_xml_chars(str.c_str()));
-        if (raw_ == 0)
-        {
-            std::string what = "fail to compile XPath expression: " + str;
-            throw xpath_error(what);
-        }
         registry_.insert(std::make_pair(prefix, uri));
+        init_raw_(str);
     }
 
 
     xpath::xpath(const std::string& str, const xmlns_registry& registry)
-    : str_(str), raw_(0), registry_(registry)
+    : str_(str), registry_(registry), raw_(0)
     {
-        raw_ = xmlXPathCompile(detail::to_xml_chars(str.c_str()));
-        if (raw_ == 0)
-        {
-            std::string what = "fail to compile XPath expression: " + str;
-            throw xpath_error(what);
-        }
+        init_raw_(str);
     }
 
 
-    xpath::xpath(const xpath& rhs): str_(rhs.str_), raw_(0), registry_(rhs.registry_)
+    xpath::xpath(const xpath& rhs): str_(rhs.str_), registry_(rhs.registry_), raw_(0)
     {
-        raw_ = xmlXPathCompile(detail::to_xml_chars(rhs.str_.c_str()));
-        if (raw_ == 0)
-        {
-            std::string what = "fail to compile XPath expression: " + rhs.str_;
-            throw xpath_error(what);
-        }
+        init_raw_(rhs.str_);
     }
 
 
@@ -67,19 +53,7 @@ namespace xtree {
     {
         if (this != &rhs)
         {
-            // Recompile the XPath expression.
-            xmlXPathCompExpr* px = xmlXPathCompile(detail::to_xml_chars(rhs.str_.c_str()));
-            if (px == 0)
-            {
-                std::string what = "fail to compile XPath expression: " + rhs.str_;
-                throw xpath_error(what);
-            }
-            // Free the underlying XPath expression object.
-            assert(raw_ != 0);
-            xmlXPathFreeCompExpr(raw_);
-            raw_ = 0;
-            // Reinitialize member variables.
-            raw_ = px;
+            init_raw_(rhs.str_);
             str_ = rhs.str_;
             registry_ = rhs.registry_;
         }
@@ -92,6 +66,26 @@ namespace xtree {
         assert(raw_ != 0);
         xmlXPathFreeCompExpr(raw_);
         raw_ = 0;
+    }
+
+
+    void xpath::init_raw_(const std::string& str)
+    {
+        // Compile the XPath expression.
+        xmlXPathCompExpr* px = xmlXPathCompile(detail::to_xml_chars(str.c_str()));
+        if (px == 0)
+        {
+            std::string what = "fail to compile XPath expression: " + str;
+            throw xpath_error(what);
+        }
+        // Free the underlying XPath expression object as necessary.
+        if (raw_ != 0)
+        {
+            xmlXPathFreeCompExpr(raw_);
+            raw_ = 0;
+        }
+        // Reset raw.
+        raw_ = px;
     }
 
 

@@ -27,6 +27,7 @@
 
 #include "xtree/xpath.hpp"
 #include "xtree/xpath_result.hpp"
+#include "xtree/xpath_typed_results.hpp"
 #include "xtree/node_set.hpp"
 
 #include "xtree/validity.hpp"

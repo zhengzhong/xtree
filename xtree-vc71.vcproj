@@ -270,6 +270,9 @@
 			<File
 				RelativePath=".\src\xtree\xpath_result.cpp">
 			</File>
+			<File
+				RelativePath=".\src\xtree\xpath_typed_results.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -397,6 +400,9 @@
 			</File>
 			<File
 				RelativePath=".\include\xtree\xpath_result.hpp">
+			</File>
+			<File
+				RelativePath=".\include\xtree\xpath_typed_results.hpp">
 			</File>
 			<File
 				RelativePath=".\include\xtree\xtree.hpp">

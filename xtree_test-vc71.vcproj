@@ -235,9 +235,6 @@
 				RelativePath=".\test\test_element_child_iterator.cpp">
 			</File>
 			<File
-				RelativePath=".\test\test_element_eval.cpp">
-			</File>
-			<File
 				RelativePath=".\test\test_element_find.cpp">
 			</File>
 			<File
@@ -263,6 +260,9 @@
 			</File>
 			<File
 				RelativePath=".\test\test_xmlns.cpp">
+			</File>
+			<File
+				RelativePath=".\test\test_xpath.cpp">
 			</File>
 			<File
 				RelativePath=".\test\xtree_auto_link.cpp">

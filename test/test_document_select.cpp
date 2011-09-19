@@ -245,6 +245,7 @@ BOOST_AUTO_TEST_CASE(test_document_select_empty)
         xtree::xpath("/n:root/*", PREFIX, URI),
         xtree::xpath("//item", PREFIX, URI),
         xtree::xpath("/root/whatever", PREFIX, URI),
+        xtree::xpath("n:item", PREFIX, URI),
     };
     const unsigned int MAX_SIZE = sizeof(XPATHS) / sizeof(const xtree::xpath);
     try

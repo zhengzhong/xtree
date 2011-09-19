@@ -186,6 +186,13 @@ namespace xtree {
     //! \{
 
 
+    void document::eval(const xpath& expr, xpath_result& result)
+    {
+        detail::xpath_context context(raw_doc(), 0);
+        context.eval(expr, result);
+    }
+
+
     bool document::eval_boolean(const xpath& expr) const
     {
         xpath_boolean result;
@@ -215,8 +222,7 @@ namespace xtree {
 
     void document::select_nodes(const xpath& expr, node_set& nodes)
     {
-        detail::xpath_context context(raw_doc(), 0);
-        context.eval(expr, nodes);
+        eval(expr, nodes);
     }
 
 

@@ -31,6 +31,7 @@ namespace xtree {
 
     class XTREE_DECL xmlns;
     class XTREE_DECL xpath;
+    class XTREE_DECL xpath_result;
     class XTREE_DECL node_set;
 
 
@@ -638,6 +639,12 @@ namespace xtree {
         //! \name XPath
         //! \{
 
+        //! Evaluates an XPath expression.
+        //! \param expr  the XPath expression.
+        //! \return the generic XPath result.
+        //! \throws xpath_error  if the XPath expression is invalid.
+        void eval(const xpath& expr, xpath_result& result);
+
         //! Evaluates an XPath expression to a boolean.
         //! \param expr  the XPath expression.
         //! \return the boolean result.
@@ -656,7 +663,7 @@ namespace xtree {
         //! \throws xpath_error  if the XPath expression is invalid.
         std::string eval_string(const xpath& expr) const;
 
-        //! Evaluates the XPath expression to a node set.
+        //! Evaluates the XPath expression to a node set. This is an alias to eval().
         //! \param expr   the XPath expression.
         //! \param nodes  the result node set.
         //! \throws xpath_error  if the XPath expression is invalid.

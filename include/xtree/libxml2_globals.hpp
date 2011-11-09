@@ -79,8 +79,14 @@ namespace detail {
 namespace xtree {
 
 
-    //! \name Memory Debugging Functions
+    //! \name Global Libxml2 Functions
     //! \{
+
+
+    //! Initializes libxml2 library. In a multi-threaded environment, user should initialize
+    //! libxml2 explicitly in the "main" thread by calling this function before using any of the
+    //! other API. See http://xmlsoft.org/threads.html for more information.
+    XTREE_DECL void initialize_libxml2();
 
 
     //! Sets the cleanup parser flag to indicate whether to call xmlCleanupParser() at exit.

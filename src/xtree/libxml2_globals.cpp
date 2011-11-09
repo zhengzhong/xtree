@@ -92,6 +92,12 @@ namespace detail {
 namespace xtree {
 
 
+    void initialize_libxml2()
+    {
+        detail::libxml2_globals::initialize();
+    }
+
+
     void set_libxml2_cleanup_parser(bool flag)
     {
         detail::libxml2_globals::set_cleanup_parser(flag);

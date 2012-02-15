@@ -73,10 +73,10 @@ namespace detail {
         const xpath::xmlns_registry& registry = expr.get_xmlns_registry();
         for (const_iterator i = registry.begin(); i != registry.end(); ++i)
         {
-            int zero = xmlXPathRegisterNs( raw_,
-                                           detail::to_xml_chars(i->first.c_str()),
-                                           detail::to_xml_chars(i->second.c_str()) );
-            if (zero != 0)
+            int ret_code = xmlXPathRegisterNs( raw_,
+                                               detail::to_xml_chars(i->first.c_str()),
+                                               detail::to_xml_chars(i->second.c_str()) );
+            if (ret_code != 0)
             {
                 std::string what = "fail to register namespace " + i->first + "=" + i->second
                                  + ": xmlXPathRegisterNs returned non-zero";

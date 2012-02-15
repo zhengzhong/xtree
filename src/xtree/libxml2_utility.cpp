@@ -125,7 +125,7 @@ namespace detail {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    std::string build_error_message(int code)
+    std::string error_code_to_string(int code)
     {
         std::ostringstream oss;
         switch (code)
@@ -920,7 +920,7 @@ namespace detail {
         case XML_CHECK_X = 6006 : 503
         */
         default:
-            oss << "Unknown error code";
+            oss << "Not-OK";
             break;
         }
         oss << " (code=" << code << ")";
@@ -934,14 +934,14 @@ namespace detail {
     std::string build_error_message(const xmlError& err)
     {
         std::ostringstream oss;
-        oss << domain_code_to_string(err.domain) << ": " << build_error_message(err.code);
+        oss << domain_code_to_string(err.domain) << ": " << error_code_to_string(err.code);
         if (err.message != 0)
         {
-            oss << " Details: " << err.message;
+            oss << ", details: " << err.message;
         }
         if (err.int1 > 0 && err.int2 > 0)
         {
-            oss << " Location: " << err.int1 << ": " << err.int2;
+            oss << ", location: " << err.int1 << ": " << err.int2;
         }
         return oss.str();
     }

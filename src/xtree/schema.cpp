@@ -142,9 +142,10 @@ namespace xtree {
                                  &detail::on_validity_error,
                                  &detail::on_validity_warning,
                                  static_cast<void*>(&result) );
-        int return_code = xmlSchemaValidateDoc(valid_ctxt.get(), doc.raw_doc());
-        // Check the return code.
-        if (return_code >= 0)
+        int ret_code = xmlSchemaValidateDoc(valid_ctxt.get(), doc.raw_doc());
+        // Check the return code: 0 if the document is schemas valid, a positive error code number
+        // otherwise, -1 in case of internal or API error.
+        if (ret_code >= 0)
         {
             return result;
         }

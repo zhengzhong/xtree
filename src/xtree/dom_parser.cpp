@@ -147,17 +147,12 @@ namespace xtree {
             set_global_variables global_variables;
             // Initialize libxml2 parser context.
             init_dom_parser_context(context);
-            // Parse xml document under the parser context.
-            xmlParseDocument(context);
-            // Check the return value.
-            if (!context->wellFormed)
-            {
-                throw dom_error("fail to parse xml using libxml2: document is not well-formed");
-            }
-            if (context->errNo != 0)
+            // Parse xml document under the parser context and check return code.
+            int ret_code = xmlParseDocument(context);
+            if (ret_code != 0 || context->errNo != 0)
             {
                 std::string what = "fail to parse xml using libxml2: "
-                                 + detail::build_error_message(context->errNo);
+                                 + detail::build_error_message(context->lastError);
                 throw dom_error(what);
             }
             if (context->myDoc == 0)
